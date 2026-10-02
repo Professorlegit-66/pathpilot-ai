@@ -1,15 +1,22 @@
 import { useState } from 'react';
-import { Rocket, Globe, ArrowRight } from 'lucide-react';
+import { Rocket, Mail, Lock, User, Globe, MapPin, ShieldCheck, ArrowLeft } from 'lucide-react';
 
 export default function AuthPage({ onLogin }) {
   const [isRegister, setIsRegister] = useState(false);
+  
+  // Registration step state: 'form' or 'verify'
+  const [regStep, setRegStep] = useState('form'); 
+  const [enteredOtp, setEnteredOtp] = useState('');
+  const [mockSentOtp, setMockSentOtp] = useState('');
+
+  // Fields initialized as empty strings for real user input
   const [formData, setFormData] = useState({
-    name: 'Talha Ahmad',
-    email: 'talha@example.com',
-    password: '••••••••',
+    name: '',
+    email: '',
+    password: '',
     country: 'Pakistan',
-    region: 'Khyber Pakhtunkhwa',
-    city: 'Kohat'
+    region: '',
+    city: ''
   });
 
   const handleChange = (e) => {
@@ -17,110 +24,218 @@ export default function AuthPage({ onLogin }) {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  // Step 1: Validate email format & trigger OTP generation/sending
+  const handleRequestOtp = (e) => {
     e.preventDefault();
+    
+    // Basic real email validation check
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      alert("Please enter a valid email address.");
+      return;
+    }
+
+    // Generate a mock 6-digit OTP (In production, this is handled by backend + email service like SendGrid/Resend)
+    const randomOtp = Math.floor(100000 + Math.random() * 900000).toString();
+    setMockSentOtp(randomOtp);
+    
+    // For hackathon demo ease, alert the generated code so you can test it seamlessly
+    alert(`[Demo Mode] Verification OTP sent to ${formData.email}\nYour OTP Code is: ${randomOtp}`);
+    
+    setRegStep('verify');
+  };
+
+  // Step 2: Verify OTP and complete registration
+  const handleVerifyAndRegister = (e) => {
+    e.preventDefault();
+    if (enteredOtp !== mockSentOtp) {
+      alert("Invalid OTP code. Please check the code and try again.");
+      return;
+    }
+    // Success! Proceed to log in session
     onLogin(formData);
   };
 
-  const inputStyle = {
-    width: '100%', padding: '0.75rem 1rem', background: '#0f172a', border: '1px solid #334155',
-    borderRadius: '8px', color: '#f8fafc', fontSize: '0.95rem', marginTop: '0.3rem', boxSizing: 'border-box'
+  const handleSignIn = (e) => {
+    e.preventDefault();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      alert("Please enter a valid email address.");
+      return;
+    }
+    onLogin(formData);
   };
 
-  const labelStyle = { fontSize: '0.85rem', fontWeight: '500', color: '#cbd5e1', display: 'block', textAlign: 'left' };
+  // Styling helpers
+  const inputWrapperStyle = { position: 'relative', display: 'flex', alignItems: 'center', marginTop: '0.35rem' };
+  const iconStyle = { position: 'absolute', left: '1rem', color: '#64748b', pointerEvents: 'none' };
+  const inputStyle = { width: '100%', padding: '0.75rem 1rem 0.75rem 2.75rem', background: '#090d16', border: '1px solid #334155', borderRadius: '10px', color: '#f8fafc', fontSize: '0.9rem', boxSizing: 'border-box', outline: 'none' };
+  const labelStyle = { fontSize: '0.8rem', fontWeight: '500', color: '#cbd5e1', display: 'block', textAlign: 'left', marginTop: '0.75rem' };
 
   return (
-    <div style={{ height: '100vh', width: '100vw', background: '#0f172a', display: 'flex', alignItems: 'center', justifyContent: 'center', overflowY: 'auto', padding: '2rem' }}>
-      <div style={{ width: '100%', maxWidth: '480px', background: '#1e293b', border: '1px solid #334155', borderRadius: '16px', padding: '2.5rem', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.5)' }}>
+    <div style={{ minHeight: '100vh', width: '100vw', background: '#070b14', display: 'flex', alignItems: 'center', justifyContent: 'center', overflowY: 'auto', padding: '3rem 1rem', boxSizing: 'border-box' }}>
+      <div style={{ width: '100%', maxWidth: '460px', background: '#0f172a', border: '1px solid #1e293b', borderRadius: '20px', padding: '2.25rem', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.7)', margin: 'auto' }}>
         
         {/* Brand Header */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem' }}>
-          <div style={{ background: '#059669', padding: '0.5rem', borderRadius: '8px', display: 'flex' }}>
-            <Rocket size={24} color="#fff" />
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: '1.25rem' }}>
+          <div style={{ background: 'linear-gradient(135deg, #059669 0%, #047857 100%)', padding: '0.65rem', borderRadius: '12px', display: 'flex', boxShadow: '0 10px 15px -3px rgba(5, 150, 105, 0.3)', marginBottom: '0.5rem' }}>
+            <Rocket size={26} color="#fff" />
           </div>
-          <div>
-            <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#fff', margin: 0 }}>PathPilot AI</h1>
-            <span style={{ fontSize: '0.7rem', background: '#05966933', color: '#34d399', padding: '0.1rem 0.4rem', borderRadius: '4px', fontWeight: '600' }}>GLOBAL OPPORTUNITY NAVIGATOR</span>
-          </div>
+          <h1 style={{ fontSize: '1.6rem', fontWeight: 'bold', color: '#fff', margin: 0, letterSpacing: '-0.025em' }}>PathPilot AI</h1>
+          <span style={{ fontSize: '0.65rem', background: '#05966933', color: '#34d399', padding: '0.1rem 0.4rem', borderRadius: '4px', fontWeight: '600', marginTop: '0.3rem' }}>GLOBAL OPPORTUNITY NAVIGATOR</span>
         </div>
 
-        <p style={{ color: '#94a3b8', fontSize: '0.9rem', marginBottom: '1.5rem', lineHeight: '1.4' }}>
-          {isRegister ? 'Create your account and set your location. The system will adapt to your regional education system automatically.' : 'Welcome back! Enter your credentials to access your session.'}
-        </p>
-
-        {/* Tab Switcher - Sign In first, Register second */}
-        <div style={{ display: 'flex', background: '#0f172a', padding: '0.25rem', borderRadius: '8px', marginBottom: '1.5rem' }}>
-          <button 
-            type="button" 
-            onClick={() => setIsRegister(false)}
-            style={{ flex: 1, background: !isRegister ? '#1e293b' : 'transparent', color: !isRegister ? '#fff' : '#94a3b8', border: 'none', padding: '0.5rem', borderRadius: '6px', fontWeight: '600', cursor: 'pointer' }}
-          >
-            Sign In
-          </button>
-          <button 
-            type="button" 
-            onClick={() => setIsRegister(true)}
-            style={{ flex: 1, background: isRegister ? '#1e293b' : 'transparent', color: isRegister ? '#fff' : '#94a3b8', border: 'none', padding: '0.5rem', borderRadius: '6px', fontWeight: '600', cursor: 'pointer' }}
-          >
-            Register
-          </button>
-        </div>
-
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          
-          {/* Full Name only shows during Register */}
-          {isRegister && (
-            <div>
-              <label style={labelStyle}>Full Name</label>
-              <input type="text" name="name" value={formData.name} onChange={handleChange} style={inputStyle} required />
-            </div>
-          )}
-
-          <div>
-            <label style={labelStyle}>Email Address</label>
-            <input type="email" name="email" value={formData.email} onChange={handleChange} style={inputStyle} required />
-          </div>
-
-          <div>
-            <label style={labelStyle}>Password</label>
-            <input type="password" name="password" value={formData.password} onChange={handleChange} style={inputStyle} required />
-          </div>
-
-          {/* Location details only show during Register */}
-          {isRegister && (
-            <>
+        {/* --- VIEW A: SIGN IN --- */}
+        {!isRegister && (
+          <>
+            <h2 style={{ fontSize: '1.1rem', fontWeight: '600', color: '#e2e8f0', textAlign: 'center', marginBottom: '1.25rem' }}>Sign in to your account</h2>
+            <form onSubmit={handleSignIn} style={{ display: 'flex', flexDirection: 'column' }}>
               <div>
-                <label style={labelStyle}>Country</label>
-                <select name="country" value={formData.country} onChange={handleChange} style={inputStyle}>
-                  <option value="Pakistan">Pakistan</option>
-                  <option value="International">International / Other</option>
-                </select>
+                <div style={inputWrapperStyle}>
+                  <Mail size={18} style={iconStyle} />
+                  <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="Email address" style={inputStyle} required />
+                </div>
+              </div>
+              <div>
+                <div style={{ ...inputWrapperStyle, marginTop: '0.75rem' }}>
+                  <Lock size={18} style={iconStyle} />
+                  <input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="Password" style={inputStyle} required />
+                </div>
+              </div>
+              <button type="submit" style={{ background: 'linear-gradient(135deg, #059669 0%, #047857 100%)', color: '#fff', border: 'none', padding: '0.8rem', borderRadius: '10px', fontWeight: '600', fontSize: '0.95rem', cursor: 'pointer', marginTop: '1.25rem' }}>
+                Sign In
+              </button>
+            </form>
+          </>
+        )}
+
+        {/* --- VIEW B: REGISTER - STEP 1 (Details & Email Input) --- */}
+        {isRegister && regStep === 'form' && (
+          <>
+            <h2 style={{ fontSize: '1.1rem', fontWeight: '600', color: '#e2e8f0', textAlign: 'center', marginBottom: '1.25rem' }}>Create a new account</h2>
+            <form onSubmit={handleRequestOtp} style={{ display: 'flex', flexDirection: 'column' }}>
+              <div>
+                <label style={labelStyle}>Full Name</label>
+                <div style={inputWrapperStyle}>
+                  <User size={18} style={iconStyle} />
+                  <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Full Name" style={inputStyle} required />
+                </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+              <div>
+                <label style={labelStyle}>Email Address (Real Email)</label>
+                <div style={inputWrapperStyle}>
+                  <Mail size={18} style={iconStyle} />
+                  <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="name@example.com" style={inputStyle} required />
+                </div>
+              </div>
+
+              <div>
+                <label style={labelStyle}>Password</label>
+                <div style={inputWrapperStyle}>
+                  <Lock size={18} style={iconStyle} />
+                  <input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="Create Password" style={inputStyle} required />
+                </div>
+              </div>
+
+              <div>
+                <label style={labelStyle}>Country</label>
+                <div style={inputWrapperStyle}>
+                  <Globe size={18} style={iconStyle} />
+                  <select name="country" value={formData.country} onChange={handleChange} style={{ ...inputStyle, appearance: 'none', cursor: 'pointer' }}>
+                    <option value="Pakistan">Pakistan</option>
+                    <option value="International">International / Other</option>
+                  </select>
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
                 <div>
                   <label style={labelStyle}>Region / Province</label>
-                  <input type="text" name="region" value={formData.region} onChange={handleChange} placeholder="e.g. KPK / Punjab" style={inputStyle} required />
+                  <div style={inputWrapperStyle}>
+                    <MapPin size={18} style={iconStyle} />
+                    <input type="text" name="region" value={formData.region} onChange={handleChange} placeholder="e.g. KPK" style={inputStyle} required />
+                  </div>
                 </div>
                 <div>
                   <label style={labelStyle}>City</label>
-                  <input type="text" name="city" value={formData.city} onChange={handleChange} placeholder="e.g. Kohat" style={inputStyle} required />
+                  <div style={inputWrapperStyle}>
+                    <MapPin size={18} style={iconStyle} />
+                    <input type="text" name="city" value={formData.city} onChange={handleChange} placeholder="e.g. Kohat" style={inputStyle} required />
+                  </div>
                 </div>
               </div>
-            </>
-          )}
 
-          <button 
-            type="submit"
-            style={{ 
-              background: '#059669', color: '#fff', border: 'none', padding: '0.875rem', 
-              borderRadius: '8px', fontWeight: '600', fontSize: '1rem', cursor: 'pointer',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', marginTop: '1rem'
-            }}
-          >
-            {isRegister ? 'Create Account & Continue' : 'Sign In to Session'} <ArrowRight size={18} />
-          </button>
-        </form>
+              <button type="submit" style={{ background: 'linear-gradient(135deg, #059669 0%, #047857 100%)', color: '#fff', border: 'none', padding: '0.8rem', borderRadius: '10px', fontWeight: '600', fontSize: '0.95rem', cursor: 'pointer', marginTop: '1.25rem' }}>
+                Send Verification OTP Code
+              </button>
+            </form>
+          </>
+        )}
+
+        {/* --- VIEW C: REGISTER - STEP 2 (OTP Verification Code Input) --- */}
+        {isRegister && regStep === 'verify' && (
+          <>
+            <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
+              <ShieldCheck size={40} color="#34d399" style={{ marginBottom: '0.5rem' }} />
+              <h2 style={{ fontSize: '1.1rem', fontWeight: '600', color: '#e2e8f0', margin: 0 }}>Verify Your Email</h2>
+              <p style={{ color: '#94a3b8', fontSize: '0.85rem', marginTop: '0.5rem' }}>
+                We sent a 6-digit verification code to <span style={{ color: '#34d399', fontWeight: '600' }}>{formData.email}</span>
+              </p>
+            </div>
+
+            <form onSubmit={handleVerifyAndRegister} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <div>
+                <label style={labelStyle}>Enter 6-Digit OTP Code</label>
+                <div style={inputWrapperStyle}>
+                  <ShieldCheck size={18} style={iconStyle} />
+                  <input 
+                    type="text" 
+                    maxLength="6"
+                    value={enteredOtp} 
+                    onChange={(e) => setEnteredOtp(e.target.value)} 
+                    placeholder="123456" 
+                    style={{ ...inputStyle, letterSpacing: '0.25rem', textAlign: 'center', fontWeight: 'bold', fontSize: '1.2rem' }} 
+                    required 
+                  />
+                </div>
+              </div>
+
+              <button type="submit" style={{ background: 'linear-gradient(135deg, #059669 0%, #047857 100%)', color: '#fff', border: 'none', padding: '0.8rem', borderRadius: '10px', fontWeight: '600', fontSize: '0.95rem', cursor: 'pointer', marginTop: '0.5rem' }}>
+                Verify & Create Account
+              </button>
+
+              <button 
+                type="button" 
+                onClick={() => setRegStep('form')}
+                style={{ background: 'transparent', border: 'none', color: '#94a3b8', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem', fontSize: '0.85rem', marginTop: '0.5rem' }}
+              >
+                <ArrowLeft size={14} /> Back to registration details
+              </button>
+            </form>
+          </>
+        )}
+
+        {/* Toggle between Sign In / Register tabs */}
+        <div style={{ textAlign: 'center', marginTop: '1.25rem' }}>
+          <p style={{ color: '#94a3b8', fontSize: '0.85rem', margin: 0 }}>
+            {isRegister ? 'Already have an account? ' : "Don't have an account? "}
+            <button 
+              type="button" 
+              onClick={() => { setIsRegister(!isRegister); setRegStep('form'); }}
+              style={{ background: 'transparent', border: 'none', color: '#34d399', fontWeight: '600', cursor: 'pointer', padding: 0, fontSize: '0.85rem' }}
+            >
+              {isRegister ? 'Sign in' : 'Sign up'}
+            </button>
+          </p>
+        </div>
+
+        {/* Footer Warning / Notice */}
+        <div style={{ textAlign: 'center', marginTop: '1.5rem', borderTop: '1px solid #1e293b', paddingTop: '1rem' }}>
+          <p style={{ color: '#64748b', fontSize: '0.7rem', lineHeight: '1.4', margin: 0 }}>
+            PathPilot AI is under active development — some features may change or behave unexpectedly.
+          </p>
+        </div>
 
       </div>
     </div>

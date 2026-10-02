@@ -6,12 +6,15 @@ import ProfilePage from './pages/ProfilePage';
 import ProgramMatcher from './pages/ProgramMatcher';
 import CareerExplorer from './pages/CareerExplorer';
 import RoadmapView from './pages/RoadmapView';
+import AuthPage from './pages/AuthPage';
 
 export default function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [studentProfile, setStudentProfile] = useState({
-    name: 'Talha Ahmad',
+    name: '',
     country: 'Pakistan',
-    city: 'Islamabad',
+    region: 'Khyber Pakhtunkhwa',
+    city: 'Kohat',
     current_education_level: 'HSSC',
     ssc_percentage: 75.0,
     hssc_percentage: 85.0,
@@ -22,6 +25,21 @@ export default function App() {
   });
 
   const [matchingResults, setMatchingResults] = useState(null);
+
+  const handleLogin = (initialData) => {
+    setStudentProfile(prev => ({
+      ...prev,
+      name: initialData.name,
+      country: initialData.country,
+      region: initialData.region,
+      city: initialData.city
+    }));
+    setIsAuthenticated(true);
+  };
+
+  if (!isAuthenticated) {
+    return <AuthPage onLogin={handleLogin} />;
+  }
 
   return (
     <Router>

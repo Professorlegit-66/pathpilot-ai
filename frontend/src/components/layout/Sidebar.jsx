@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, UserCheck, GraduationCap, Briefcase, Map, LogOut, Rocket } from 'lucide-react';
+import { LayoutDashboard, UserCheck, GraduationCap, Briefcase, MessageSquare, Map, LogOut, Rocket } from 'lucide-react';
 
 export default function Sidebar({ onSignOut }) {
   const navItems = [
@@ -8,6 +8,7 @@ export default function Sidebar({ onSignOut }) {
     { label: 'University Matcher', path: '/programs', icon: GraduationCap },
     { label: 'Career Explorer', path: '/careers', icon: Briefcase },
     { label: 'AI Roadmap', path: '/roadmap', icon: Map },
+    { label: 'Career Counselor', path: '/counselor', icon: MessageSquare },
   ];
 
   return (

@@ -7,6 +7,7 @@ import ProgramMatcher from './pages/ProgramMatcher';
 import CareerExplorer from './pages/CareerExplorer';
 import RoadmapView from './pages/RoadmapView';
 import AuthPage from './pages/AuthPage';
+import CareerCounselor from './pages/CareerCounselor';
 
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -56,6 +57,7 @@ export default function App() {
           <Route path="programs" element={<ProgramMatcher results={matchingResults} profile={studentProfile} setResults={setMatchingResults} />} />
           <Route path="careers" element={<CareerExplorer />} />
           <Route path="roadmap" element={<RoadmapView profile={studentProfile} results={matchingResults} />} />
+          <Route path="counselor" element={<CareerCounselor profile={studentProfile} />} />
         </Route>
       </Routes>
     </Router>

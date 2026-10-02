@@ -1,8 +1,7 @@
-import json
-import os
 from agents.career_agent import CareerAgent
 from agents.eligibility_agent import EligibilityAgent
 from agents.roadmap_agent import RoadmapAgent
+from agents.career_counselor_agent import CareerCounselorAgent # Add import
 
 class AIOrchestrator:
     def __init__(self, data_dir="data"):
@@ -10,6 +9,7 @@ class AIOrchestrator:
         self.career_agent = CareerAgent(data_dir=data_dir)
         self.eligibility_agent = EligibilityAgent(data_dir=data_dir)
         self.roadmap_agent = RoadmapAgent()
+        self.counselor_agent = CareerCounselorAgent(data_dir=data_dir)
 
     def _load_json(self, filename):
         filepath = os.path.join(self.data_dir, filename)

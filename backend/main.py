@@ -54,6 +54,9 @@ class RoadmapRequest(BaseModel):
     profile: StudentProfile
     results: List[EligibilityResult]
 
+class CounselorRequest(BaseModel):
+    profile: StudentProfile
+    query: str
 
 # -----------------------------------------------------------------------------
 # API ENDPOINTS (Delegating to Multi-Agent System)
@@ -91,6 +94,16 @@ def get_careers():
 def get_universities():
     return {"status": "success", "data": orchestrator.get_universities()}
 
+@app.post("/api/counselor/chat", tags=["Multi-Agent AI Workflow"])
+def career_counselor_chat(req: CounselorRequest):
+    """
+    Directs student query to the Career Counselor Agent.
+    """
+    try:
+        advice = orchestrator.counselor_agent.get_advice(req.profile.dict(), req.query)
+        return {"response": advice}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 # -----------------------------------------------------------------------------
 # Application Execution Setup

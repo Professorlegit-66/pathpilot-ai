@@ -1,0 +1,42 @@
+[
+  {
+    "id": "nust_islamabad",
+    "name": "National University of Sciences and Technology (NUST)",
+    "country": "Pakistan",
+    "city": "Islamabad",
+    "hec_recognized": true,
+    "hec_source": "https://www.hec.gov.pk/english/universities/Pages/DAIs/HEC-recognized-Campuses.aspx",
+    "website": "https://nust.edu.pk/",
+    "last_verified": "2026-10-01"
+  },
+  {
+    "id": "fast_islamabad",
+    "name": "National University of Computer and Emerging Sciences (FAST-NUCES)",
+    "country": "Pakistan",
+    "city": "Islamabad",
+    "hec_recognized": true,
+    "hec_source": "https://www.hec.gov.pk/english/universities/Pages/DAIs/HEC-recognized-Campuses.aspx",
+    "website": "https://nu.edu.pk/",
+    "last_verified": "2026-10-01"
+  },
+  {
+    "id": "comsats_islamabad",
+    "name": "COMSATS University Islamabad (CUI)",
+    "country": "Pakistan",
+    "city": "Islamabad",
+    "hec_recognized": true,
+    "hec_source": "https://www.hec.gov.pk/english/universities/Pages/DAIs/HEC-recognized-Campuses.aspx",
+    "website": "https://www.comsats.edu.pk/",
+    "last_verified": "2026-10-01"
+  },
+  {
+    "id": "air_islamabad",
+    "name": "Air University",
+    "country": "Pakistan",
+    "city": "Islamabad",
+    "hec_recognized": true,
+    "hec_source": "https://www.hec.gov.pk/english/universities/Pages/Islamabad/Air-University.aspx",
+    "website": "https://www.au.edu.pk/",
+    "last_verified": "2026-10-01"
+  }
+]

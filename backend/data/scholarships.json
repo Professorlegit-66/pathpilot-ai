@@ -1,0 +1,58 @@
+[
+  {
+    "id": "nust_need_based_aid",
+    "name": "NUST Need Based Financial Aid",
+    "provider": "NUST",
+    "degree_levels": [
+      "Bachelor",
+      "Master"
+    ],
+    "type": "need_based",
+    "coverage": "Partial or full academic expenditures; interest-free loan/deferment options may also be available.",
+    "duration_note": "NUST states need-based scholarships can cover partial/full academic expenditures for up to 4 years for undergraduate students.",
+    "eligibility_logic": "Financial need is assessed from household financial information; admission is on merit.",
+    "source": "https://nust.edu.pk/admissions/scholarships/need-based-financial-aid/",
+    "last_verified": "2026-10-01"
+  },
+  {
+    "id": "fast_merit_scholarship",
+    "name": "FAST-NUCES Merit Scholarship",
+    "provider": "FAST-NUCES",
+    "degree_levels": [
+      "Bachelor"
+    ],
+    "type": "merit_based",
+    "coverage": "Full tuition fee for the stated eligible top position holders, subject to FAST rules.",
+    "eligibility_logic": "FAST Peshawar FAQ states scholarships are awarded to top three position holders in each examination-board group and top three in the NU admission merit list, subject to stated continuation conditions.",
+    "source": "https://pwr.nu.edu.pk/faqs/",
+    "last_verified": "2026-10-01"
+  },
+  {
+    "id": "fast_interest_free_loan",
+    "name": "FAST-NUCES Interest-Free Study Loan",
+    "provider": "FAST-NUCES",
+    "degree_levels": [
+      "Bachelor",
+      "Master",
+      "PhD"
+    ],
+    "type": "need_based_loan",
+    "coverage": "Tuition-fee financial assistance in the form of an interest-free study loan.",
+    "eligibility_logic": "FAST states assistance is for bright/indigent students and is subject to renewal based on academic performance and financial need.",
+    "source": "https://www.nu.edu.pk/Admissions/Scholarship",
+    "last_verified": "2026-10-01"
+  },
+  {
+    "id": "comsats_need_based_scholarships",
+    "name": "COMSATS Scholarships & Financial Aid",
+    "provider": "COMSATS University Islamabad",
+    "degree_levels": [
+      "Bachelor"
+    ],
+    "type": "mixed",
+    "coverage": "Full and partial scholarships/financial aid may be available through university and external funding agencies.",
+    "eligibility_logic": "Exact eligibility depends on the specific scholarship; do not treat this record as a single scholarship with one universal rule.",
+    "source": "https://lahore.comsats.edu.pk/admissions/scholarships_financial_aid.aspx",
+    "last_verified": "2026-10-01"
+  }
+]

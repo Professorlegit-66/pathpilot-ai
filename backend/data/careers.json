@@ -1,0 +1,90 @@
+[
+  {
+    "id": "software_engineer",
+    "name": "Software Engineer",
+    "related_fields": [
+      "Computer Science",
+      "Software Engineering",
+      "Computer Engineering"
+    ],
+    "skills": [
+      "programming",
+      "data structures and algorithms",
+      "software design",
+      "databases",
+      "version control"
+    ],
+    "source_basis": "Career mapping seed; not a claim of guaranteed employment."
+  },
+  {
+    "id": "ml_engineer",
+    "name": "Machine Learning Engineer",
+    "related_fields": [
+      "Computer Science",
+      "Artificial Intelligence",
+      "Data Science"
+    ],
+    "skills": [
+      "Python",
+      "machine learning",
+      "statistics",
+      "linear algebra",
+      "model deployment",
+      "software engineering"
+    ],
+    "source_basis": "Career mapping seed for recommendation logic."
+  },
+  {
+    "id": "data_scientist",
+    "name": "Data Scientist",
+    "related_fields": [
+      "Data Science",
+      "Computer Science",
+      "Artificial Intelligence",
+      "Statistics"
+    ],
+    "skills": [
+      "Python",
+      "statistics",
+      "SQL",
+      "machine learning",
+      "data visualization"
+    ],
+    "source_basis": "Career mapping seed for recommendation logic."
+  },
+  {
+    "id": "ai_engineer",
+    "name": "AI Engineer",
+    "related_fields": [
+      "Artificial Intelligence",
+      "Computer Science",
+      "Data Science"
+    ],
+    "skills": [
+      "Python",
+      "machine learning",
+      "deep learning",
+      "APIs",
+      "deployment",
+      "LLM/AI systems"
+    ],
+    "source_basis": "Career mapping seed for recommendation logic."
+  },
+  {
+    "id": "cybersecurity_engineer",
+    "name": "Cybersecurity Engineer",
+    "related_fields": [
+      "Cyber Security",
+      "Computer Science",
+      "Information Technology"
+    ],
+    "skills": [
+      "networking",
+      "Linux",
+      "security fundamentals",
+      "scripting",
+      "incident response"
+    ],
+    "source_basis": "Career mapping seed for recommendation logic."
+  }
+]

@@ -1,0 +1,125 @@
+[
+  {
+    "id": "nust_bscs",
+    "university_id": "nust_islamabad",
+    "campus": "Islamabad",
+    "name": "BS Computer Science",
+    "degree_level": "Bachelor",
+    "field": "Computer Science",
+    "duration_years": 4,
+    "eligibility": {
+      "ssc_required": true,
+      "hssc_required": true,
+      "hssc_groups": [
+        "Pre-Engineering",
+        "Computer Science",
+        "Pre-Medical",
+        "HSSC with Mathematics"
+      ],
+      "mathematics_required": true,
+      "minimum_hssc_percent": null,
+      "notes": "NUST lists BS Computer Science among computing programmes and accepts the listed HSSC routes; pre-medical applicants without additional mathematics must clear deficient Mathematics courses."
+    },
+    "accreditation": {
+      "body": "NCEAC",
+      "status": "not independently populated in this seed record",
+      "note": "Do not infer programme accreditation from university recognition."
+    },
+    "sources": [
+      "https://nust.edu.pk/admissions/undergraduates/eligibility-criteria-for-ug-programmes/",
+      "https://nust.edu.pk/admissions/undergraduates/list-of-ug-programmes-and-institutions"
+    ],
+    "last_verified": "2026-10-01"
+  },
+  {
+    "id": "fast_bscs",
+    "university_id": "fast_islamabad",
+    "campus": "Islamabad",
+    "name": "BS Computer Science",
+    "degree_level": "Bachelor",
+    "field": "Computer Science",
+    "duration_years": 4,
+    "eligibility": {
+      "minimum_ssc_percent": 60,
+      "minimum_hssc_percent": 50,
+      "mathematics_required": true,
+      "accepted_admission_tests": [
+        "FAST-NUCES",
+        "SAT",
+        "NTS NAT-IE",
+        "NTS NAT-ICS"
+      ],
+      "note": "Merit cut-off is determined by the university."
+    },
+    "accreditation": {
+      "body": "NCEAC",
+      "status": "historical/official NCEAC record found; current batch status should be checked for the applicant's intended intake",
+      "source": "https://nceac.org.pk/Documents/GCMeetingMinutes/Minutes-%2024th%20Meeting.pdf"
+    },
+    "sources": [
+      "https://nu.edu.pk/Admissions/EligibilityCriteria",
+      "https://nu.edu.pk/Degree-Programs",
+      "https://nu.edu.pk/Admissions/Scholarship"
+    ],
+    "last_verified": "2026-10-01"
+  },
+  {
+    "id": "comsats_bscs",
+    "university_id": "comsats_islamabad",
+    "campus": "Islamabad",
+    "name": "BS Computer Science",
+    "degree_level": "Bachelor",
+    "field": "Computer Science",
+    "duration_years": 4,
+    "eligibility": {
+      "minimum_hssc_percent": 50,
+      "minimum_nat_percent": 50,
+      "nat_required": true,
+      "accepted_test": "NTS-NAT-I",
+      "note": "Official CUI program page states minimum 50% Intermediate/equivalent and minimum 50% NTS-NAT."
+    },
+    "accreditation": {
+      "body": "NCEAC",
+      "status": "pending",
+      "note": "The NCEAC Islamabad campus record lists the BS Computer Science accreditation visit as pending; do not label this programme simply 'accredited' for the current record.",
+      "source": "https://nceac.org.pk/accreditation/AccreditBatches/030a20f8-f424-4ece-b76f-e228f82c087b"
+    },
+    "sources": [
+      "https://ww2.comsats.edu.pk/cs_wah/bscs.aspx",
+      "https://nceac.org.pk/accreditation/AccreditBatches/030a20f8-f424-4ece-b76f-e228f82c087b"
+    ],
+    "last_verified": "2026-10-01"
+  },
+  {
+    "id": "air_bscs",
+    "university_id": "air_islamabad",
+    "campus": "Islamabad",
+    "name": "BS Computer Science",
+    "degree_level": "Bachelor",
+    "field": "Computer Science",
+    "duration_years": 4,
+    "eligibility": {
+      "minimum_hssc_percent": 50,
+      "mathematics_required": true,
+      "mathematics_deficiency_allowed": true,
+      "mathematics_deficiency_credits": 6,
+      "note": "Air University states HSSC/A-level/equivalent with at least 50% and Mathematics for BS Computing programs; students without Mathematics must complete a 6-credit deficiency course."
+    },
+    "accreditation": {
+      "body": "NCEAC",
+      "status": "approved for specified batches",
+      "approved_batches": [
+        "Fall 2021",
+        "Fall 2022"
+      ],
+      "approved_on": "2025-09-14",
+      "note": "The NCEAC record specifies Y (2 Academic Years) and a maximum of four sections of 50 students per year. Accreditation is batch/intake-specific.",
+      "source": "https://nceac.org.pk/accreditation/AccreditBatches/6a21cc45-8faf-46a5-82f2-71f3bcb28243"
+    },
+    "sources": [
+      "https://kc.au.edu.pk/Pages/Admission/eligibility_criteria.aspx",
+      "https://nceac.org.pk/accreditation/AccreditBatches/6a21cc45-8faf-46a5-82f3bcb28243"
+    ],
+    "last_verified": "2026-10-01"
+  }
+]

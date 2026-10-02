@@ -1,0 +1,7 @@
+{
+  "verified_on": "2026-10-01",
+  "principle": "Institution recognition, programme eligibility, programme accreditation, scholarships, and fees are separate facts and must be verified separately.",
+  "important": "NCEAC accreditation is programme/campus/batch-specific. A university being HEC-recognized does not by itself prove that a particular computing programme or intake is NCEAC-accredited.",
+  "fees": "No generic semester-fee values are included unless tied to a specific current official fee source/campus. This avoids inventing or mixing campus-specific fees.",
+  "demo_scope": "This is a small verified seed dataset for a 48-hour MVP, not a complete national university database."
+}

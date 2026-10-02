@@ -14,10 +14,8 @@ export default function Sidebar() {
   const navItems = [
     { label: 'Overview', path: '/dashboard', icon: LayoutDashboard },
     { label: 'Student Profile', path: '/profile', icon: UserCheck },
-    { label: 'Career Explorer', path: '/careers', icon: Compass },
-    { label: 'Program Matcher', path: '/programs', icon: GraduationCap },
-    { label: 'Scholarship Vault', path: '/scholarships', icon: Award },
-    { label: 'AI Roadmap', path: '/roadmap', icon: Map },
+    { label: 'University Matcher', path: '/programs', icon: GraduationCap },
+    { label: 'Career & Roadmap', path: '/roadmap', icon: Map },
   ];
 
   return (

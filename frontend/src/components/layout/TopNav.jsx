@@ -29,10 +29,10 @@ export default function TopNav({ profile }) {
 
         {/* User Card */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', paddingLeft: '1rem', borderLeft: '1px solid #1e293b' }}>
-          <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: '#059669', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>
+          <div style={{ width: '36px', height: '36px', minWidth: '36px', borderRadius: '50%', background: '#059669', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', flexShrink: 0 }}>
             {profile?.name ? profile.name[0] : 'S'}
           </div>
-          <div style={{ textAlign: 'left' }}>
+          <div style={{ textAlign: 'left', whiteSpace: 'nowrap' }}>
             <div style={{ fontSize: '0.875rem', fontWeight: '600', color: '#f8fafc' }}>{profile?.name || 'Student User'}</div>
             <div style={{ fontSize: '0.75rem', color: '#64748b' }}>{profile?.city || 'Pakistan'}</div>
           </div>

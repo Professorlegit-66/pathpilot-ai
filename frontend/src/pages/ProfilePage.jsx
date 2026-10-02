@@ -47,7 +47,7 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
   const labelStyle = { fontSize: '0.9rem', fontWeight: '500', color: '#cbd5e1' };
 
   return (
-    <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+    <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
       <div style={{ marginBottom: '2rem' }}>
         <h1 style={{ fontSize: '2rem', fontWeight: 'bold', margin: '0 0 0.5rem 0' }}>Academic Profile</h1>
         <p style={{ color: '#94a3b8', margin: 0 }}>Configure your academic history and career goals to power the matching engine.</p>
@@ -84,16 +84,16 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
               </select>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'flex-end' }}>
+            <div style={{ display: 'flex', alignItems: 'center', marginTop: '1.5rem' }}>
               <label style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer', ...labelStyle }}>
                 <input 
                   type="checkbox" 
                   name="mathematics_background" 
                   checked={profile.mathematics_background} 
                   onChange={handleInputChange} 
-                  style={{ width: '1.2rem', height: '1.2rem', accentColor: '#059669' }}
+                  style={{ width: '1.25rem', height: '1.25rem', accentColor: '#059669', flexShrink: 0, margin: 0 }}
                 />
-                I have a mathematics background
+                <span style={{ lineHeight: '1.2' }}>I have a mathematics background</span>
               </label>
             </div>
 
@@ -126,16 +126,16 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
               </select>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'flex-end' }}>
+            <div style={{ display: 'flex', alignItems: 'center', marginTop: '1.5rem' }}>
               <label style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer', ...labelStyle }}>
                 <input 
                   type="checkbox" 
                   name="financial_need_status" 
                   checked={profile.financial_need_status} 
                   onChange={handleInputChange} 
-                  style={{ width: '1.2rem', height: '1.2rem', accentColor: '#059669' }}
+                  style={{ width: '1.25rem', height: '1.25rem', accentColor: '#059669', flexShrink: 0, margin: 0 }}
                 />
-                Evaluate Financial Aid Eligibility
+                <span style={{ lineHeight: '1.2' }}>Evaluate Financial Aid Eligibility</span>
               </label>
             </div>
           </div>

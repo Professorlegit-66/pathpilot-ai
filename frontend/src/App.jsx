@@ -4,6 +4,7 @@ import MainLayout from './components/layout/MainLayout';
 import Dashboard from './pages/Dashboard';
 import ProfilePage from './pages/ProfilePage';
 import ProgramMatcher from './pages/ProgramMatcher';
+import CareerExplorer from './pages/CareerExplorer';
 import RoadmapView from './pages/RoadmapView';
 
 export default function App() {
@@ -30,6 +31,7 @@ export default function App() {
           <Route path="dashboard" element={<Dashboard profile={studentProfile} results={matchingResults} />} />
           <Route path="profile" element={<ProfilePage profile={studentProfile} setProfile={setStudentProfile} setResults={setMatchingResults} />} />
           <Route path="programs" element={<ProgramMatcher results={matchingResults} profile={studentProfile} setResults={setMatchingResults} />} />
+          <Route path="careers" element={<CareerExplorer />} />
           <Route path="roadmap" element={<RoadmapView profile={studentProfile} results={matchingResults} />} />
         </Route>
       </Routes>

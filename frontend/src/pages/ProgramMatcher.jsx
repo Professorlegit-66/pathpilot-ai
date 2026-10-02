@@ -44,7 +44,7 @@ export default function ProgramMatcher({ results, profile, setResults }) {
           <button 
             onClick={handleRecheck} 
             disabled={loading}
-            style={{ background: '#2563eb', color: '#fff', border: 'none', padding: '0.6rem 1.2rem', borderRadius: '8px', cursor: 'pointer', fontWeight: '600' }}
+            style={{ background: '#059669', color: '#fff', border: 'none', padding: '0.6rem 1.2rem', borderRadius: '8px', cursor: 'pointer', fontWeight: '600' }}
           >
             {loading ? 'Evaluating...' : 'Re-Run Rule Engine'}
           </button>
@@ -81,7 +81,7 @@ export default function ProgramMatcher({ results, profile, setResults }) {
           <GraduationCap size={48} color="#64748b" style={{ marginBottom: '1rem' }} />
           <h3 style={{ margin: '0 0 0.5rem 0', color: '#f8fafc' }}>No Eligibility Results Found</h3>
           <p style={{ color: '#94a3b8', margin: '0 0 1.5rem 0' }}>Configure your profile credentials to initiate deterministic evaluation.</p>
-          <Link to="/profile" style={{ background: '#2563eb', color: '#fff', padding: '0.75rem 1.5rem', borderRadius: '8px', textDecoration: 'none', fontWeight: '600' }}>
+          <Link to="/profile" style={{ background: '#059669', color: '#fff', padding: '0.75rem 1.5rem', borderRadius: '8px', textDecoration: 'none', fontWeight: '600' }}>
             Go to Profile Setup
           </Link>
         </div>

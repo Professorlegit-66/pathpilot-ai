@@ -36,7 +36,7 @@ export default function Sidebar() {
     }}>
       {/* Brand Header */}
       <div style={{ padding: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem', borderBottom: '1px solid #1e293b' }}>
-        <div style={{ background: '#2563eb', padding: '0.5rem', borderRadius: '8px', display: 'flex' }}>
+        <div style={{ background: '#059669', padding: '0.5rem', borderRadius: '8px', display: 'flex' }}>
           <Sparkles size={20} color="#fff" />
         </div>
         <div>
@@ -64,7 +64,7 @@ export default function Sidebar() {
                 fontSize: '0.95rem',
                 color: isActive ? '#ffffff' : '#94a3b8',
                 backgroundColor: isActive ? '#1e293b' : 'transparent',
-                borderLeft: isActive ? '4px solid #3b82f6' : '4px solid transparent',
+                borderLeft: isActive ? '4px solid #10b981' : '4px solid transparent',
                 transition: 'all 0.2s ease'
               })}
             >

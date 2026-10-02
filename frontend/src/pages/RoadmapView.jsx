@@ -36,7 +36,7 @@ export default function RoadmapView({ profile, results }) {
       {/* Header */}
       <div>
         <h1 style={{ fontSize: '2rem', fontWeight: 'bold', margin: '0 0 0.5rem 0', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <Map color="#38bdf8" /> AI Career & Learning Roadmap
+          <Map color="#34d399" /> AI Career & Learning Roadmap
         </h1>
         <p style={{ color: '#94a3b8', margin: 0 }}>
           Grounded explanation layer powered by Groq (Llama 3.3), constrained strictly to verified datasets.
@@ -47,7 +47,7 @@ export default function RoadmapView({ profile, results }) {
       {!roadmap ? (
         <div style={{ background: '#1e293b', padding: '3rem', borderRadius: '16px', border: '1px solid #334155', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.25rem' }}>
           <div style={{ background: '#0f172a', padding: '1rem', borderRadius: '50%', border: '1px solid #334155' }}>
-            <Sparkles size={32} color="#38bdf8" />
+            <Sparkles size={32} color="#34d399" />
           </div>
           <div>
             <h3 style={{ margin: '0 0 0.5rem 0', color: '#f8fafc', fontSize: '1.25rem' }}>Ready to generate your path forward?</h3>
@@ -60,7 +60,7 @@ export default function RoadmapView({ profile, results }) {
             onClick={handleGenerateRoadmap}
             disabled={loading}
             style={{ 
-              background: '#2563eb', color: '#fff', border: 'none', padding: '0.875rem 2rem', 
+              background: '#059669', color: '#fff', border: 'none', padding: '0.875rem 2rem', 
               borderRadius: '8px', cursor: 'pointer', fontWeight: '600', fontSize: '1rem',
               display: 'flex', alignItems: 'center', gap: '0.5rem', transition: 'background 0.2s'
             }}

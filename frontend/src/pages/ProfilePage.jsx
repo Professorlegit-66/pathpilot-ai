@@ -57,7 +57,7 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
         
         {/* Section 1: Academic Background */}
         <div style={{ background: '#1e293b', padding: '2rem', borderRadius: '16px', border: '1px solid #334155' }}>
-          <h2 style={{ margin: '0 0 1.5rem 0', fontSize: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#38bdf8' }}>
+          <h2 style={{ margin: '0 0 1.5rem 0', fontSize: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#34d399' }}>
             <BookOpen size={20} /> Academic History
           </h2>
           
@@ -91,7 +91,7 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
                   name="mathematics_background" 
                   checked={profile.mathematics_background} 
                   onChange={handleInputChange} 
-                  style={{ width: '1.2rem', height: '1.2rem', accentColor: '#2563eb' }}
+                  style={{ width: '1.2rem', height: '1.2rem', accentColor: '#059669' }}
                 />
                 I have a mathematics background
               </label>
@@ -133,7 +133,7 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
                   name="financial_need_status" 
                   checked={profile.financial_need_status} 
                   onChange={handleInputChange} 
-                  style={{ width: '1.2rem', height: '1.2rem', accentColor: '#2563eb' }}
+                  style={{ width: '1.2rem', height: '1.2rem', accentColor: '#059669' }}
                 />
                 Evaluate Financial Aid Eligibility
               </label>
@@ -147,7 +147,7 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
             type="submit" 
             disabled={loading} 
             style={{ 
-              background: '#2563eb', color: 'white', border: 'none', padding: '1rem 2rem', 
+              background: '#059669', color: 'white', border: 'none', padding: '1rem 2rem', 
               borderRadius: '8px', cursor: 'pointer', fontSize: '1.1rem', fontWeight: '600',
               display: 'flex', alignItems: 'center', gap: '0.75rem', transition: 'background 0.2s',
               opacity: loading ? 0.7 : 1

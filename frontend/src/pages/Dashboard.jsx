@@ -51,7 +51,7 @@ export default function Dashboard({ profile, results }) {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div>
               <p style={{ margin: '0 0 0.5rem 0', color: '#94a3b8', fontSize: '0.9rem', fontWeight: '600' }}>AI ROADMAP STATUS</p>
-              <h2 style={{ margin: 0, fontSize: '1.5rem', color: roadmapGenerated ? '#38bdf8' : '#94a3b8', marginTop: '0.5rem' }}>
+              <h2 style={{ margin: 0, fontSize: '1.5rem', color: roadmapGenerated ? '#34d399' : '#94a3b8', marginTop: '0.5rem' }}>
                 {roadmapGenerated ? 'Active' : 'Pending'}
               </h2>
             </div>
@@ -74,7 +74,7 @@ export default function Dashboard({ profile, results }) {
               : "Update your academic profile to let our rule engine find matching university programs."}
           </p>
         </div>
-        <Link to={eligibleCount > 0 ? "/roadmap" : "/profile"} style={{ background: '#2563eb', color: '#fff', padding: '0.75rem 1.5rem', borderRadius: '8px', textDecoration: 'none', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '0.5rem', transition: 'background 0.2s' }}>
+        <Link to={eligibleCount > 0 ? "/roadmap" : "/profile"} style={{ background: '#059669', color: '#fff', padding: '0.75rem 1.5rem', borderRadius: '8px', textDecoration: 'none', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '0.5rem', transition: 'background 0.2s' }}>
           {eligibleCount > 0 ? "Go to Roadmap" : "Update Profile"} <ArrowRight size={18} />
         </Link>
       </div>

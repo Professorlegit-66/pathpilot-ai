@@ -24,7 +24,7 @@ export default function CareerExplorer() {
       {/* Header */}
       <div>
         <h1 style={{ fontSize: '2rem', fontWeight: 'bold', margin: '0 0 0.5rem 0', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <Compass color="#38bdf8" /> Career & Opportunity Explorer
+          <Compass color="#34d399" /> Career & Opportunity Explorer
         </h1>
         <p style={{ color: '#94a3b8', margin: 0 }}>
           Explore professional pathways, required skills, and industry demands aligned with verified opportunity datasets.
@@ -34,7 +34,7 @@ export default function CareerExplorer() {
       {/* Content Section */}
       {loading ? (
         <div style={{ background: '#1e293b', padding: '3rem', borderRadius: '16px', border: '1px solid #334155', textAlign: 'center', color: '#94a3b8' }}>
-          <Loader2 className="animate-spin" size={32} style={{ margin: '0 auto 1rem auto' }} color="#38bdf8" />
+          <Loader2 className="animate-spin" size={32} style={{ margin: '0 auto 1rem auto' }} color="#34d399" />
           Loading verified career pathways...
         </div>
       ) : careers.length === 0 ? (
@@ -56,7 +56,7 @@ export default function CareerExplorer() {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                 <div>
                   <h3 style={{ margin: '0 0 0.25rem 0', fontSize: '1.25rem', color: '#f8fafc', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <Briefcase size={20} color="#38bdf8" /> {career.title || career.name}
+                    <Briefcase size={20} color="#34d399" /> {career.title || career.name}
                   </h3>
                   <p style={{ margin: 0, color: '#94a3b8', fontSize: '0.95rem', lineHeight: '1.5' }}>
                     {career.description || "Directly linked to software engineering and emerging technical domains."}
@@ -75,7 +75,7 @@ export default function CareerExplorer() {
                       <span 
                         key={sIdx} 
                         style={{ 
-                          background: '#1e293b', color: '#38bdf8', border: '1px solid #334155', 
+                          background: '#1e293b', color: '#34d399', border: '1px solid #334155', 
                           padding: '0.25rem 0.75rem', borderRadius: '6px', fontSize: '0.85rem', fontWeight: '500' 
                         }}
                       >

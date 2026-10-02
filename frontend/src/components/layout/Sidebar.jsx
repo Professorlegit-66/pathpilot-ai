@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom';
 import { LayoutDashboard, UserCheck, GraduationCap, Briefcase, Map, LogOut, Rocket } from 'lucide-react';
 
-export default function Sidebar() {
+export default function Sidebar({ onSignOut }) {
   const navItems = [
     { label: 'Overview', path: '/dashboard', icon: LayoutDashboard },
     { label: 'Student Profile', path: '/profile', icon: UserCheck },
@@ -57,7 +57,7 @@ export default function Sidebar() {
       {/* Footer / Sign Out */}
       <div style={{ padding: '1rem', borderTop: '1px solid #1e293b' }}>
         <button 
-          onClick={() => alert("Signed out successfully (Demo Mode)")}
+          onClick={onSignOut}
           style={{ 
             width: '100%', display: 'flex', alignItems: 'center', gap: '0.75rem', 
             padding: '0.75rem 1rem', background: 'transparent', border: '1px solid #334155', 

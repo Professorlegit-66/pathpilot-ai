@@ -37,6 +37,11 @@ export default function App() {
     setIsAuthenticated(true);
   };
 
+  const handleSignOut = () => {
+    setIsAuthenticated(false);
+    setMatchingResults(null);
+  };
+
   if (!isAuthenticated) {
     return <AuthPage onLogin={handleLogin} />;
   }
@@ -44,7 +49,7 @@ export default function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<MainLayout profile={studentProfile} />}>
+        <Route path="/" element={<MainLayout profile={studentProfile} onSignOut={handleSignOut} />}>
           <Route index element={<Navigate to="/dashboard" replace />} />
           <Route path="dashboard" element={<Dashboard profile={studentProfile} results={matchingResults} />} />
           <Route path="profile" element={<ProfilePage profile={studentProfile} setProfile={setStudentProfile} setResults={setMatchingResults} />} />

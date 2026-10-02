@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Rocket, Globe, ArrowRight } from 'lucide-react';
 
 export default function AuthPage({ onLogin }) {
-  const [isRegister, setIsRegister] = useState(true);
+  const [isRegister, setIsRegister] = useState(false);
   const [formData, setFormData] = useState({
     name: 'Talha Ahmad',
     email: 'talha@example.com',
@@ -48,15 +48,8 @@ export default function AuthPage({ onLogin }) {
           {isRegister ? 'Create your account and set your location. The system will adapt to your regional education system automatically.' : 'Welcome back! Enter your credentials to access your session.'}
         </p>
 
-        {/* Tab Switcher */}
+        {/* Tab Switcher - Sign In first, Register second */}
         <div style={{ display: 'flex', background: '#0f172a', padding: '0.25rem', borderRadius: '8px', marginBottom: '1.5rem' }}>
-          <button 
-            type="button" 
-            onClick={() => setIsRegister(true)}
-            style={{ flex: 1, background: isRegister ? '#1e293b' : 'transparent', color: isRegister ? '#fff' : '#94a3b8', border: 'none', padding: '0.5rem', borderRadius: '6px', fontWeight: '600', cursor: 'pointer' }}
-          >
-            Register
-          </button>
           <button 
             type="button" 
             onClick={() => setIsRegister(false)}
@@ -64,13 +57,24 @@ export default function AuthPage({ onLogin }) {
           >
             Sign In
           </button>
+          <button 
+            type="button" 
+            onClick={() => setIsRegister(true)}
+            style={{ flex: 1, background: isRegister ? '#1e293b' : 'transparent', color: isRegister ? '#fff' : '#94a3b8', border: 'none', padding: '0.5rem', borderRadius: '6px', fontWeight: '600', cursor: 'pointer' }}
+          >
+            Register
+          </button>
         </div>
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <div>
-            <label style={labelStyle}>Full Name</label>
-            <input type="text" name="name" value={formData.name} onChange={handleChange} style={inputStyle} required />
-          </div>
+          
+          {/* Full Name only shows during Register */}
+          {isRegister && (
+            <div>
+              <label style={labelStyle}>Full Name</label>
+              <input type="text" name="name" value={formData.name} onChange={handleChange} style={inputStyle} required />
+            </div>
+          )}
 
           <div>
             <label style={labelStyle}>Email Address</label>
@@ -82,6 +86,7 @@ export default function AuthPage({ onLogin }) {
             <input type="password" name="password" value={formData.password} onChange={handleChange} style={inputStyle} required />
           </div>
 
+          {/* Location details only show during Register */}
           {isRegister && (
             <>
               <div>

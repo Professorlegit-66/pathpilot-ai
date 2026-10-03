@@ -2,6 +2,7 @@ import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
+from routers import ai_routes, data_routes, auth_routes, profile_routes
 
 # Load environment variables
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -34,5 +35,6 @@ app.add_middleware(
 
 # Register all routers
 app.include_router(auth_routes.router)
+app.include_router(profile_routes.router)
 app.include_router(ai_routes.router)
 app.include_router(data_routes.router)

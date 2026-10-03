@@ -1,8 +1,11 @@
 import { useState } from 'react';
-import { Rocket, Mail, Lock, User, Globe, MapPin, ShieldCheck, ArrowLeft } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { Rocket, Mail, Lock, User, Globe, MapPin, ShieldCheck, ArrowLeft, AlertCircle } from 'lucide-react';
 
 export default function AuthPage({ onLogin }) {
+  const { login, register } = useAuth();
   const [isRegister, setIsRegister] = useState(false);
+  const [error, setError] = useState('');
   
   // Registration step state: 'form' or 'verify'
   const [regStep, setRegStep] = useState('form'); 
@@ -27,43 +30,62 @@ export default function AuthPage({ onLogin }) {
   // Step 1: Validate email format & trigger OTP generation/sending
   const handleRequestOtp = (e) => {
     e.preventDefault();
+    setError('');
     
-    // Basic real email validation check
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
-      alert("Please enter a valid email address.");
+      setError("Please enter a valid email address.");
       return;
     }
 
-    // Generate a mock 6-digit OTP (In production, this is handled by backend + email service like SendGrid/Resend)
+    // Generate a mock 6-digit OTP
     const randomOtp = Math.floor(100000 + Math.random() * 900000).toString();
     setMockSentOtp(randomOtp);
     
-    // For hackathon demo ease, alert the generated code so you can test it seamlessly
     alert(`[Demo Mode] Verification OTP sent to ${formData.email}\nYour OTP Code is: ${randomOtp}`);
     
     setRegStep('verify');
   };
 
-  // Step 2: Verify OTP and complete registration
-  const handleVerifyAndRegister = (e) => {
+  // Step 2: Verify OTP and complete registration in backend
+  const handleVerifyAndRegister = async (e) => {
     e.preventDefault();
+    setError('');
+
     if (enteredOtp !== mockSentOtp) {
-      alert("Invalid OTP code. Please check the code and try again.");
+      setError("Invalid OTP code. Please check the code and try again.");
       return;
     }
-    // Success! Proceed to log in session
-    onLogin(formData);
+
+    // Register user in SQLite database
+    const result = await register(formData.name, formData.email, formData.password);
+    
+    if (result.success) {
+      onLogin(formData);
+    } else {
+      setError(result.error);
+    }
   };
 
-  const handleSignIn = (e) => {
+  // Sign In using backend authentication
+  const handleSignIn = async (e) => {
     e.preventDefault();
+    setError('');
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
-      alert("Please enter a valid email address.");
+      setError("Please enter a valid email address.");
       return;
     }
-    onLogin(formData);
+
+    // Log user in and fetch JWT
+    const result = await login(formData.email, formData.password);
+    
+    if (result.success) {
+      onLogin(formData);
+    } else {
+      setError(result.error);
+    }
   };
 
   // Styling helpers
@@ -84,6 +106,14 @@ export default function AuthPage({ onLogin }) {
           <h1 style={{ fontSize: '1.6rem', fontWeight: 'bold', color: '#fff', margin: 0, letterSpacing: '-0.025em' }}>PathPilot AI</h1>
           <span style={{ fontSize: '0.65rem', background: '#05966933', color: '#34d399', padding: '0.1rem 0.4rem', borderRadius: '4px', fontWeight: '600', marginTop: '0.3rem' }}>GLOBAL OPPORTUNITY NAVIGATOR</span>
         </div>
+
+        {/* Error Message Display */}
+        {error && (
+          <div style={{ background: '#7f1d1d33', border: '1px solid #ef444455', color: '#fca5a5', padding: '0.75rem', borderRadius: '8px', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.25rem' }}>
+            <AlertCircle size={16} />
+            {error}
+          </div>
+        )}
 
         {/* --- VIEW A: SIGN IN --- */}
         {!isRegister && (
@@ -222,7 +252,7 @@ export default function AuthPage({ onLogin }) {
             {isRegister ? 'Already have an account? ' : "Don't have an account? "}
             <button 
               type="button" 
-              onClick={() => { setIsRegister(!isRegister); setRegStep('form'); }}
+              onClick={() => { setIsRegister(!isRegister); setRegStep('form'); setError(''); }}
               style={{ background: 'transparent', border: 'none', color: '#34d399', fontWeight: '600', cursor: 'pointer', padding: 0, fontSize: '0.85rem' }}
             >
               {isRegister ? 'Sign in' : 'Sign up'}

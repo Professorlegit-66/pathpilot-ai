@@ -1,75 +1,84 @@
-/* 1. Global Reset & Box Sizing */
-*, *::before, *::after {
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  html, body {
+    @apply bg-slate-100 text-slate-900 dark:bg-slate-900 dark:text-slate-100;
+    transition-property: background-color;
+    transition-duration: 300ms;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: default;
+  }
+
+  html {
+    color-scheme: light;
+  }
+  html.dark {
+    color-scheme: dark;
+  }
+
+  p, span, h1, h2, h3, h4, h5, h6, label {
+    caret-color: transparent;
+  }
+
+  img, h1, h2, h3, h4, h5, h6, button, svg {
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  button {
+    cursor: pointer;
+  }
+}
+
+.transition-colors,
+.transition-all {
+  transition-property: background-color, border-color, box-shadow, transform, opacity, width, height;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent; 
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgb(148 163 184 / 0.5); 
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(148 163 184 / 0.8); 
+}
+.dark ::-webkit-scrollbar-thumb {
+  background-color: rgb(71 85 105 / 0.6);
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(71 85 105 / 0.9);
+}
+
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-slide-in {
+  animation: fadeSlideIn 0.25s ease-out;
+}
+
+/* --- Fluid Responsive Layout Utilities --- */
+.fluid-page-container {
+  width: 100%;
+  max-width: 1450px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
   box-sizing: border-box;
 }
 
-html, body, #root {
-  margin: 0;
-  padding: 0;
+.fluid-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr));
+  gap: 1.5rem;
   width: 100%;
-  height: 100%;
-  overflow: hidden;
-  background-color: #070b14;
-  color: #f8fafc;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-}
-
-/* 2. Custom Dark Theme Scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-::-webkit-scrollbar-track {
-  background: #0f172a; 
-}
-::-webkit-scrollbar-thumb {
-  background: #334155; 
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #475569; 
-}
-
-/* 3. Interactive Card Hover Effects */
-.interactive-card {
-  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-}
-.interactive-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
-}
-
-/* 4. Global Button Polish */
-button {
-  transition: all 0.2s ease;
-}
-button:hover:not(:disabled) {
-  transform: translateY(-1px);
-  filter: brightness(1.15);
-}
-button:active:not(:disabled) {
-  transform: translateY(1px);
-}
-
-/* Enable smooth vertical scrolling while hiding scrollbars globally */
-html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  overflow-y: auto;
-  overflow-x: hidden;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none;  /* Internet Explorer and Edge */
-}
-
-html::-webkit-scrollbar, 
-body::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, and Opera */
-}
-
-/* Ensure app root allows full expansion and scrolling */
-#root {
-  min-height: 100%;
-  display: flex;
-  flex-direction: column;
 }

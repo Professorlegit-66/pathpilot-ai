@@ -12,6 +12,25 @@ import CareerCounselor from './pages/CareerCounselor';
 
 function AppContent() {
   const { token, logout } = useAuth();
+
+  // Automatically adjust application scale based on window size/resolution like StudyVault AI
+  useEffect(() => {
+    const updateAppScale = () => {
+      const height = window.innerHeight;
+      const width = window.innerWidth;
+      
+      let scale = height / 900; 
+      if (width < 1200) scale = width / 1440;
+      
+      const clampedScale = Math.min(Math.max(scale, 0.78), 1);
+      document.documentElement.style.fontSize = `${clampedScale * 100}%`;
+    };
+
+    updateAppScale();
+    window.addEventListener('resize', updateAppScale);
+    return () => window.removeEventListener('resize', updateAppScale);
+  }, []);
+
   const [studentProfile, setStudentProfile] = useState({
     name: '',
     country: 'Pakistan',

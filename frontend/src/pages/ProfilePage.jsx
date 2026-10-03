@@ -8,7 +8,6 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
   const navigate = useNavigate();
   const { token } = useAuth();
   
-  // Initialize form state matching backend database schema keys (desired_degree, budget)
   const [formData, setFormData] = useState(profile || {
     name: '',
     country: 'Pakistan',
@@ -39,7 +38,6 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
     setSuccessMsg('');
 
     try {
-      // 1. Send profile update to backend database for permanent persistence
       const saveRes = await fetch('http://127.0.0.1:8000/api/profile/', {
         method: 'POST',
         headers: { 
@@ -54,11 +52,8 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
       }
 
       const savedData = await saveRes.json();
-      
-      // 2. Update parent React state with the confirmed backend data
       setProfile(prev => ({ ...prev, ...savedData }));
       
-      // 3. Automatically re-run rule engine so recommendations update immediately
       const res = await fetch('http://127.0.0.1:8000/api/programs/match', {
         method: 'POST',
         headers: { 
@@ -122,7 +117,7 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
   };
 
   return (
-    <div style={{ maxWidth: '900px', width: '100%', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '2rem', paddingBottom: '4rem', boxSizing: 'border-box' }}>
+    <div className="fluid-page-container" style={{ paddingBottom: '4rem' }}>
       
       <div>
         <h1 style={{ fontSize: '2.2rem', fontWeight: 'bold', color: '#f8fafc', margin: '0 0 0.5rem 0' }}>
@@ -148,7 +143,7 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
             <h2 style={{ margin: 0, fontSize: '1.15rem', fontWeight: 'bold', color: '#f8fafc' }}>Location & Context</h2>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '1.25rem' }}>
+          <div className="fluid-grid">
             <div>
               <label style={labelStyle}>Full Name</label>
               <input 
@@ -200,7 +195,7 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
             <h2 style={{ margin: 0, fontSize: '1.15rem', fontWeight: 'bold', color: '#f8fafc' }}>Academic History (Pakistan System)</h2>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '1.25rem', marginBottom: '1.25rem' }}>
+          <div className="fluid-grid" style={{ marginBottom: '1.25rem' }}>
             <div>
               <label style={labelStyle}>Current Education Level</label>
               <CustomDropdown 
@@ -275,7 +270,7 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
             <h2 style={{ margin: 0, fontSize: '1.15rem', fontWeight: 'bold', color: '#f8fafc' }}>Targets & Financial Constraints</h2>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '1.25rem', marginBottom: '1.25rem' }}>
+          <div className="fluid-grid" style={{ marginBottom: '1.25rem' }}>
             <div>
               <label style={labelStyle}>Preferred Field of Study</label>
               <CustomDropdown 
@@ -323,7 +318,8 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
             justifyContent: 'center',
             gap: '0.5rem',
             boxShadow: '0 4px 14px rgba(5, 150, 105, 0.4)',
-            marginTop: '0.5rem'
+            marginTop: '0.5rem',
+            width: 'fit-content'
           }}
         >
           <Save size={18} /> {saving ? 'Saving to Database...' : 'Save Profile & Evaluate Programs'}
@@ -338,7 +334,7 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
           <h2 style={{ margin: 0, fontSize: '1.15rem', fontWeight: 'bold', color: '#f8fafc' }}>Danger Zone</h2>
         </div>
         <p style={{ color: '#94a3b8', fontSize: '0.9rem', margin: '0 0 1.25rem 0', lineHeight: '1.5' }}>
-          Permanently delete your account and remove all saved profile records and chat history from EduPath AI. This action cannot be undone.
+          Permanently delete your account and remove all saved profile records and chat history from PathPilot AI. This action cannot be undone.
         </p>
 
         {!showDeleteConfirm ? (

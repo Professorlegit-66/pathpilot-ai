@@ -61,7 +61,11 @@ export default function AuthPage({ onLogin }) {
     const result = await register(formData.name, formData.email, formData.password);
     
     if (result.success) {
-      onLogin(formData);
+      if (typeof onLogin === 'function') {
+        onLogin(formData);
+      } else {
+        window.location.reload();
+      }
     } else {
       setError(result.error);
     }
@@ -82,7 +86,11 @@ export default function AuthPage({ onLogin }) {
     const result = await login(formData.email, formData.password);
     
     if (result.success) {
-      onLogin(formData);
+      if (typeof onLogin === 'function') {
+        onLogin(formData);
+      } else {
+        window.location.reload();
+      }
     } else {
       setError(result.error);
     }

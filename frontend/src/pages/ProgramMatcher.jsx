@@ -1,17 +1,23 @@
 import { useState } from 'react';
-import { CheckCircle2, XCircle, AlertCircle, GraduationCap, Award, ExternalLink } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { CheckCircle2, XCircle, AlertCircle, GraduationCap, Award, RefreshCw, ArrowRight } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 export default function ProgramMatcher({ results, profile, setResults }) {
   const [loading, setLoading] = useState(false);
   const [filter, setFilter] = useState('ALL'); // ALL, ELIGIBLE, NOT_ELIGIBLE
+  const { token } = useAuth();
+  const navigate = useNavigate();
 
   const handleRecheck = async () => {
     setLoading(true);
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/eligibility', {
+      const response = await fetch('http://127.0.0.1:8000/api/programs/match', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify(profile)
       });
       const data = await response.json();
@@ -24,19 +30,25 @@ export default function ProgramMatcher({ results, profile, setResults }) {
     }
   };
 
-  const filteredResults = results?.filter(item => {
-    if (filter === 'ELIGIBLE') return item.eligibility_status.includes("Eligible");
-    if (filter === 'NOT_ELIGIBLE') return item.eligibility_status.includes("Not eligible");
+  // Normalize results to always be an array regardless of whether backend returns array or wrapper object
+  const rawList = Array.isArray(results) 
+    ? results 
+    : (results?.eligible_programs || results?.programs || []);
+
+  const filteredResults = rawList.filter(item => {
+    const status = item.eligibility_status || '';
+    if (filter === 'ELIGIBLE') return status.includes("Eligible");
+    if (filter === 'NOT_ELIGIBLE') return status.includes("Not eligible") || status.includes("Not Eligible");
     return true;
   });
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', maxWidth: '1200px', margin: '0 auto' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', width: '100%', maxWidth: '1200px', margin: '0 auto', boxSizing: 'border-box' }}>
       
       {/* Header & Controls */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
-          <h1 style={{ fontSize: '2rem', fontWeight: 'bold', margin: '0 0 0.5rem 0' }}>Program Matcher & Eligibility</h1>
+          <h1 style={{ fontSize: '2rem', fontWeight: 'bold', margin: '0 0 0.5rem 0', color: '#f8fafc' }}>Program Matcher & Eligibility</h1>
           <p style={{ color: '#94a3b8', margin: 0 }}>Deterministic evaluation of your credentials against verified institutional datasets.</p>
         </div>
 
@@ -44,15 +56,19 @@ export default function ProgramMatcher({ results, profile, setResults }) {
           <button 
             onClick={handleRecheck} 
             disabled={loading}
-            style={{ background: '#059669', color: '#fff', border: 'none', padding: '0.6rem 1.2rem', borderRadius: '8px', cursor: 'pointer', fontWeight: '600' }}
+            style={{ 
+              background: '#059669', color: '#fff', border: 'none', padding: '0.6rem 1.2rem', 
+              borderRadius: '8px', cursor: 'pointer', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '0.5rem' 
+            }}
           >
+            <RefreshCw size={14} className={loading ? "animate-spin" : ""} />
             {loading ? 'Evaluating...' : 'Re-Run Rule Engine'}
           </button>
         </div>
       </div>
 
       {/* Filter Tabs */}
-      {results && results.length > 0 && (
+      {rawList.length > 0 && (
         <div style={{ display: 'flex', gap: '0.5rem', borderBottom: '1px solid #334155', paddingBottom: '1rem' }}>
           {['ALL', 'ELIGIBLE', 'NOT_ELIGIBLE'].map((tab) => (
             <button
@@ -69,14 +85,14 @@ export default function ProgramMatcher({ results, profile, setResults }) {
                 fontSize: '0.9rem'
               }}
             >
-              {tab === 'ALL' ? 'All Programs' : tab === 'ELIGIBLE' ? 'Eligible Only' : 'Not Eligible'}
+              {tab === 'ALL' ? `All Programs (${rawList.length})` : tab === 'ELIGIBLE' ? 'Eligible Only' : 'Not Eligible'}
             </button>
           ))}
         </div>
       )}
 
       {/* Results View */}
-      {!results ? (
+      {rawList.length === 0 ? (
         <div style={{ background: '#1e293b', padding: '3rem', borderRadius: '16px', border: '1px solid #334155', textAlign: 'center' }}>
           <GraduationCap size={48} color="#64748b" style={{ marginBottom: '1rem' }} />
           <h3 style={{ margin: '0 0 0.5rem 0', color: '#f8fafc' }}>No Eligibility Results Found</h3>
@@ -92,8 +108,9 @@ export default function ProgramMatcher({ results, profile, setResults }) {
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
           {filteredResults.map((item, index) => {
-            const isEligible = item.eligibility_status.includes("Eligible");
-            const isNotEligible = item.eligibility_status.includes("Not eligible");
+            const status = item.eligibility_status || '';
+            const isEligible = status.includes("Eligible");
+            const isNotEligible = status.includes("Not eligible") || status.includes("Not Eligible");
 
             return (
               <div 
@@ -128,21 +145,36 @@ export default function ProgramMatcher({ results, profile, setResults }) {
                 </div>
 
                 {/* Verdict Box */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  {isEligible && <CheckCircle2 color="#22c55e" size={20} />}
-                  {isNotEligible && <XCircle color="#ef4444" size={20} />}
-                  {!isEligible && !isNotEligible && <AlertCircle color="#f59e0b" size={20} />}
-                  <span style={{ fontWeight: '600', color: isEligible ? '#34d399' : isNotEligible ? '#fca5a5' : '#fbbf24' }}>
-                    {item.eligibility_status}
-                  </span>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    {isEligible && <CheckCircle2 color="#22c55e" size={20} />}
+                    {isNotEligible && <XCircle color="#ef4444" size={20} />}
+                    {!isEligible && !isNotEligible && <AlertCircle color="#f59e0b" size={20} />}
+                    <span style={{ fontWeight: '600', color: isEligible ? '#34d399' : isNotEligible ? '#fca5a5' : '#fbbf24' }}>
+                      {item.eligibility_status}
+                    </span>
+                  </div>
+
+                  <button 
+                    onClick={() => navigate('/roadmap')}
+                    style={{
+                      background: '#0f172a', border: '1px solid #334155', color: '#38bdf8',
+                      padding: '0.5rem 1rem', borderRadius: '8px', fontSize: '0.85rem', fontWeight: '600',
+                      cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem', transition: 'background 0.2s'
+                    }}
+                  >
+                    View Roadmap <ArrowRight size={14} />
+                  </button>
                 </div>
 
                 {/* Rule Justification Breakdown */}
-                <ul style={{ margin: 0, paddingLeft: '1.2rem', color: '#cbd5e1', fontSize: '0.9rem', display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
-                  {item.reasoning.map((reason, i) => (
-                    <li key={i}>{reason}</li>
-                  ))}
-                </ul>
+                {item.reasoning && item.reasoning.length > 0 && (
+                  <ul style={{ margin: 0, paddingLeft: '1.2rem', color: '#cbd5e1', fontSize: '0.9rem', display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
+                    {item.reasoning.map((reason, i) => (
+                      <li key={i}>{reason}</li>
+                    ))}
+                  </ul>
+                )}
 
                 {/* Financial Aid Sub-section */}
                 {item.available_scholarships && item.available_scholarships.length > 0 && (

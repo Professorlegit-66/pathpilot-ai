@@ -3,16 +3,13 @@ from sqlalchemy.orm import Session
 import bcrypt
 import jwt
 from datetime import datetime, timedelta
-import os
 
 from database import get_db
 import models
 from schemas import UserCreate, UserLogin, Token
+from config import SECRET_KEY, ALGORITHM  # <-- Import centralized config
 
 router = APIRouter(prefix="/api/auth", tags=["Authentication"])
-
-SECRET_KEY = os.getenv("JWT_SECRET", "super-secret-hackathon-key")
-ALGORITHM = "HS256"
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     try:
@@ -31,7 +28,7 @@ def get_password_hash(password: str) -> str:
 
 def create_access_token(data: dict):
     to_encode = data.copy()
-    expire = datetime.utcnow() + timedelta(days=7) # Stays logged in for 7 days
+    expire = datetime.utcnow() + timedelta(days=7)
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 

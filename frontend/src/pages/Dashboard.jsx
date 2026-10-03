@@ -2,10 +2,14 @@ import { Link } from 'react-router-dom';
 import { GraduationCap, Briefcase, Award, Map, ArrowRight, Zap } from 'lucide-react';
 
 export default function Dashboard({ profile, results }) {
-  // Calculate quick stats from the deterministic engine results
-  const eligibleCount = results?.filter(r => r.eligibility_status.includes("Eligible")).length || 0;
-  const totalScholarships = results?.reduce((acc, curr) => acc + (curr.available_scholarships?.length || 0), 0) || 0;
-  const roadmapGenerated = false; // We can wire this to state later
+  // Normalize results to always be an array regardless of whether backend returns array or wrapper object
+  const rawList = Array.isArray(results) 
+    ? results 
+    : (results?.eligible_programs || results?.programs || []);
+
+  const eligibleCount = rawList.filter(r => (r.eligibility_status || '').includes("Eligible")).length;
+  const totalScholarships = rawList.reduce((acc, curr) => acc + (curr.available_scholarships?.length || 0), 0);
+  const roadmapGenerated = false; 
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
@@ -13,10 +17,10 @@ export default function Dashboard({ profile, results }) {
       {/* Welcome Header */}
       <div>
         <h1 style={{ fontSize: '2rem', fontWeight: 'bold', margin: '0 0 0.5rem 0' }}>
-          Welcome back, {profile.name.split(' ')[0]} 👋
+          Welcome back, {(profile?.name || 'Student').split(' ')[0]} 👋
         </h1>
         <p style={{ color: '#94a3b8', margin: 0, fontSize: '1.1rem' }}>
-          Here is the current outlook for your journey into {profile.preferred_field}.
+          Here is the current outlook for your journey into {profile?.preferred_field || 'Computer Science'}.
         </p>
       </div>
 

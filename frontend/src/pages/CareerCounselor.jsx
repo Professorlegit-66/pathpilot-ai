@@ -4,7 +4,9 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
 export default function CareerCounselor({ profile }) {
-  const STORAGE_KEY = `pathpilot_chat_${profile?.email || 'guest'}`;
+  // Use a stable storage key based on email, falling back safely
+  const userEmail = profile?.email || 'guest';
+  const STORAGE_KEY = `pathpilot_chat_${userEmail}`;
 
   const [messages, setMessages] = useState(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
@@ -14,7 +16,7 @@ export default function CareerCounselor({ profile }) {
     return [
       { 
         sender: 'bot', 
-        text: `Hello **${profile.name || 'Student'}**! I am your AI Career Counselor. Ask me anything about career tracks in **${profile.preferred_field || 'Computer Science'}**, required technical skills, or guidance for your path in ${profile.city || 'Islamabad'}, ${profile.country || 'Pakistan'}.` 
+        text: `Hello **${profile?.name || 'Student'}**! I am your AI Career Counselor. Ask me anything about career tracks in **${profile?.preferred_field || 'Computer Science'}**, required technical skills, or guidance for your path in ${profile?.city || 'Kohat'}, ${profile?.country || 'Pakistan'}.` 
       }
     ];
   });
@@ -22,15 +24,28 @@ export default function CareerCounselor({ profile }) {
   const [inputQuery, setInputQuery] = useState('');
   const [loading, setLoading] = useState(false);
 
+  // Update initial greeting if profile loads after initial mount and chat is still at default
+  useEffect(() => {
+    if (profile?.name && messages.length === 1 && messages[0].sender === 'bot' && messages[0].text.includes('Hello **Student**')) {
+      const updatedWelcome = [{
+        sender: 'bot',
+        text: `Hello **${profile.name}**! I am your AI Career Counselor. Ask me anything about career tracks in **${profile?.preferred_field || 'Computer Science'}**, required technical skills, or guidance for your path in ${profile?.city || 'Kohat'}, ${profile?.country || 'Pakistan'}.`
+      }];
+      setMessages(updatedWelcome);
+    }
+  }, [profile]);
+
   // Save messages to localStorage on change
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
-  }, [messages, STORAGE_KEY]);
+    if (userEmail !== 'guest') {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
+    }
+  }, [messages, STORAGE_KEY, userEmail]);
 
   const handleClearChat = () => {
     const defaultMsg = [{ 
       sender: 'bot', 
-      text: `Hello **${profile.name || 'Student'}**! Chat history cleared. How can I assist you with your career path today?` 
+      text: `Hello **${profile?.name || 'Student'}**! How can I assist you with your career path today?` 
     }];
     setMessages(defaultMsg);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultMsg));
@@ -61,17 +76,20 @@ export default function CareerCounselor({ profile }) {
     }
   };
 
-  // Helper to strip out unwanted HTML <br> tags returned by LLMs
   const cleanMarkdown = (text) => {
     if (!text) return '';
-    return text.replace(/<br\s*\/?>/gi, '\n\n');
+    let cleaned = text.replace(/<br\s*\/?>/gi, '\n');
+    cleaned = cleaned.replace(/<\s*li[^>]*>(.*?)<\s*\/\s*li\s*>/gi, '• $1<br/>');
+    cleaned = cleaned.replace(/<\s*\/?\s*ul[^>]*>/gi, '');
+    cleaned = cleaned.replace(/<\s*\/?\s*ol[^>]*>/gi, '');
+    return cleaned;
   };
 
   return (
-    <div style={{ maxWidth: '950px', margin: '0 auto', display: 'flex', flexDirection: 'column', height: 'calc(100vh - 100px)' }}>
+    <div style={{ width: '100%', height: 'calc(100vh - 110px)', margin: '0 auto', padding: '0 1.5rem', display: 'flex', flexDirection: 'column', boxSizing: 'border-box', overflow: 'hidden' }}>
       
       {/* Header with Clear Chat Button */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '1.25rem' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '1rem', flexShrink: 0 }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#34d399', fontSize: '0.8rem', fontWeight: '600', marginBottom: '0.2rem' }}>
             <Sparkles size={16} /> MULTI-AGENT ADVISORY SYSTEM
@@ -99,7 +117,7 @@ export default function CareerCounselor({ profile }) {
       </div>
 
       {/* Chat Container */}
-      <div style={{ flex: 1, background: '#090d16', border: '1px solid #1e293b', borderRadius: '16px', display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.5)' }}>
+      <div style={{ flex: 1, background: '#090d16', border: '1px solid #1e293b', borderRadius: '16px', display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.5)', minHeight: 0 }}>
         
         {/* Message Feed */}
         <div style={{ flex: 1, overflowY: 'auto', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -165,7 +183,7 @@ export default function CareerCounselor({ profile }) {
         </div>
 
         {/* Input Bar */}
-        <form onSubmit={handleSendMessage} style={{ padding: '1rem 1.25rem', background: '#0f172a', borderTop: '1px solid #1e293b', display: 'flex', gap: '0.75rem' }}>
+        <form onSubmit={handleSendMessage} style={{ padding: '1rem 1.25rem', background: '#0f172a', borderTop: '1px solid #1e293b', display: 'flex', gap: '0.75rem', flexShrink: 0 }}>
           <input 
             type="text" 
             value={inputQuery}

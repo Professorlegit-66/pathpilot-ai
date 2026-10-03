@@ -28,10 +28,11 @@ function AppContent() {
 
   const [matchingResults, setMatchingResults] = useState(null);
 
-  // Automatically fetch saved profile from SQLite database on login or refresh
+  // Automatically fetch saved profile and run program match on login or refresh
   useEffect(() => {
     if (!token) return;
 
+    // 1. Fetch Profile
     fetch('http://127.0.0.1:8000/api/profile/', {
       headers: { 'Authorization': `Bearer ${token}` }
     })
@@ -39,12 +40,22 @@ function AppContent() {
       .then(data => {
         if (data && Object.keys(data).length > 0) {
           setStudentProfile(prev => ({ ...prev, ...data }));
+          
+          // 2. Automatically compute matching results based on restored profile
+          return fetch('http://127.0.0.1:8000/api/programs/match', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+            body: JSON.stringify(data)
+          });
         }
       })
-      .catch(err => console.error("Failed to load profile from database:", err));
+      .then(res => res ? res.json() : null)
+      .then(matchData => {
+        if (matchData) setMatchingResults(matchData);
+      })
+      .catch(err => console.error("Failed to sync profile/matches:", err));
   }, [token]);
 
-  // If user is not authenticated, show the secure AuthPage
   if (!token) {
     return <AuthPage />;
   }
@@ -58,7 +69,7 @@ function AppContent() {
           <Route path="profile" element={<ProfilePage profile={studentProfile} setProfile={setStudentProfile} setResults={setMatchingResults} />} />
           <Route path="programs" element={<ProgramMatcher results={matchingResults} profile={studentProfile} setResults={setMatchingResults} />} />
           <Route path="careers" element={<CareerExplorer />} />
-          <Route path="roadmap" element={<RoadmapView profile={studentProfile} results={matchingResults} />} />
+          <Route path="roadmap" element={<RoadmapView profile={studentProfile} results={matchingResults} setResults={setMatchingResults} />} />
           <Route path="counselor" element={<CareerCounselor profile={studentProfile} />} />
         </Route>
       </Routes>

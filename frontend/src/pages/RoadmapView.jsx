@@ -1,10 +1,30 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Map, AlertCircle, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { Map, AlertCircle, ArrowRight, CheckCircle2, Loader2 } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
-export default function RoadmapView({ profile, results }) {
+export default function RoadmapView({ profile, results, setResults }) {
   const navigate = useNavigate();
+  const { token } = useAuth();
+  const [loading, setLoading] = useState(false);
 
-  // If no program match results exist in state, show an inline professional warning card instead of a native alert popup
+  const handleAutoEvaluate = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch('http://127.0.0.1:8000/api/programs/match', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify(profile)
+      });
+      const data = await res.json();
+      setResults(data);
+    } catch (err) {
+      console.error("Auto-evaluation failed", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (!results || !results.eligible_programs || results.eligible_programs.length === 0) {
     return (
       <div style={{ maxWidth: '800px', margin: '4rem auto', padding: '2.5rem', background: '#1e293b', border: '1px solid #334155', borderRadius: '16px', textAlign: 'center', boxSizing: 'border-box' }}>
@@ -13,27 +33,28 @@ export default function RoadmapView({ profile, results }) {
         </div>
         <h2 style={{ fontSize: '1.4rem', color: '#f8fafc', marginBottom: '0.75rem' }}>Eligibility Evaluation Required</h2>
         <p style={{ color: '#94a3b8', fontSize: '0.95rem', lineHeight: '1.5', maxWidth: '500px', margin: '0 auto 1.5rem auto' }}>
-          Please evaluate your program eligibility first in the University Matcher before generating your customized AI career roadmap.
+          Your program eligibility needs to be verified before generating your customized AI career roadmap.
         </p>
-        <button 
-          onClick={() => navigate('/programs')}
-          style={{
-            background: '#059669', color: '#fff', border: 'none', padding: '0.75rem 1.5rem',
-            borderRadius: '8px', fontWeight: '600', fontSize: '0.95rem', cursor: 'pointer',
-            display: 'inline-flex', alignItems: 'center', gap: '0.5rem', boxShadow: '0 4px 12px rgba(5, 150, 105, 0.3)',
-            transition: 'background 0.2s'
-          }}
-        >
-          Go to University Matcher <ArrowRight size={16} />
-        </button>
+        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+          <button 
+            onClick={handleAutoEvaluate}
+            disabled={loading}
+            style={{
+              background: '#059669', color: '#fff', border: 'none', padding: '0.75rem 1.5rem',
+              borderRadius: '8px', fontWeight: '600', fontSize: '0.95rem', cursor: 'pointer',
+              display: 'inline-flex', alignItems: 'center', gap: '0.5rem', boxShadow: '0 4px 12px rgba(5, 150, 105, 0.3)'
+            }}
+          >
+            {loading ? <Loader2 size={16} className="animate-spin" /> : null}
+            Auto-Evaluate & Generate Roadmap <ArrowRight size={16} />
+          </button>
+        </div>
       </div>
     );
   }
 
   return (
     <div style={{ maxWidth: '1000px', width: '100%', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '1.5rem', boxSizing: 'border-box' }}>
-      
-      {/* Header */}
       <div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#34d399', fontSize: '0.8rem', fontWeight: '600', marginBottom: '0.2rem' }}>
 
@@ -46,7 +67,6 @@ GROUNDED ACTION PLAN
         </p>
       </div>
 
-      {/* Success Badge */}
       <div style={{ background: '#064e3b33', border: '1px solid #05966966', padding: '1rem 1.25rem', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
         <CheckCircle2 size={20} color="#34d399" />
         <span style={{ color: '#34d399', fontSize: '0.9rem', fontWeight: '500' }}>
@@ -54,7 +74,6 @@ GROUNDED ACTION PLAN
         </span>
       </div>
 
-      {/* Roadmap Content Card */}
       <div style={{ background: '#1e293b', border: '1px solid #334155', borderRadius: '16px', padding: '2rem', boxSizing: 'border-box' }}>
         <h3 style={{ color: '#38bdf8', fontSize: '1.15rem', marginTop: 0, marginBottom: '0.75rem' }}>Career Alignment</h3>
         <p style={{ color: '#cbd5e1', fontSize: '0.95rem', lineHeight: '1.6', marginBottom: '1.5rem' }}>
@@ -70,7 +89,6 @@ GROUNDED ACTION PLAN
           ))}
         </ul>
       </div>
-
     </div>
   );
 }

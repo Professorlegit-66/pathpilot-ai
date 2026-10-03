@@ -50,3 +50,26 @@ button:hover:not(:disabled) {
 button:active:not(:disabled) {
   transform: translateY(1px);
 }
+
+/* Enable smooth vertical scrolling while hiding scrollbars globally */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* Internet Explorer and Edge */
+}
+
+html::-webkit-scrollbar, 
+body::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, and Opera */
+}
+
+/* Ensure app root allows full expansion and scrolling */
+#root {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}

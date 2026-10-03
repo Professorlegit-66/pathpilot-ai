@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Send, Bot, User, Sparkles, Trash2, Loader2 } from 'lucide-react';
+import { Send, Bot, User, Sparkles, Trash2, Loader2, MessageSquare } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
@@ -8,30 +8,24 @@ export default function CareerCounselor({ profile }) {
   const userEmail = profile?.email || 'guest';
   const STORAGE_KEY = `pathpilot_chat_${userEmail}`;
 
+  // PRD Rule 18: Specific Counselor Introduction
+  const getGreeting = () => `Hi! I already have your profile, so I can help you explore careers and education options based on your information. \n\nYou can ask me about matching careers, program eligibility, or financial aid.`;
+
   const [messages, setMessages] = useState(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
       try { return JSON.parse(saved); } catch (e) { /* fallback */ }
     }
-    return [
-      { 
-        sender: 'bot', 
-        text: `Hello **${profile?.name || 'Student'}**! I am your AI Career Counselor. Ask me anything about career tracks in **${profile?.preferred_field || 'Computer Science'}**, required technical skills, or guidance for your path in ${profile?.city || 'Kohat'}, ${profile?.country || 'Pakistan'}.` 
-      }
-    ];
+    return [{ sender: 'bot', text: getGreeting() }];
   });
 
   const [inputQuery, setInputQuery] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // Update initial greeting if profile loads after initial mount and chat is still at default
+  // Update initial greeting if profile loads after initial mount
   useEffect(() => {
-    if (profile?.name && messages.length === 1 && messages[0].sender === 'bot' && messages[0].text.includes('Hello **Student**')) {
-      const updatedWelcome = [{
-        sender: 'bot',
-        text: `Hello **${profile.name}**! I am your AI Career Counselor. Ask me anything about career tracks in **${profile?.preferred_field || 'Computer Science'}**, required technical skills, or guidance for your path in ${profile?.city || 'Kohat'}, ${profile?.country || 'Pakistan'}.`
-      }];
-      setMessages(updatedWelcome);
+    if (profile?.name && messages.length === 1 && messages[0].sender === 'bot') {
+      setMessages([{ sender: 'bot', text: getGreeting() }]);
     }
   }, [profile]);
 
@@ -43,19 +37,16 @@ export default function CareerCounselor({ profile }) {
   }, [messages, STORAGE_KEY, userEmail]);
 
   const handleClearChat = () => {
-    const defaultMsg = [{ 
-      sender: 'bot', 
-      text: `Hello **${profile?.name || 'Student'}**! How can I assist you with your career path today?` 
-    }];
+    const defaultMsg = [{ sender: 'bot', text: getGreeting() }];
     setMessages(defaultMsg);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultMsg));
   };
 
-  const handleSendMessage = async (e) => {
-    e.preventDefault();
-    if (!inputQuery.trim() || loading) return;
+  const handleSendMessage = async (e, overrideText = null) => {
+    if (e) e.preventDefault();
+    const userMsg = overrideText || inputQuery;
+    if (!userMsg.trim() || loading) return;
 
-    const userMsg = inputQuery;
     setInputQuery('');
     setMessages(prev => [...prev, { sender: 'user', text: userMsg }]);
     setLoading(true);
@@ -63,7 +54,10 @@ export default function CareerCounselor({ profile }) {
     try {
       const res = await fetch('http://127.0.0.1:8000/api/counselor/chat', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json' 
+          // Note: Add Authorization header here if your backend requires it
+        },
         body: JSON.stringify({ profile, query: userMsg })
       });
       const data = await res.json();
@@ -85,6 +79,15 @@ export default function CareerCounselor({ profile }) {
     return cleaned;
   };
 
+  // PRD Rule 19: Counselor Quick Prompts
+  const quickPrompts = [
+    "What careers match my profile?",
+    "Which programs fit my interests?",
+    "Am I eligible for these programs?",
+    "What financial-aid options are available?",
+    "Explain my roadmap"
+  ];
+
   return (
     <div style={{ width: '100%', height: 'calc(100vh - 110px)', margin: '0 auto', padding: '0 1.5rem', display: 'flex', flexDirection: 'column', boxSizing: 'border-box', overflow: 'hidden' }}>
       
@@ -96,7 +99,7 @@ export default function CareerCounselor({ profile }) {
           </div>
           <h1 style={{ fontSize: '1.6rem', fontWeight: 'bold', color: '#fff', margin: 0 }}>AI Career Counselor</h1>
           <p style={{ color: '#94a3b8', fontSize: '0.85rem', marginTop: '0.2rem' }}>
-            Interactive consultation with full markdown, list, and table rendering support.
+            Interactive consultation grounded in your verified academic profile.
           </p>
         </div>
 
@@ -181,6 +184,28 @@ export default function CareerCounselor({ profile }) {
             </div>
           )}
         </div>
+
+        {/* Quick Prompts (Only show at the beginning of conversation) */}
+        {messages.length <= 2 && !loading && (
+          <div style={{ padding: '0.75rem 1.25rem', display: 'flex', gap: '0.5rem', overflowX: 'auto', flexWrap: 'nowrap', borderTop: '1px solid #1e293b', background: '#0f172a' }}>
+            {quickPrompts.map((prompt, i) => (
+              <button 
+                key={i}
+                onClick={() => handleSendMessage(null, prompt)}
+                style={{ 
+                  background: '#1e293b', color: '#38bdf8', border: '1px solid #334155', 
+                  padding: '0.5rem 1rem', borderRadius: '20px', fontSize: '0.85rem', 
+                  whiteSpace: 'nowrap', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem',
+                  transition: 'background 0.2s'
+                }}
+                onMouseEnter={e => e.currentTarget.style.background = '#334155'}
+                onMouseLeave={e => e.currentTarget.style.background = '#1e293b'}
+              >
+                <MessageSquare size={14} /> {prompt}
+              </button>
+            ))}
+          </div>
+        )}
 
         {/* Input Bar */}
         <form onSubmit={handleSendMessage} style={{ padding: '1rem 1.25rem', background: '#0f172a', borderTop: '1px solid #1e293b', display: 'flex', gap: '0.75rem', flexShrink: 0 }}>

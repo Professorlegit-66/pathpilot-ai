@@ -1,17 +1,40 @@
-import { useState } from 'react';
-import { Send, Bot, User, Sparkles } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Send, Bot, User, Sparkles, Trash2, Loader2 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
 export default function CareerCounselor({ profile }) {
-  const [messages, setMessages] = useState([
-    { 
-      sender: 'bot', 
-      text: `Hello **${profile.name || 'Student'}**! I am your AI Career Counselor. Ask me anything about career tracks in **${profile.preferred_field}**, required technical skills, or guidance for your path in ${profile.city}, ${profile.country}.` 
+  const STORAGE_KEY = `pathpilot_chat_${profile?.email || 'guest'}`;
+
+  const [messages, setMessages] = useState(() => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      try { return JSON.parse(saved); } catch (e) { /* fallback */ }
     }
-  ]);
+    return [
+      { 
+        sender: 'bot', 
+        text: `Hello **${profile.name || 'Student'}**! I am your AI Career Counselor. Ask me anything about career tracks in **${profile.preferred_field || 'Computer Science'}**, required technical skills, or guidance for your path in ${profile.city || 'Islamabad'}, ${profile.country || 'Pakistan'}.` 
+      }
+    ];
+  });
+
   const [inputQuery, setInputQuery] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // Save messages to localStorage on change
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
+  }, [messages, STORAGE_KEY]);
+
+  const handleClearChat = () => {
+    const defaultMsg = [{ 
+      sender: 'bot', 
+      text: `Hello **${profile.name || 'Student'}**! Chat history cleared. How can I assist you with your career path today?` 
+    }];
+    setMessages(defaultMsg);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultMsg));
+  };
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
@@ -38,18 +61,41 @@ export default function CareerCounselor({ profile }) {
     }
   };
 
+  // Helper to strip out unwanted HTML <br> tags returned by LLMs
+  const cleanMarkdown = (text) => {
+    if (!text) return '';
+    return text.replace(/<br\s*\/?>/gi, '\n\n');
+  };
+
   return (
     <div style={{ maxWidth: '950px', margin: '0 auto', display: 'flex', flexDirection: 'column', height: 'calc(100vh - 100px)' }}>
       
-      {/* Header */}
-      <div style={{ marginBottom: '1.25rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#34d399', fontSize: '0.8rem', fontWeight: '600', marginBottom: '0.2rem' }}>
-          <Sparkles size={16} /> MULTI-AGENT ADVISORY SYSTEM
+      {/* Header with Clear Chat Button */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '1.25rem' }}>
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#34d399', fontSize: '0.8rem', fontWeight: '600', marginBottom: '0.2rem' }}>
+            <Sparkles size={16} /> MULTI-AGENT ADVISORY SYSTEM
+          </div>
+          <h1 style={{ fontSize: '1.6rem', fontWeight: 'bold', color: '#fff', margin: 0 }}>AI Career Counselor</h1>
+          <p style={{ color: '#94a3b8', fontSize: '0.85rem', marginTop: '0.2rem' }}>
+            Interactive consultation with full markdown, list, and table rendering support.
+          </p>
         </div>
-        <h1 style={{ fontSize: '1.6rem', fontWeight: 'bold', color: '#fff', margin: 0 }}>AI Career Counselor</h1>
-        <p style={{ color: '#94a3b8', fontSize: '0.85rem', marginTop: '0.2rem' }}>
-          Interactive consultation with full markdown, list, and table rendering support.
-        </p>
+
+        <button 
+          onClick={handleClearChat}
+          title="Clear Conversation"
+          style={{
+            background: '#1e293b', border: '1px solid #334155', color: '#f87171',
+            padding: '0.5rem 0.85rem', borderRadius: '8px', cursor: 'pointer',
+            display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8rem', fontWeight: '600',
+            transition: 'background 0.2s'
+          }}
+          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#7f1d1d33'}
+          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1e293b'}
+        >
+          <Trash2 size={14} /> Clear Chat
+        </button>
       </div>
 
       {/* Chat Container */}
@@ -89,7 +135,7 @@ export default function CareerCounselor({ profile }) {
                         li: ({node, ...props}) => <li style={{ marginBottom: '0.25rem' }} {...props} />
                       }}
                     >
-                      {msg.text}
+                      {cleanMarkdown(msg.text)}
                     </ReactMarkdown>
                   </div>
                 ) : (
@@ -106,11 +152,12 @@ export default function CareerCounselor({ profile }) {
           ))}
 
           {loading && (
-            <div style={{ display: 'flex', gap: '0.75rem', alignSelf: 'flex-start' }}>
+            <div style={{ display: 'flex', gap: '0.75rem', alignSelf: 'flex-start', alignItems: 'center' }}>
               <div style={{ background: '#059669', width: '32px', height: '32px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Bot size={18} color="#fff" />
               </div>
-              <div style={{ background: '#1e293b', color: '#94a3b8', padding: '0.9rem 1.15rem', borderRadius: '12px', fontSize: '0.9rem' }}>
+              <div style={{ background: '#1e293b', color: '#94a3b8', padding: '0.9rem 1.15rem', borderRadius: '12px', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                <Loader2 size={16} className="animate-spin" color="#34d399" />
                 Counselor is formulating advice...
               </div>
             </div>
@@ -128,7 +175,8 @@ export default function CareerCounselor({ profile }) {
           />
           <button 
             type="submit" 
-            style={{ background: 'linear-gradient(135deg, #059669 0%, #047857 100%)', color: '#fff', border: 'none', padding: '0 1.25rem', borderRadius: '10px', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', boxShadow: '0 4px 12px rgba(5, 150, 105, 0.3)' }}
+            disabled={loading}
+            style={{ background: 'linear-gradient(135deg, #059669 0%, #047857 100%)', color: '#fff', border: 'none', padding: '0 1.25rem', borderRadius: '10px', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', boxShadow: '0 4px 12px rgba(5, 150, 105, 0.3)', opacity: loading ? 0.7 : 1 }}
           >
             <Send size={16} /> Send
           </button>

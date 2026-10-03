@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { Save, Loader2, BookOpen, Target, Globe } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext'; // Added AuthContext import
 
 export default function ProfilePage({ profile, setProfile, setResults }) {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { token } = useAuth(); // Retrieve JWT token
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -37,17 +39,37 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
     setLoading(true);
     
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/eligibility', {
+      // 1. Securely save profile data to the SQLite database
+      if (token) {
+        const saveResponse = await fetch('http://127.0.0.1:8000/api/profile/', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}` 
+          },
+          body: JSON.stringify(profile)
+        });
+        
+        if (!saveResponse.ok) {
+          console.warn("Failed to save profile to database, but continuing to evaluation...");
+        }
+      }
+
+      // 2. Trigger the existing eligibility rule engine
+      const evalResponse = await fetch('http://127.0.0.1:8000/api/eligibility', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(profile)
       });
-      const data = await response.json();
+      
+      if (!evalResponse.ok) throw new Error("Eligibility engine failed");
+
+      const data = await evalResponse.json();
       setResults(data);
       navigate('/programs');
     } catch (error) {
       console.error("API Error:", error);
-      alert("Could not connect to the eligibility engine.");
+      alert("Could not process your request. Please check your connection.");
     } finally {
       setLoading(false);
     }

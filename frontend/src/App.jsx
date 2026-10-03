@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import MainLayout from './components/layout/MainLayout';
 import Dashboard from './pages/Dashboard';
 import ProfilePage from './pages/ProfilePage';
@@ -9,8 +10,8 @@ import RoadmapView from './pages/RoadmapView';
 import AuthPage from './pages/AuthPage';
 import CareerCounselor from './pages/CareerCounselor';
 
-export default function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+function AppContent() {
+  const { token, logout } = useAuth();
   const [studentProfile, setStudentProfile] = useState({
     name: '',
     country: 'Pakistan',
@@ -27,30 +28,31 @@ export default function App() {
 
   const [matchingResults, setMatchingResults] = useState(null);
 
-  const handleLogin = (initialData) => {
-    setStudentProfile(prev => ({
-      ...prev,
-      name: initialData.name,
-      country: initialData.country,
-      region: initialData.region,
-      city: initialData.city
-    }));
-    setIsAuthenticated(true);
-  };
+  // Automatically fetch saved profile from SQLite database on login or refresh
+  useEffect(() => {
+    if (!token) return;
 
-  const handleSignOut = () => {
-    setIsAuthenticated(false);
-    setMatchingResults(null);
-  };
+    fetch('http://127.0.0.1:8000/api/profile/', {
+      headers: { 'Authorization': `Bearer ${token}` }
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data && Object.keys(data).length > 0) {
+          setStudentProfile(prev => ({ ...prev, ...data }));
+        }
+      })
+      .catch(err => console.error("Failed to load profile from database:", err));
+  }, [token]);
 
-  if (!isAuthenticated) {
-    return <AuthPage onLogin={handleLogin} />;
+  // If user is not authenticated, show the secure AuthPage
+  if (!token) {
+    return <AuthPage />;
   }
 
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<MainLayout profile={studentProfile} onSignOut={handleSignOut} />}>
+        <Route path="/" element={<MainLayout profile={studentProfile} onSignOut={logout} />}>
           <Route index element={<Navigate to="/dashboard" replace />} />
           <Route path="dashboard" element={<Dashboard profile={studentProfile} results={matchingResults} />} />
           <Route path="profile" element={<ProfilePage profile={studentProfile} setProfile={setStudentProfile} setResults={setMatchingResults} />} />
@@ -61,5 +63,13 @@ export default function App() {
         </Route>
       </Routes>
     </Router>
+  );
+}
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   );
 }

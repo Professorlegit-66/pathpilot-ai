@@ -4,10 +4,17 @@ import TopNav from './TopNav';
 import { Outlet } from 'react-router-dom';
 
 export default function MainLayout({ profile, onSignOut }) {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  // Initialize collapse state from localStorage so it persists across refreshes and logins
+  const [isCollapsed, setIsCollapsed] = useState(() => {
+    return localStorage.getItem('pathpilot_sidebar_collapsed') === 'true';
+  });
 
   const toggleSidebar = () => {
-    setIsCollapsed(prev => !prev);
+    setIsCollapsed(prev => {
+      const newState = !prev;
+      localStorage.setItem('pathpilot_sidebar_collapsed', newState);
+      return newState;
+    });
   };
 
   return (

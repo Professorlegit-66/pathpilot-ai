@@ -1,125 +1,1277 @@
 [
   {
-    "id": "nust_bscs",
-    "university_id": "nust_islamabad",
-    "campus": "Islamabad",
-    "name": "BS Computer Science",
-    "degree_level": "Bachelor",
-    "field": "Computer Science",
-    "duration_years": 4,
-    "eligibility": {
-      "ssc_required": true,
-      "hssc_required": true,
-      "hssc_groups": [
-        "Pre-Engineering",
-        "Computer Science",
-        "Pre-Medical",
-        "HSSC with Mathematics"
-      ],
-      "mathematics_required": true,
-      "minimum_hssc_percent": null,
-      "notes": "NUST lists BS Computer Science among computing programmes and accepts the listed HSSC routes; pre-medical applicants without additional mathematics must clear deficient Mathematics courses."
-    },
-    "accreditation": {
-      "body": "NCEAC",
-      "status": "not independently populated in this seed record",
-      "note": "Do not infer programme accreditation from university recognition."
-    },
-    "sources": [
-      "https://nust.edu.pk/admissions/undergraduates/eligibility-criteria-for-ug-programmes/",
-      "https://nust.edu.pk/admissions/undergraduates/list-of-ug-programmes-and-institutions"
+    "program_id": "prog_pk_nust_cs",
+    "university_id": "uni_pk_nust",
+    "program_name": "BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "HSSC / Intermediate",
+    "accepted_streams": [
+      "Pre-Engineering",
+      "ICS",
+      "Pre-Medical"
     ],
-    "last_verified": "2026-10-01"
+    "min_math_percent": 60.0,
+    "min_overall_percent": 60.0,
+    "required_tests": [
+      "University Entry Test / Institution-specific test"
+    ]
   },
   {
-    "id": "fast_bscs",
-    "university_id": "fast_islamabad",
-    "campus": "Islamabad",
-    "name": "BS Computer Science",
-    "degree_level": "Bachelor",
-    "field": "Computer Science",
-    "duration_years": 4,
-    "eligibility": {
-      "minimum_ssc_percent": 60,
-      "minimum_hssc_percent": 50,
-      "mathematics_required": true,
-      "accepted_admission_tests": [
-        "FAST-NUCES",
-        "SAT",
-        "NTS NAT-IE",
-        "NTS NAT-ICS"
-      ],
-      "note": "Merit cut-off is determined by the university."
-    },
-    "accreditation": {
-      "body": "NCEAC",
-      "status": "historical/official NCEAC record found; current batch status should be checked for the applicant's intended intake",
-      "source": "https://nceac.org.pk/Documents/GCMeetingMinutes/Minutes-%2024th%20Meeting.pdf"
-    },
-    "sources": [
-      "https://nu.edu.pk/Admissions/EligibilityCriteria",
-      "https://nu.edu.pk/Degree-Programs",
-      "https://nu.edu.pk/Admissions/Scholarship"
+    "program_id": "prog_pk_comsats_cs",
+    "university_id": "uni_pk_comsats",
+    "program_name": "BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "HSSC / Intermediate",
+    "accepted_streams": [
+      "Pre-Engineering",
+      "ICS",
+      "Pre-Medical"
     ],
-    "last_verified": "2026-10-01"
+    "min_math_percent": 60.0,
+    "min_overall_percent": 60.0,
+    "required_tests": [
+      "University Entry Test / Institution-specific test"
+    ]
   },
   {
-    "id": "comsats_bscs",
-    "university_id": "comsats_islamabad",
-    "campus": "Islamabad",
-    "name": "BS Computer Science",
-    "degree_level": "Bachelor",
-    "field": "Computer Science",
-    "duration_years": 4,
-    "eligibility": {
-      "minimum_hssc_percent": 50,
-      "minimum_nat_percent": 50,
-      "nat_required": true,
-      "accepted_test": "NTS-NAT-I",
-      "note": "Official CUI program page states minimum 50% Intermediate/equivalent and minimum 50% NTS-NAT."
-    },
-    "accreditation": {
-      "body": "NCEAC",
-      "status": "pending",
-      "note": "The NCEAC Islamabad campus record lists the BS Computer Science accreditation visit as pending; do not label this programme simply 'accredited' for the current record.",
-      "source": "https://nceac.org.pk/accreditation/AccreditBatches/030a20f8-f424-4ece-b76f-e228f82c087b"
-    },
-    "sources": [
-      "https://ww2.comsats.edu.pk/cs_wah/bscs.aspx",
-      "https://nceac.org.pk/accreditation/AccreditBatches/030a20f8-f424-4ece-b76f-e228f82c087b"
+    "program_id": "prog_pk_qau_cs",
+    "university_id": "uni_pk_qau",
+    "program_name": "BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "HSSC / Intermediate",
+    "accepted_streams": [
+      "Pre-Engineering",
+      "ICS",
+      "Pre-Medical"
     ],
-    "last_verified": "2026-10-01"
+    "min_math_percent": 60.0,
+    "min_overall_percent": 60.0,
+    "required_tests": [
+      "University Entry Test / Institution-specific test"
+    ]
   },
   {
-    "id": "air_bscs",
-    "university_id": "air_islamabad",
-    "campus": "Islamabad",
-    "name": "BS Computer Science",
-    "degree_level": "Bachelor",
-    "field": "Computer Science",
-    "duration_years": 4,
-    "eligibility": {
-      "minimum_hssc_percent": 50,
-      "mathematics_required": true,
-      "mathematics_deficiency_allowed": true,
-      "mathematics_deficiency_credits": 6,
-      "note": "Air University states HSSC/A-level/equivalent with at least 50% and Mathematics for BS Computing programs; students without Mathematics must complete a 6-credit deficiency course."
-    },
-    "accreditation": {
-      "body": "NCEAC",
-      "status": "approved for specified batches",
-      "approved_batches": [
-        "Fall 2021",
-        "Fall 2022"
-      ],
-      "approved_on": "2025-09-14",
-      "note": "The NCEAC record specifies Y (2 Academic Years) and a maximum of four sections of 50 students per year. Accreditation is batch/intake-specific.",
-      "source": "https://nceac.org.pk/accreditation/AccreditBatches/6a21cc45-8faf-46a5-82f2-71f3bcb28243"
-    },
-    "sources": [
-      "https://kc.au.edu.pk/Pages/Admission/eligibility_criteria.aspx",
-      "https://nceac.org.pk/accreditation/AccreditBatches/6a21cc45-8faf-46a5-82f3bcb28243"
+    "program_id": "prog_pk_pieas_cs",
+    "university_id": "uni_pk_pieas",
+    "program_name": "BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "HSSC / Intermediate",
+    "accepted_streams": [
+      "Pre-Engineering",
+      "ICS",
+      "Pre-Medical"
     ],
-    "last_verified": "2026-10-01"
+    "min_math_percent": 60.0,
+    "min_overall_percent": 60.0,
+    "required_tests": [
+      "University Entry Test / Institution-specific test"
+    ]
+  },
+  {
+    "program_id": "prog_pk_air_cs",
+    "university_id": "uni_pk_air",
+    "program_name": "BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "HSSC / Intermediate",
+    "accepted_streams": [
+      "Pre-Engineering",
+      "ICS",
+      "Pre-Medical"
+    ],
+    "min_math_percent": 60.0,
+    "min_overall_percent": 60.0,
+    "required_tests": [
+      "University Entry Test / Institution-specific test"
+    ]
+  },
+  {
+    "program_id": "prog_pk_bahria_cs",
+    "university_id": "uni_pk_bahria",
+    "program_name": "BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "HSSC / Intermediate",
+    "accepted_streams": [
+      "Pre-Engineering",
+      "ICS",
+      "Pre-Medical"
+    ],
+    "min_math_percent": 60.0,
+    "min_overall_percent": 60.0,
+    "required_tests": [
+      "University Entry Test / Institution-specific test"
+    ]
+  },
+  {
+    "program_id": "prog_pk_fast_cs",
+    "university_id": "uni_pk_fast",
+    "program_name": "BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "HSSC / Intermediate",
+    "accepted_streams": [
+      "Pre-Engineering",
+      "ICS",
+      "Pre-Medical"
+    ],
+    "min_math_percent": 60.0,
+    "min_overall_percent": 60.0,
+    "required_tests": [
+      "University Entry Test / Institution-specific test"
+    ]
+  },
+  {
+    "program_id": "prog_pk_lums_cs",
+    "university_id": "uni_pk_lums",
+    "program_name": "BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "HSSC / Intermediate",
+    "accepted_streams": [
+      "Pre-Engineering",
+      "ICS",
+      "Pre-Medical"
+    ],
+    "min_math_percent": 60.0,
+    "min_overall_percent": 60.0,
+    "required_tests": [
+      "University Entry Test / Institution-specific test"
+    ]
+  },
+  {
+    "program_id": "prog_pk_iba_cs",
+    "university_id": "uni_pk_iba",
+    "program_name": "BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "HSSC / Intermediate",
+    "accepted_streams": [
+      "Pre-Engineering",
+      "ICS",
+      "Pre-Medical"
+    ],
+    "min_math_percent": 60.0,
+    "min_overall_percent": 60.0,
+    "required_tests": [
+      "University Entry Test / Institution-specific test"
+    ]
+  },
+  {
+    "program_id": "prog_pk_uetlahore_cs",
+    "university_id": "uni_pk_uetlahore",
+    "program_name": "BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "HSSC / Intermediate",
+    "accepted_streams": [
+      "Pre-Engineering",
+      "ICS",
+      "Pre-Medical"
+    ],
+    "min_math_percent": 60.0,
+    "min_overall_percent": 60.0,
+    "required_tests": [
+      "University Entry Test / Institution-specific test"
+    ]
+  },
+  {
+    "program_id": "prog_pk_uettaxila_cs",
+    "university_id": "uni_pk_uettaxila",
+    "program_name": "BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "HSSC / Intermediate",
+    "accepted_streams": [
+      "Pre-Engineering",
+      "ICS",
+      "Pre-Medical"
+    ],
+    "min_math_percent": 60.0,
+    "min_overall_percent": 60.0,
+    "required_tests": [
+      "University Entry Test / Institution-specific test"
+    ]
+  },
+  {
+    "program_id": "prog_pk_punjab_cs",
+    "university_id": "uni_pk_punjab",
+    "program_name": "BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "HSSC / Intermediate",
+    "accepted_streams": [
+      "Pre-Engineering",
+      "ICS",
+      "Pre-Medical"
+    ],
+    "min_math_percent": 60.0,
+    "min_overall_percent": 60.0,
+    "required_tests": [
+      "University Entry Test / Institution-specific test"
+    ]
+  },
+  {
+    "program_id": "prog_pk_gculahore_cs",
+    "university_id": "uni_pk_gculahore",
+    "program_name": "BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "HSSC / Intermediate",
+    "accepted_streams": [
+      "Pre-Engineering",
+      "ICS",
+      "Pre-Medical"
+    ],
+    "min_math_percent": 60.0,
+    "min_overall_percent": 60.0,
+    "required_tests": [
+      "University Entry Test / Institution-specific test"
+    ]
+  },
+  {
+    "program_id": "prog_pk_karachi_cs",
+    "university_id": "uni_pk_karachi",
+    "program_name": "BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "HSSC / Intermediate",
+    "accepted_streams": [
+      "Pre-Engineering",
+      "ICS",
+      "Pre-Medical"
+    ],
+    "min_math_percent": 60.0,
+    "min_overall_percent": 60.0,
+    "required_tests": [
+      "University Entry Test / Institution-specific test"
+    ]
+  },
+  {
+    "program_id": "prog_pk_sindh_cs",
+    "university_id": "uni_pk_sindh",
+    "program_name": "BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "HSSC / Intermediate",
+    "accepted_streams": [
+      "Pre-Engineering",
+      "ICS",
+      "Pre-Medical"
+    ],
+    "min_math_percent": 60.0,
+    "min_overall_percent": 60.0,
+    "required_tests": [
+      "University Entry Test / Institution-specific test"
+    ]
+  },
+  {
+    "program_id": "prog_pk_uaf_cs",
+    "university_id": "uni_pk_uaf",
+    "program_name": "BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "HSSC / Intermediate",
+    "accepted_streams": [
+      "Pre-Engineering",
+      "ICS",
+      "Pre-Medical"
+    ],
+    "min_math_percent": 60.0,
+    "min_overall_percent": 60.0,
+    "required_tests": [
+      "University Entry Test / Institution-specific test"
+    ]
+  },
+  {
+    "program_id": "prog_pk_uaar_cs",
+    "university_id": "uni_pk_uaar",
+    "program_name": "BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "HSSC / Intermediate",
+    "accepted_streams": [
+      "Pre-Engineering",
+      "ICS",
+      "Pre-Medical"
+    ],
+    "min_math_percent": 60.0,
+    "min_overall_percent": 60.0,
+    "required_tests": [
+      "University Entry Test / Institution-specific test"
+    ]
+  },
+  {
+    "program_id": "prog_pk_uvas_cs",
+    "university_id": "uni_pk_uvas",
+    "program_name": "BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "HSSC / Intermediate",
+    "accepted_streams": [
+      "Pre-Engineering",
+      "ICS",
+      "Pre-Medical"
+    ],
+    "min_math_percent": 60.0,
+    "min_overall_percent": 60.0,
+    "required_tests": [
+      "University Entry Test / Institution-specific test"
+    ]
+  },
+  {
+    "program_id": "prog_pk_bzu_cs",
+    "university_id": "uni_pk_bzu",
+    "program_name": "BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "HSSC / Intermediate",
+    "accepted_streams": [
+      "Pre-Engineering",
+      "ICS",
+      "Pre-Medical"
+    ],
+    "min_math_percent": 60.0,
+    "min_overall_percent": 60.0,
+    "required_tests": [
+      "University Entry Test / Institution-specific test"
+    ]
+  },
+  {
+    "program_id": "prog_pk_iub_cs",
+    "university_id": "uni_pk_iub",
+    "program_name": "BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "HSSC / Intermediate",
+    "accepted_streams": [
+      "Pre-Engineering",
+      "ICS",
+      "Pre-Medical"
+    ],
+    "min_math_percent": 60.0,
+    "min_overall_percent": 60.0,
+    "required_tests": [
+      "University Entry Test / Institution-specific test"
+    ]
+  },
+  {
+    "program_id": "prog_pk_uetpesh_cs",
+    "university_id": "uni_pk_uetpesh",
+    "program_name": "BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "HSSC / Intermediate",
+    "accepted_streams": [
+      "Pre-Engineering",
+      "ICS",
+      "Pre-Medical"
+    ],
+    "min_math_percent": 60.0,
+    "min_overall_percent": 60.0,
+    "required_tests": [
+      "University Entry Test / Institution-specific test"
+    ]
+  },
+  {
+    "program_id": "prog_pk_uop_cs",
+    "university_id": "uni_pk_uop",
+    "program_name": "BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "HSSC / Intermediate",
+    "accepted_streams": [
+      "Pre-Engineering",
+      "ICS",
+      "Pre-Medical"
+    ],
+    "min_math_percent": 60.0,
+    "min_overall_percent": 60.0,
+    "required_tests": [
+      "University Entry Test / Institution-specific test"
+    ]
+  },
+  {
+    "program_id": "prog_pk_ned_cs",
+    "university_id": "uni_pk_ned",
+    "program_name": "BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "HSSC / Intermediate",
+    "accepted_streams": [
+      "Pre-Engineering",
+      "ICS",
+      "Pre-Medical"
+    ],
+    "min_math_percent": 60.0,
+    "min_overall_percent": 60.0,
+    "required_tests": [
+      "University Entry Test / Institution-specific test"
+    ]
+  },
+  {
+    "program_id": "prog_pk_habib_cs",
+    "university_id": "uni_pk_habib",
+    "program_name": "BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "HSSC / Intermediate",
+    "accepted_streams": [
+      "Pre-Engineering",
+      "ICS",
+      "Pre-Medical"
+    ],
+    "min_math_percent": 60.0,
+    "min_overall_percent": 60.0,
+    "required_tests": [
+      "University Entry Test / Institution-specific test"
+    ]
+  },
+  {
+    "program_id": "prog_pk_aku_cs",
+    "university_id": "uni_pk_aku",
+    "program_name": "BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "HSSC / Intermediate",
+    "accepted_streams": [
+      "Pre-Engineering",
+      "ICS",
+      "Pre-Medical"
+    ],
+    "min_math_percent": 60.0,
+    "min_overall_percent": 60.0,
+    "required_tests": [
+      "University Entry Test / Institution-specific test"
+    ]
+  },
+  {
+    "program_id": "prog_in_iitm_cs",
+    "university_id": "uni_in_iitm",
+    "program_name": "B.Tech / BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "12th Board",
+    "accepted_streams": [
+      "PCM",
+      "PCB",
+      "Commerce with Math"
+    ],
+    "min_math_percent": 60.0,
+    "min_overall_percent": 60.0,
+    "required_tests": [
+      "JEE Main / Institution-specific admission process"
+    ]
+  },
+  {
+    "program_id": "prog_in_iisc_cs",
+    "university_id": "uni_in_iisc",
+    "program_name": "B.Tech / BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "12th Board",
+    "accepted_streams": [
+      "PCM",
+      "PCB",
+      "Commerce with Math"
+    ],
+    "min_math_percent": 60.0,
+    "min_overall_percent": 60.0,
+    "required_tests": [
+      "JEE Main / Institution-specific admission process"
+    ]
+  },
+  {
+    "program_id": "prog_in_iitb_cs",
+    "university_id": "uni_in_iitb",
+    "program_name": "B.Tech / BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "12th Board",
+    "accepted_streams": [
+      "PCM",
+      "PCB",
+      "Commerce with Math"
+    ],
+    "min_math_percent": 60.0,
+    "min_overall_percent": 60.0,
+    "required_tests": [
+      "JEE Main / Institution-specific admission process"
+    ]
+  },
+  {
+    "program_id": "prog_in_iitd_cs",
+    "university_id": "uni_in_iitd",
+    "program_name": "B.Tech / BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "12th Board",
+    "accepted_streams": [
+      "PCM",
+      "PCB",
+      "Commerce with Math"
+    ],
+    "min_math_percent": 60.0,
+    "min_overall_percent": 60.0,
+    "required_tests": [
+      "JEE Main / Institution-specific admission process"
+    ]
+  },
+  {
+    "program_id": "prog_in_iitk_cs",
+    "university_id": "uni_in_iitk",
+    "program_name": "B.Tech / BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "12th Board",
+    "accepted_streams": [
+      "PCM",
+      "PCB",
+      "Commerce with Math"
+    ],
+    "min_math_percent": 60.0,
+    "min_overall_percent": 60.0,
+    "required_tests": [
+      "JEE Main / Institution-specific admission process"
+    ]
+  },
+  {
+    "program_id": "prog_in_iitkgp_cs",
+    "university_id": "uni_in_iitkgp",
+    "program_name": "B.Tech / BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "12th Board",
+    "accepted_streams": [
+      "PCM",
+      "PCB",
+      "Commerce with Math"
+    ],
+    "min_math_percent": 60.0,
+    "min_overall_percent": 60.0,
+    "required_tests": [
+      "JEE Main / Institution-specific admission process"
+    ]
+  },
+  {
+    "program_id": "prog_in_iitr_cs",
+    "university_id": "uni_in_iitr",
+    "program_name": "B.Tech / BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "12th Board",
+    "accepted_streams": [
+      "PCM",
+      "PCB",
+      "Commerce with Math"
+    ],
+    "min_math_percent": 60.0,
+    "min_overall_percent": 60.0,
+    "required_tests": [
+      "JEE Main / Institution-specific admission process"
+    ]
+  },
+  {
+    "program_id": "prog_in_iitg_cs",
+    "university_id": "uni_in_iitg",
+    "program_name": "B.Tech / BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "12th Board",
+    "accepted_streams": [
+      "PCM",
+      "PCB",
+      "Commerce with Math"
+    ],
+    "min_math_percent": 60.0,
+    "min_overall_percent": 60.0,
+    "required_tests": [
+      "JEE Main / Institution-specific admission process"
+    ]
+  },
+  {
+    "program_id": "prog_in_iith_cs",
+    "university_id": "uni_in_iith",
+    "program_name": "B.Tech / BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "12th Board",
+    "accepted_streams": [
+      "PCM",
+      "PCB",
+      "Commerce with Math"
+    ],
+    "min_math_percent": 60.0,
+    "min_overall_percent": 60.0,
+    "required_tests": [
+      "JEE Main / Institution-specific admission process"
+    ]
+  },
+  {
+    "program_id": "prog_in_iitbhu_cs",
+    "university_id": "uni_in_iitbhu",
+    "program_name": "B.Tech / BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "12th Board",
+    "accepted_streams": [
+      "PCM",
+      "PCB",
+      "Commerce with Math"
+    ],
+    "min_math_percent": 60.0,
+    "min_overall_percent": 60.0,
+    "required_tests": [
+      "JEE Main / Institution-specific admission process"
+    ]
+  },
+  {
+    "program_id": "prog_in_jnu_cs",
+    "university_id": "uni_in_jnu",
+    "program_name": "B.Tech / BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "12th Board",
+    "accepted_streams": [
+      "PCM",
+      "PCB",
+      "Commerce with Math"
+    ],
+    "min_math_percent": 60.0,
+    "min_overall_percent": 60.0,
+    "required_tests": [
+      "JEE Main / Institution-specific admission process"
+    ]
+  },
+  {
+    "program_id": "prog_in_jamia_cs",
+    "university_id": "uni_in_jamia",
+    "program_name": "B.Tech / BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "12th Board",
+    "accepted_streams": [
+      "PCM",
+      "PCB",
+      "Commerce with Math"
+    ],
+    "min_math_percent": 60.0,
+    "min_overall_percent": 60.0,
+    "required_tests": [
+      "JEE Main / Institution-specific admission process"
+    ]
+  },
+  {
+    "program_id": "prog_in_du_cs",
+    "university_id": "uni_in_du",
+    "program_name": "B.Tech / BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "12th Board",
+    "accepted_streams": [
+      "PCM",
+      "PCB",
+      "Commerce with Math"
+    ],
+    "min_math_percent": 60.0,
+    "min_overall_percent": 60.0,
+    "required_tests": [
+      "JEE Main / Institution-specific admission process"
+    ]
+  },
+  {
+    "program_id": "prog_in_bhu_cs",
+    "university_id": "uni_in_bhu",
+    "program_name": "B.Tech / BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "12th Board",
+    "accepted_streams": [
+      "PCM",
+      "PCB",
+      "Commerce with Math"
+    ],
+    "min_math_percent": 60.0,
+    "min_overall_percent": 60.0,
+    "required_tests": [
+      "JEE Main / Institution-specific admission process"
+    ]
+  },
+  {
+    "program_id": "prog_in_ju_cs",
+    "university_id": "uni_in_ju",
+    "program_name": "B.Tech / BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "12th Board",
+    "accepted_streams": [
+      "PCM",
+      "PCB",
+      "Commerce with Math"
+    ],
+    "min_math_percent": 60.0,
+    "min_overall_percent": 60.0,
+    "required_tests": [
+      "JEE Main / Institution-specific admission process"
+    ]
+  },
+  {
+    "program_id": "prog_in_mahe_cs",
+    "university_id": "uni_in_mahe",
+    "program_name": "B.Tech / BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "12th Board",
+    "accepted_streams": [
+      "PCM",
+      "PCB",
+      "Commerce with Math"
+    ],
+    "min_math_percent": 60.0,
+    "min_overall_percent": 60.0,
+    "required_tests": [
+      "JEE Main / Institution-specific admission process"
+    ]
+  },
+  {
+    "program_id": "prog_in_amrita_cs",
+    "university_id": "uni_in_amrita",
+    "program_name": "B.Tech / BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "12th Board",
+    "accepted_streams": [
+      "PCM",
+      "PCB",
+      "Commerce with Math"
+    ],
+    "min_math_percent": 60.0,
+    "min_overall_percent": 60.0,
+    "required_tests": [
+      "JEE Main / Institution-specific admission process"
+    ]
+  },
+  {
+    "program_id": "prog_in_amu_cs",
+    "university_id": "uni_in_amu",
+    "program_name": "B.Tech / BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "12th Board",
+    "accepted_streams": [
+      "PCM",
+      "PCB",
+      "Commerce with Math"
+    ],
+    "min_math_percent": 60.0,
+    "min_overall_percent": 60.0,
+    "required_tests": [
+      "JEE Main / Institution-specific admission process"
+    ]
+  },
+  {
+    "program_id": "prog_in_uoh_cs",
+    "university_id": "uni_in_uoh",
+    "program_name": "B.Tech / BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "12th Board",
+    "accepted_streams": [
+      "PCM",
+      "PCB",
+      "Commerce with Math"
+    ],
+    "min_math_percent": 60.0,
+    "min_overall_percent": 60.0,
+    "required_tests": [
+      "JEE Main / Institution-specific admission process"
+    ]
+  },
+  {
+    "program_id": "prog_in_anna_cs",
+    "university_id": "uni_in_anna",
+    "program_name": "B.Tech / BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "12th Board",
+    "accepted_streams": [
+      "PCM",
+      "PCB",
+      "Commerce with Math"
+    ],
+    "min_math_percent": 60.0,
+    "min_overall_percent": 60.0,
+    "required_tests": [
+      "JEE Main / Institution-specific admission process"
+    ]
+  },
+  {
+    "program_id": "prog_in_nitt_cs",
+    "university_id": "uni_in_nitt",
+    "program_name": "B.Tech / BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "12th Board",
+    "accepted_streams": [
+      "PCM",
+      "PCB",
+      "Commerce with Math"
+    ],
+    "min_math_percent": 60.0,
+    "min_overall_percent": 60.0,
+    "required_tests": [
+      "JEE Main / Institution-specific admission process"
+    ]
+  },
+  {
+    "program_id": "prog_in_sppu_cs",
+    "university_id": "uni_in_sppu",
+    "program_name": "B.Tech / BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "12th Board",
+    "accepted_streams": [
+      "PCM",
+      "PCB",
+      "Commerce with Math"
+    ],
+    "min_math_percent": 60.0,
+    "min_overall_percent": 60.0,
+    "required_tests": [
+      "JEE Main / Institution-specific admission process"
+    ]
+  },
+  {
+    "program_id": "prog_in_chandigarh_cs",
+    "university_id": "uni_in_chandigarh",
+    "program_name": "B.Tech / BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "12th Board",
+    "accepted_streams": [
+      "PCM",
+      "PCB",
+      "Commerce with Math"
+    ],
+    "min_math_percent": 60.0,
+    "min_overall_percent": 60.0,
+    "required_tests": [
+      "JEE Main / Institution-specific admission process"
+    ]
+  },
+  {
+    "program_id": "prog_in_bits_cs",
+    "university_id": "uni_in_bits",
+    "program_name": "B.Tech / BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "12th Board",
+    "accepted_streams": [
+      "PCM",
+      "PCB",
+      "Commerce with Math"
+    ],
+    "min_math_percent": 60.0,
+    "min_overall_percent": 60.0,
+    "required_tests": [
+      "JEE Main / Institution-specific admission process"
+    ]
+  },
+  {
+    "program_id": "prog_in_vit_cs",
+    "university_id": "uni_in_vit",
+    "program_name": "B.Tech / BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "12th Board",
+    "accepted_streams": [
+      "PCM",
+      "PCB",
+      "Commerce with Math"
+    ],
+    "min_math_percent": 60.0,
+    "min_overall_percent": 60.0,
+    "required_tests": [
+      "JEE Main / Institution-specific admission process"
+    ]
+  },
+  {
+    "program_id": "prog_us_mit_cs",
+    "university_id": "uni_us_mit",
+    "program_name": "BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "High School Diploma",
+    "accepted_streams": [
+      "STEM Focus",
+      "General Track"
+    ],
+    "min_math_percent": 3.0,
+    "min_overall_percent": 3.0,
+    "required_tests": []
+  },
+  {
+    "program_id": "prog_us_stanford_cs",
+    "university_id": "uni_us_stanford",
+    "program_name": "BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "High School Diploma",
+    "accepted_streams": [
+      "STEM Focus",
+      "General Track"
+    ],
+    "min_math_percent": 3.0,
+    "min_overall_percent": 3.0,
+    "required_tests": []
+  },
+  {
+    "program_id": "prog_us_harvard_cs",
+    "university_id": "uni_us_harvard",
+    "program_name": "BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "High School Diploma",
+    "accepted_streams": [
+      "STEM Focus",
+      "General Track"
+    ],
+    "min_math_percent": 3.0,
+    "min_overall_percent": 3.0,
+    "required_tests": []
+  },
+  {
+    "program_id": "prog_us_caltech_cs",
+    "university_id": "uni_us_caltech",
+    "program_name": "BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "High School Diploma",
+    "accepted_streams": [
+      "STEM Focus",
+      "General Track"
+    ],
+    "min_math_percent": 3.0,
+    "min_overall_percent": 3.0,
+    "required_tests": []
+  },
+  {
+    "program_id": "prog_us_upenn_cs",
+    "university_id": "uni_us_upenn",
+    "program_name": "BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "High School Diploma",
+    "accepted_streams": [
+      "STEM Focus",
+      "General Track"
+    ],
+    "min_math_percent": 3.0,
+    "min_overall_percent": 3.0,
+    "required_tests": []
+  },
+  {
+    "program_id": "prog_us_cornell_cs",
+    "university_id": "uni_us_cornell",
+    "program_name": "BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "High School Diploma",
+    "accepted_streams": [
+      "STEM Focus",
+      "General Track"
+    ],
+    "min_math_percent": 3.0,
+    "min_overall_percent": 3.0,
+    "required_tests": []
+  },
+  {
+    "program_id": "prog_us_yale_cs",
+    "university_id": "uni_us_yale",
+    "program_name": "BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "High School Diploma",
+    "accepted_streams": [
+      "STEM Focus",
+      "General Track"
+    ],
+    "min_math_percent": 3.0,
+    "min_overall_percent": 3.0,
+    "required_tests": []
+  },
+  {
+    "program_id": "prog_us_jhu_cs",
+    "university_id": "uni_us_jhu",
+    "program_name": "BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "High School Diploma",
+    "accepted_streams": [
+      "STEM Focus",
+      "General Track"
+    ],
+    "min_math_percent": 3.0,
+    "min_overall_percent": 3.0,
+    "required_tests": []
+  },
+  {
+    "program_id": "prog_us_berkeley_cs",
+    "university_id": "uni_us_berkeley",
+    "program_name": "BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "High School Diploma",
+    "accepted_streams": [
+      "STEM Focus",
+      "General Track"
+    ],
+    "min_math_percent": 3.0,
+    "min_overall_percent": 3.0,
+    "required_tests": []
+  },
+  {
+    "program_id": "prog_us_chicago_cs",
+    "university_id": "uni_us_chicago",
+    "program_name": "BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "High School Diploma",
+    "accepted_streams": [
+      "STEM Focus",
+      "General Track"
+    ],
+    "min_math_percent": 3.0,
+    "min_overall_percent": 3.0,
+    "required_tests": []
+  },
+  {
+    "program_id": "prog_us_princeton_cs",
+    "university_id": "uni_us_princeton",
+    "program_name": "BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "High School Diploma",
+    "accepted_streams": [
+      "STEM Focus",
+      "General Track"
+    ],
+    "min_math_percent": 3.0,
+    "min_overall_percent": 3.0,
+    "required_tests": []
+  },
+  {
+    "program_id": "prog_us_columbia_cs",
+    "university_id": "uni_us_columbia",
+    "program_name": "BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "High School Diploma",
+    "accepted_streams": [
+      "STEM Focus",
+      "General Track"
+    ],
+    "min_math_percent": 3.0,
+    "min_overall_percent": 3.0,
+    "required_tests": []
+  },
+  {
+    "program_id": "prog_us_northwestern_cs",
+    "university_id": "uni_us_northwestern",
+    "program_name": "BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "High School Diploma",
+    "accepted_streams": [
+      "STEM Focus",
+      "General Track"
+    ],
+    "min_math_percent": 3.0,
+    "min_overall_percent": 3.0,
+    "required_tests": []
+  },
+  {
+    "program_id": "prog_us_ucla_cs",
+    "university_id": "uni_us_ucla",
+    "program_name": "BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "High School Diploma",
+    "accepted_streams": [
+      "STEM Focus",
+      "General Track"
+    ],
+    "min_math_percent": 3.0,
+    "min_overall_percent": 3.0,
+    "required_tests": []
+  },
+  {
+    "program_id": "prog_us_michigan_cs",
+    "university_id": "uni_us_michigan",
+    "program_name": "BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "High School Diploma",
+    "accepted_streams": [
+      "STEM Focus",
+      "General Track"
+    ],
+    "min_math_percent": 3.0,
+    "min_overall_percent": 3.0,
+    "required_tests": []
+  },
+  {
+    "program_id": "prog_us_cmu_cs",
+    "university_id": "uni_us_cmu",
+    "program_name": "BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "High School Diploma",
+    "accepted_streams": [
+      "STEM Focus",
+      "General Track"
+    ],
+    "min_math_percent": 3.0,
+    "min_overall_percent": 3.0,
+    "required_tests": []
+  },
+  {
+    "program_id": "prog_us_nyu_cs",
+    "university_id": "uni_us_nyu",
+    "program_name": "BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "High School Diploma",
+    "accepted_streams": [
+      "STEM Focus",
+      "General Track"
+    ],
+    "min_math_percent": 3.0,
+    "min_overall_percent": 3.0,
+    "required_tests": []
+  },
+  {
+    "program_id": "prog_us_brown_cs",
+    "university_id": "uni_us_brown",
+    "program_name": "BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "High School Diploma",
+    "accepted_streams": [
+      "STEM Focus",
+      "General Track"
+    ],
+    "min_math_percent": 3.0,
+    "min_overall_percent": 3.0,
+    "required_tests": []
+  },
+  {
+    "program_id": "prog_us_duke_cs",
+    "university_id": "uni_us_duke",
+    "program_name": "BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "High School Diploma",
+    "accepted_streams": [
+      "STEM Focus",
+      "General Track"
+    ],
+    "min_math_percent": 3.0,
+    "min_overall_percent": 3.0,
+    "required_tests": []
+  },
+  {
+    "program_id": "prog_us_ut_cs",
+    "university_id": "uni_us_ut",
+    "program_name": "BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "High School Diploma",
+    "accepted_streams": [
+      "STEM Focus",
+      "General Track"
+    ],
+    "min_math_percent": 3.0,
+    "min_overall_percent": 3.0,
+    "required_tests": []
+  },
+  {
+    "program_id": "prog_us_uiuc_cs",
+    "university_id": "uni_us_uiuc",
+    "program_name": "BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "High School Diploma",
+    "accepted_streams": [
+      "STEM Focus",
+      "General Track"
+    ],
+    "min_math_percent": 3.0,
+    "min_overall_percent": 3.0,
+    "required_tests": []
+  },
+  {
+    "program_id": "prog_us_ucsd_cs",
+    "university_id": "uni_us_ucsd",
+    "program_name": "BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "High School Diploma",
+    "accepted_streams": [
+      "STEM Focus",
+      "General Track"
+    ],
+    "min_math_percent": 3.0,
+    "min_overall_percent": 3.0,
+    "required_tests": []
+  },
+  {
+    "program_id": "prog_us_psu_cs",
+    "university_id": "uni_us_psu",
+    "program_name": "BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "High School Diploma",
+    "accepted_streams": [
+      "STEM Focus",
+      "General Track"
+    ],
+    "min_math_percent": 3.0,
+    "min_overall_percent": 3.0,
+    "required_tests": []
+  },
+  {
+    "program_id": "prog_us_wash_cs",
+    "university_id": "uni_us_wash",
+    "program_name": "BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "High School Diploma",
+    "accepted_streams": [
+      "STEM Focus",
+      "General Track"
+    ],
+    "min_math_percent": 3.0,
+    "min_overall_percent": 3.0,
+    "required_tests": []
+  },
+  {
+    "program_id": "prog_us_bu_cs",
+    "university_id": "uni_us_bu",
+    "program_name": "BS Computer Science",
+    "degree_level": "Undergraduate",
+    "field_category": "Computer Science",
+    "required_education_level": "High School Diploma",
+    "accepted_streams": [
+      "STEM Focus",
+      "General Track"
+    ],
+    "min_math_percent": 3.0,
+    "min_overall_percent": 3.0,
+    "required_tests": []
   }
 ]

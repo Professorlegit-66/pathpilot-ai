@@ -1,58 +1,752 @@
 [
   {
-    "id": "nust_need_based_aid",
-    "name": "NUST Need Based Financial Aid",
-    "provider": "NUST",
-    "degree_levels": [
-      "Bachelor",
-      "Master"
-    ],
-    "type": "need_based",
-    "coverage": "Partial or full academic expenditures; interest-free loan/deferment options may also be available.",
-    "duration_note": "NUST states need-based scholarships can cover partial/full academic expenditures for up to 4 years for undergraduate students.",
-    "eligibility_logic": "Financial need is assessed from household financial information; admission is on merit.",
-    "source": "https://nust.edu.pk/admissions/scholarships/need-based-financial-aid/",
-    "last_verified": "2026-10-01"
+    "scholarship_id": "sch_pk_nust_aid",
+    "university_id": "uni_pk_nust",
+    "name": "National University of Sciences and Technology (NUST) Need-Based / Merit Financial Aid",
+    "type": "Need-Based / Merit",
+    "coverage": "Tuition assistance; amount varies",
+    "eligible_countries": [
+      "Pakistan"
+    ]
   },
   {
-    "id": "fast_merit_scholarship",
-    "name": "FAST-NUCES Merit Scholarship",
-    "provider": "FAST-NUCES",
-    "degree_levels": [
-      "Bachelor"
-    ],
-    "type": "merit_based",
-    "coverage": "Full tuition fee for the stated eligible top position holders, subject to FAST rules.",
-    "eligibility_logic": "FAST Peshawar FAQ states scholarships are awarded to top three position holders in each examination-board group and top three in the NU admission merit list, subject to stated continuation conditions.",
-    "source": "https://pwr.nu.edu.pk/faqs/",
-    "last_verified": "2026-10-01"
+    "scholarship_id": "sch_pk_comsats_aid",
+    "university_id": "uni_pk_comsats",
+    "name": "COMSATS University Islamabad Need-Based / Merit Financial Aid",
+    "type": "Need-Based / Merit",
+    "coverage": "Tuition assistance; amount varies",
+    "eligible_countries": [
+      "Pakistan"
+    ]
   },
   {
-    "id": "fast_interest_free_loan",
-    "name": "FAST-NUCES Interest-Free Study Loan",
-    "provider": "FAST-NUCES",
-    "degree_levels": [
-      "Bachelor",
-      "Master",
-      "PhD"
-    ],
-    "type": "need_based_loan",
-    "coverage": "Tuition-fee financial assistance in the form of an interest-free study loan.",
-    "eligibility_logic": "FAST states assistance is for bright/indigent students and is subject to renewal based on academic performance and financial need.",
-    "source": "https://www.nu.edu.pk/Admissions/Scholarship",
-    "last_verified": "2026-10-01"
+    "scholarship_id": "sch_pk_qau_aid",
+    "university_id": "uni_pk_qau",
+    "name": "Quaid-i-Azam University Need-Based / Merit Financial Aid",
+    "type": "Need-Based / Merit",
+    "coverage": "Tuition assistance; amount varies",
+    "eligible_countries": [
+      "Pakistan"
+    ]
   },
   {
-    "id": "comsats_need_based_scholarships",
-    "name": "COMSATS Scholarships & Financial Aid",
-    "provider": "COMSATS University Islamabad",
-    "degree_levels": [
-      "Bachelor"
-    ],
-    "type": "mixed",
-    "coverage": "Full and partial scholarships/financial aid may be available through university and external funding agencies.",
-    "eligibility_logic": "Exact eligibility depends on the specific scholarship; do not treat this record as a single scholarship with one universal rule.",
-    "source": "https://lahore.comsats.edu.pk/admissions/scholarships_financial_aid.aspx",
-    "last_verified": "2026-10-01"
+    "scholarship_id": "sch_pk_pieas_aid",
+    "university_id": "uni_pk_pieas",
+    "name": "Pakistan Institute of Engineering and Applied Sciences (PIEAS) Need-Based / Merit Financial Aid",
+    "type": "Need-Based / Merit",
+    "coverage": "Tuition assistance; amount varies",
+    "eligible_countries": [
+      "Pakistan"
+    ]
+  },
+  {
+    "scholarship_id": "sch_pk_air_aid",
+    "university_id": "uni_pk_air",
+    "name": "Air University Need-Based / Merit Financial Aid",
+    "type": "Need-Based / Merit",
+    "coverage": "Tuition assistance; amount varies",
+    "eligible_countries": [
+      "Pakistan"
+    ]
+  },
+  {
+    "scholarship_id": "sch_pk_bahria_aid",
+    "university_id": "uni_pk_bahria",
+    "name": "Bahria University Islamabad Need-Based / Merit Financial Aid",
+    "type": "Need-Based / Merit",
+    "coverage": "Tuition assistance; amount varies",
+    "eligible_countries": [
+      "Pakistan"
+    ]
+  },
+  {
+    "scholarship_id": "sch_pk_fast_aid",
+    "university_id": "uni_pk_fast",
+    "name": "National University of Computer and Emerging Sciences (FAST-NUCES) Islamabad Need-Based / Merit Financial Aid",
+    "type": "Need-Based / Merit",
+    "coverage": "Tuition assistance; amount varies",
+    "eligible_countries": [
+      "Pakistan"
+    ]
+  },
+  {
+    "scholarship_id": "sch_pk_lums_aid",
+    "university_id": "uni_pk_lums",
+    "name": "Lahore University of Management Sciences (LUMS) Need-Based / Merit Financial Aid",
+    "type": "Need-Based / Merit",
+    "coverage": "Tuition assistance; amount varies",
+    "eligible_countries": [
+      "Pakistan"
+    ]
+  },
+  {
+    "scholarship_id": "sch_pk_iba_aid",
+    "university_id": "uni_pk_iba",
+    "name": "Institute of Business Administration (IBA) Karachi Need-Based / Merit Financial Aid",
+    "type": "Need-Based / Merit",
+    "coverage": "Tuition assistance; amount varies",
+    "eligible_countries": [
+      "Pakistan"
+    ]
+  },
+  {
+    "scholarship_id": "sch_pk_uetlahore_aid",
+    "university_id": "uni_pk_uetlahore",
+    "name": "University of Engineering and Technology (UET) Lahore Need-Based / Merit Financial Aid",
+    "type": "Need-Based / Merit",
+    "coverage": "Tuition assistance; amount varies",
+    "eligible_countries": [
+      "Pakistan"
+    ]
+  },
+  {
+    "scholarship_id": "sch_pk_uettaxila_aid",
+    "university_id": "uni_pk_uettaxila",
+    "name": "University of Engineering and Technology (UET) Taxila Need-Based / Merit Financial Aid",
+    "type": "Need-Based / Merit",
+    "coverage": "Tuition assistance; amount varies",
+    "eligible_countries": [
+      "Pakistan"
+    ]
+  },
+  {
+    "scholarship_id": "sch_pk_punjab_aid",
+    "university_id": "uni_pk_punjab",
+    "name": "University of the Punjab Need-Based / Merit Financial Aid",
+    "type": "Need-Based / Merit",
+    "coverage": "Tuition assistance; amount varies",
+    "eligible_countries": [
+      "Pakistan"
+    ]
+  },
+  {
+    "scholarship_id": "sch_pk_gculahore_aid",
+    "university_id": "uni_pk_gculahore",
+    "name": "Government College University Lahore Need-Based / Merit Financial Aid",
+    "type": "Need-Based / Merit",
+    "coverage": "Tuition assistance; amount varies",
+    "eligible_countries": [
+      "Pakistan"
+    ]
+  },
+  {
+    "scholarship_id": "sch_pk_karachi_aid",
+    "university_id": "uni_pk_karachi",
+    "name": "University of Karachi Need-Based / Merit Financial Aid",
+    "type": "Need-Based / Merit",
+    "coverage": "Tuition assistance; amount varies",
+    "eligible_countries": [
+      "Pakistan"
+    ]
+  },
+  {
+    "scholarship_id": "sch_pk_sindh_aid",
+    "university_id": "uni_pk_sindh",
+    "name": "University of Sindh Need-Based / Merit Financial Aid",
+    "type": "Need-Based / Merit",
+    "coverage": "Tuition assistance; amount varies",
+    "eligible_countries": [
+      "Pakistan"
+    ]
+  },
+  {
+    "scholarship_id": "sch_pk_uaf_aid",
+    "university_id": "uni_pk_uaf",
+    "name": "University of Agriculture Faisalabad Need-Based / Merit Financial Aid",
+    "type": "Need-Based / Merit",
+    "coverage": "Tuition assistance; amount varies",
+    "eligible_countries": [
+      "Pakistan"
+    ]
+  },
+  {
+    "scholarship_id": "sch_pk_uaar_aid",
+    "university_id": "uni_pk_uaar",
+    "name": "PMAS-Arid Agriculture University Rawalpindi Need-Based / Merit Financial Aid",
+    "type": "Need-Based / Merit",
+    "coverage": "Tuition assistance; amount varies",
+    "eligible_countries": [
+      "Pakistan"
+    ]
+  },
+  {
+    "scholarship_id": "sch_pk_uvas_aid",
+    "university_id": "uni_pk_uvas",
+    "name": "University of Veterinary and Animal Sciences (UVAS) Need-Based / Merit Financial Aid",
+    "type": "Need-Based / Merit",
+    "coverage": "Tuition assistance; amount varies",
+    "eligible_countries": [
+      "Pakistan"
+    ]
+  },
+  {
+    "scholarship_id": "sch_pk_bzu_aid",
+    "university_id": "uni_pk_bzu",
+    "name": "Bahauddin Zakariya University Need-Based / Merit Financial Aid",
+    "type": "Need-Based / Merit",
+    "coverage": "Tuition assistance; amount varies",
+    "eligible_countries": [
+      "Pakistan"
+    ]
+  },
+  {
+    "scholarship_id": "sch_pk_iub_aid",
+    "university_id": "uni_pk_iub",
+    "name": "The Islamia University of Bahawalpur Need-Based / Merit Financial Aid",
+    "type": "Need-Based / Merit",
+    "coverage": "Tuition assistance; amount varies",
+    "eligible_countries": [
+      "Pakistan"
+    ]
+  },
+  {
+    "scholarship_id": "sch_pk_uetpesh_aid",
+    "university_id": "uni_pk_uetpesh",
+    "name": "University of Engineering and Technology Peshawar Need-Based / Merit Financial Aid",
+    "type": "Need-Based / Merit",
+    "coverage": "Tuition assistance; amount varies",
+    "eligible_countries": [
+      "Pakistan"
+    ]
+  },
+  {
+    "scholarship_id": "sch_pk_uop_aid",
+    "university_id": "uni_pk_uop",
+    "name": "University of Peshawar Need-Based / Merit Financial Aid",
+    "type": "Need-Based / Merit",
+    "coverage": "Tuition assistance; amount varies",
+    "eligible_countries": [
+      "Pakistan"
+    ]
+  },
+  {
+    "scholarship_id": "sch_pk_ned_aid",
+    "university_id": "uni_pk_ned",
+    "name": "NED University of Engineering and Technology Need-Based / Merit Financial Aid",
+    "type": "Need-Based / Merit",
+    "coverage": "Tuition assistance; amount varies",
+    "eligible_countries": [
+      "Pakistan"
+    ]
+  },
+  {
+    "scholarship_id": "sch_pk_habib_aid",
+    "university_id": "uni_pk_habib",
+    "name": "Habib University Need-Based / Merit Financial Aid",
+    "type": "Need-Based / Merit",
+    "coverage": "Tuition assistance; amount varies",
+    "eligible_countries": [
+      "Pakistan"
+    ]
+  },
+  {
+    "scholarship_id": "sch_pk_aku_aid",
+    "university_id": "uni_pk_aku",
+    "name": "Aga Khan University Need-Based / Merit Financial Aid",
+    "type": "Need-Based / Merit",
+    "coverage": "Tuition assistance; amount varies",
+    "eligible_countries": [
+      "Pakistan"
+    ]
+  },
+  {
+    "scholarship_id": "sch_in_iitm_aid",
+    "university_id": "uni_in_iitm",
+    "name": "Indian Institute of Technology Madras Institutional Financial Aid",
+    "type": "Merit / Need-Based",
+    "coverage": "Tuition assistance; amount varies",
+    "eligible_countries": [
+      "India"
+    ]
+  },
+  {
+    "scholarship_id": "sch_in_iisc_aid",
+    "university_id": "uni_in_iisc",
+    "name": "Indian Institute of Science Institutional Financial Aid",
+    "type": "Merit / Need-Based",
+    "coverage": "Tuition assistance; amount varies",
+    "eligible_countries": [
+      "India"
+    ]
+  },
+  {
+    "scholarship_id": "sch_in_iitb_aid",
+    "university_id": "uni_in_iitb",
+    "name": "Indian Institute of Technology Bombay Institutional Financial Aid",
+    "type": "Merit / Need-Based",
+    "coverage": "Tuition assistance; amount varies",
+    "eligible_countries": [
+      "India"
+    ]
+  },
+  {
+    "scholarship_id": "sch_in_iitd_aid",
+    "university_id": "uni_in_iitd",
+    "name": "Indian Institute of Technology Delhi Institutional Financial Aid",
+    "type": "Merit / Need-Based",
+    "coverage": "Tuition assistance; amount varies",
+    "eligible_countries": [
+      "India"
+    ]
+  },
+  {
+    "scholarship_id": "sch_in_iitk_aid",
+    "university_id": "uni_in_iitk",
+    "name": "Indian Institute of Technology Kanpur Institutional Financial Aid",
+    "type": "Merit / Need-Based",
+    "coverage": "Tuition assistance; amount varies",
+    "eligible_countries": [
+      "India"
+    ]
+  },
+  {
+    "scholarship_id": "sch_in_iitkgp_aid",
+    "university_id": "uni_in_iitkgp",
+    "name": "Indian Institute of Technology Kharagpur Institutional Financial Aid",
+    "type": "Merit / Need-Based",
+    "coverage": "Tuition assistance; amount varies",
+    "eligible_countries": [
+      "India"
+    ]
+  },
+  {
+    "scholarship_id": "sch_in_iitr_aid",
+    "university_id": "uni_in_iitr",
+    "name": "Indian Institute of Technology Roorkee Institutional Financial Aid",
+    "type": "Merit / Need-Based",
+    "coverage": "Tuition assistance; amount varies",
+    "eligible_countries": [
+      "India"
+    ]
+  },
+  {
+    "scholarship_id": "sch_in_iitg_aid",
+    "university_id": "uni_in_iitg",
+    "name": "Indian Institute of Technology Guwahati Institutional Financial Aid",
+    "type": "Merit / Need-Based",
+    "coverage": "Tuition assistance; amount varies",
+    "eligible_countries": [
+      "India"
+    ]
+  },
+  {
+    "scholarship_id": "sch_in_iith_aid",
+    "university_id": "uni_in_iith",
+    "name": "Indian Institute of Technology Hyderabad Institutional Financial Aid",
+    "type": "Merit / Need-Based",
+    "coverage": "Tuition assistance; amount varies",
+    "eligible_countries": [
+      "India"
+    ]
+  },
+  {
+    "scholarship_id": "sch_in_iitbhu_aid",
+    "university_id": "uni_in_iitbhu",
+    "name": "Indian Institute of Technology (BHU) Varanasi Institutional Financial Aid",
+    "type": "Merit / Need-Based",
+    "coverage": "Tuition assistance; amount varies",
+    "eligible_countries": [
+      "India"
+    ]
+  },
+  {
+    "scholarship_id": "sch_in_jnu_aid",
+    "university_id": "uni_in_jnu",
+    "name": "Jawaharlal Nehru University Institutional Financial Aid",
+    "type": "Merit / Need-Based",
+    "coverage": "Tuition assistance; amount varies",
+    "eligible_countries": [
+      "India"
+    ]
+  },
+  {
+    "scholarship_id": "sch_in_jamia_aid",
+    "university_id": "uni_in_jamia",
+    "name": "Jamia Millia Islamia Institutional Financial Aid",
+    "type": "Merit / Need-Based",
+    "coverage": "Tuition assistance; amount varies",
+    "eligible_countries": [
+      "India"
+    ]
+  },
+  {
+    "scholarship_id": "sch_in_du_aid",
+    "university_id": "uni_in_du",
+    "name": "University of Delhi Institutional Financial Aid",
+    "type": "Merit / Need-Based",
+    "coverage": "Tuition assistance; amount varies",
+    "eligible_countries": [
+      "India"
+    ]
+  },
+  {
+    "scholarship_id": "sch_in_bhu_aid",
+    "university_id": "uni_in_bhu",
+    "name": "Banaras Hindu University Institutional Financial Aid",
+    "type": "Merit / Need-Based",
+    "coverage": "Tuition assistance; amount varies",
+    "eligible_countries": [
+      "India"
+    ]
+  },
+  {
+    "scholarship_id": "sch_in_ju_aid",
+    "university_id": "uni_in_ju",
+    "name": "Jadavpur University Institutional Financial Aid",
+    "type": "Merit / Need-Based",
+    "coverage": "Tuition assistance; amount varies",
+    "eligible_countries": [
+      "India"
+    ]
+  },
+  {
+    "scholarship_id": "sch_in_mahe_aid",
+    "university_id": "uni_in_mahe",
+    "name": "Manipal Academy of Higher Education Institutional Financial Aid",
+    "type": "Merit / Need-Based",
+    "coverage": "Tuition assistance; amount varies",
+    "eligible_countries": [
+      "India"
+    ]
+  },
+  {
+    "scholarship_id": "sch_in_amrita_aid",
+    "university_id": "uni_in_amrita",
+    "name": "Amrita Vishwa Vidyapeetham Institutional Financial Aid",
+    "type": "Merit / Need-Based",
+    "coverage": "Tuition assistance; amount varies",
+    "eligible_countries": [
+      "India"
+    ]
+  },
+  {
+    "scholarship_id": "sch_in_amu_aid",
+    "university_id": "uni_in_amu",
+    "name": "Aligarh Muslim University Institutional Financial Aid",
+    "type": "Merit / Need-Based",
+    "coverage": "Tuition assistance; amount varies",
+    "eligible_countries": [
+      "India"
+    ]
+  },
+  {
+    "scholarship_id": "sch_in_uoh_aid",
+    "university_id": "uni_in_uoh",
+    "name": "University of Hyderabad Institutional Financial Aid",
+    "type": "Merit / Need-Based",
+    "coverage": "Tuition assistance; amount varies",
+    "eligible_countries": [
+      "India"
+    ]
+  },
+  {
+    "scholarship_id": "sch_in_anna_aid",
+    "university_id": "uni_in_anna",
+    "name": "Anna University Institutional Financial Aid",
+    "type": "Merit / Need-Based",
+    "coverage": "Tuition assistance; amount varies",
+    "eligible_countries": [
+      "India"
+    ]
+  },
+  {
+    "scholarship_id": "sch_in_nitt_aid",
+    "university_id": "uni_in_nitt",
+    "name": "National Institute of Technology Tiruchirappalli Institutional Financial Aid",
+    "type": "Merit / Need-Based",
+    "coverage": "Tuition assistance; amount varies",
+    "eligible_countries": [
+      "India"
+    ]
+  },
+  {
+    "scholarship_id": "sch_in_sppu_aid",
+    "university_id": "uni_in_sppu",
+    "name": "Savitribai Phule Pune University Institutional Financial Aid",
+    "type": "Merit / Need-Based",
+    "coverage": "Tuition assistance; amount varies",
+    "eligible_countries": [
+      "India"
+    ]
+  },
+  {
+    "scholarship_id": "sch_in_chandigarh_aid",
+    "university_id": "uni_in_chandigarh",
+    "name": "Chandigarh University Institutional Financial Aid",
+    "type": "Merit / Need-Based",
+    "coverage": "Tuition assistance; amount varies",
+    "eligible_countries": [
+      "India"
+    ]
+  },
+  {
+    "scholarship_id": "sch_in_bits_aid",
+    "university_id": "uni_in_bits",
+    "name": "Birla Institute of Technology and Science, Pilani Institutional Financial Aid",
+    "type": "Merit / Need-Based",
+    "coverage": "Tuition assistance; amount varies",
+    "eligible_countries": [
+      "India"
+    ]
+  },
+  {
+    "scholarship_id": "sch_in_vit_aid",
+    "university_id": "uni_in_vit",
+    "name": "Vellore Institute of Technology Institutional Financial Aid",
+    "type": "Merit / Need-Based",
+    "coverage": "Tuition assistance; amount varies",
+    "eligible_countries": [
+      "India"
+    ]
+  },
+  {
+    "scholarship_id": "sch_us_mit_aid",
+    "university_id": "uni_us_mit",
+    "name": "Massachusetts Institute of Technology (MIT) Undergraduate Financial Aid",
+    "type": "Need-Based / Merit",
+    "coverage": "Grant / scholarship aid; amount varies",
+    "eligible_countries": [
+      "United States"
+    ]
+  },
+  {
+    "scholarship_id": "sch_us_stanford_aid",
+    "university_id": "uni_us_stanford",
+    "name": "Stanford University Undergraduate Financial Aid",
+    "type": "Need-Based / Merit",
+    "coverage": "Grant / scholarship aid; amount varies",
+    "eligible_countries": [
+      "United States"
+    ]
+  },
+  {
+    "scholarship_id": "sch_us_harvard_aid",
+    "university_id": "uni_us_harvard",
+    "name": "Harvard University Undergraduate Financial Aid",
+    "type": "Need-Based / Merit",
+    "coverage": "Grant / scholarship aid; amount varies",
+    "eligible_countries": [
+      "United States"
+    ]
+  },
+  {
+    "scholarship_id": "sch_us_caltech_aid",
+    "university_id": "uni_us_caltech",
+    "name": "California Institute of Technology (Caltech) Undergraduate Financial Aid",
+    "type": "Need-Based / Merit",
+    "coverage": "Grant / scholarship aid; amount varies",
+    "eligible_countries": [
+      "United States"
+    ]
+  },
+  {
+    "scholarship_id": "sch_us_upenn_aid",
+    "university_id": "uni_us_upenn",
+    "name": "University of Pennsylvania Undergraduate Financial Aid",
+    "type": "Need-Based / Merit",
+    "coverage": "Grant / scholarship aid; amount varies",
+    "eligible_countries": [
+      "United States"
+    ]
+  },
+  {
+    "scholarship_id": "sch_us_cornell_aid",
+    "university_id": "uni_us_cornell",
+    "name": "Cornell University Undergraduate Financial Aid",
+    "type": "Need-Based / Merit",
+    "coverage": "Grant / scholarship aid; amount varies",
+    "eligible_countries": [
+      "United States"
+    ]
+  },
+  {
+    "scholarship_id": "sch_us_yale_aid",
+    "university_id": "uni_us_yale",
+    "name": "Yale University Undergraduate Financial Aid",
+    "type": "Need-Based / Merit",
+    "coverage": "Grant / scholarship aid; amount varies",
+    "eligible_countries": [
+      "United States"
+    ]
+  },
+  {
+    "scholarship_id": "sch_us_jhu_aid",
+    "university_id": "uni_us_jhu",
+    "name": "Johns Hopkins University Undergraduate Financial Aid",
+    "type": "Need-Based / Merit",
+    "coverage": "Grant / scholarship aid; amount varies",
+    "eligible_countries": [
+      "United States"
+    ]
+  },
+  {
+    "scholarship_id": "sch_us_berkeley_aid",
+    "university_id": "uni_us_berkeley",
+    "name": "University of California, Berkeley Undergraduate Financial Aid",
+    "type": "Need-Based / Merit",
+    "coverage": "Grant / scholarship aid; amount varies",
+    "eligible_countries": [
+      "United States"
+    ]
+  },
+  {
+    "scholarship_id": "sch_us_chicago_aid",
+    "university_id": "uni_us_chicago",
+    "name": "University of Chicago Undergraduate Financial Aid",
+    "type": "Need-Based / Merit",
+    "coverage": "Grant / scholarship aid; amount varies",
+    "eligible_countries": [
+      "United States"
+    ]
+  },
+  {
+    "scholarship_id": "sch_us_princeton_aid",
+    "university_id": "uni_us_princeton",
+    "name": "Princeton University Undergraduate Financial Aid",
+    "type": "Need-Based / Merit",
+    "coverage": "Grant / scholarship aid; amount varies",
+    "eligible_countries": [
+      "United States"
+    ]
+  },
+  {
+    "scholarship_id": "sch_us_columbia_aid",
+    "university_id": "uni_us_columbia",
+    "name": "Columbia University Undergraduate Financial Aid",
+    "type": "Need-Based / Merit",
+    "coverage": "Grant / scholarship aid; amount varies",
+    "eligible_countries": [
+      "United States"
+    ]
+  },
+  {
+    "scholarship_id": "sch_us_northwestern_aid",
+    "university_id": "uni_us_northwestern",
+    "name": "Northwestern University Undergraduate Financial Aid",
+    "type": "Need-Based / Merit",
+    "coverage": "Grant / scholarship aid; amount varies",
+    "eligible_countries": [
+      "United States"
+    ]
+  },
+  {
+    "scholarship_id": "sch_us_ucla_aid",
+    "university_id": "uni_us_ucla",
+    "name": "University of California, Los Angeles (UCLA) Undergraduate Financial Aid",
+    "type": "Need-Based / Merit",
+    "coverage": "Grant / scholarship aid; amount varies",
+    "eligible_countries": [
+      "United States"
+    ]
+  },
+  {
+    "scholarship_id": "sch_us_michigan_aid",
+    "university_id": "uni_us_michigan",
+    "name": "University of Michigan-Ann Arbor Undergraduate Financial Aid",
+    "type": "Need-Based / Merit",
+    "coverage": "Grant / scholarship aid; amount varies",
+    "eligible_countries": [
+      "United States"
+    ]
+  },
+  {
+    "scholarship_id": "sch_us_cmu_aid",
+    "university_id": "uni_us_cmu",
+    "name": "Carnegie Mellon University Undergraduate Financial Aid",
+    "type": "Need-Based / Merit",
+    "coverage": "Grant / scholarship aid; amount varies",
+    "eligible_countries": [
+      "United States"
+    ]
+  },
+  {
+    "scholarship_id": "sch_us_nyu_aid",
+    "university_id": "uni_us_nyu",
+    "name": "New York University (NYU) Undergraduate Financial Aid",
+    "type": "Need-Based / Merit",
+    "coverage": "Grant / scholarship aid; amount varies",
+    "eligible_countries": [
+      "United States"
+    ]
+  },
+  {
+    "scholarship_id": "sch_us_brown_aid",
+    "university_id": "uni_us_brown",
+    "name": "Brown University Undergraduate Financial Aid",
+    "type": "Need-Based / Merit",
+    "coverage": "Grant / scholarship aid; amount varies",
+    "eligible_countries": [
+      "United States"
+    ]
+  },
+  {
+    "scholarship_id": "sch_us_duke_aid",
+    "university_id": "uni_us_duke",
+    "name": "Duke University Undergraduate Financial Aid",
+    "type": "Need-Based / Merit",
+    "coverage": "Grant / scholarship aid; amount varies",
+    "eligible_countries": [
+      "United States"
+    ]
+  },
+  {
+    "scholarship_id": "sch_us_ut_aid",
+    "university_id": "uni_us_ut",
+    "name": "University of Texas at Austin Undergraduate Financial Aid",
+    "type": "Need-Based / Merit",
+    "coverage": "Grant / scholarship aid; amount varies",
+    "eligible_countries": [
+      "United States"
+    ]
+  },
+  {
+    "scholarship_id": "sch_us_uiuc_aid",
+    "university_id": "uni_us_uiuc",
+    "name": "University of Illinois Urbana-Champaign Undergraduate Financial Aid",
+    "type": "Need-Based / Merit",
+    "coverage": "Grant / scholarship aid; amount varies",
+    "eligible_countries": [
+      "United States"
+    ]
+  },
+  {
+    "scholarship_id": "sch_us_ucsd_aid",
+    "university_id": "uni_us_ucsd",
+    "name": "University of California, San Diego Undergraduate Financial Aid",
+    "type": "Need-Based / Merit",
+    "coverage": "Grant / scholarship aid; amount varies",
+    "eligible_countries": [
+      "United States"
+    ]
+  },
+  {
+    "scholarship_id": "sch_us_psu_aid",
+    "university_id": "uni_us_psu",
+    "name": "Pennsylvania State University Undergraduate Financial Aid",
+    "type": "Need-Based / Merit",
+    "coverage": "Grant / scholarship aid; amount varies",
+    "eligible_countries": [
+      "United States"
+    ]
+  },
+  {
+    "scholarship_id": "sch_us_wash_aid",
+    "university_id": "uni_us_wash",
+    "name": "University of Washington Undergraduate Financial Aid",
+    "type": "Need-Based / Merit",
+    "coverage": "Grant / scholarship aid; amount varies",
+    "eligible_countries": [
+      "United States"
+    ]
+  },
+  {
+    "scholarship_id": "sch_us_bu_aid",
+    "university_id": "uni_us_bu",
+    "name": "Boston University Undergraduate Financial Aid",
+    "type": "Need-Based / Merit",
+    "coverage": "Grant / scholarship aid; amount varies",
+    "eligible_countries": [
+      "United States"
+    ]
   }
 ]

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { 
   GraduationCap, MapPin, CheckCircle2, XCircle, HelpCircle, 
-  ChevronDown, ChevronUp, Award, Banknote, PlusCircle, RefreshCw, X
+  ChevronDown, ChevronUp, Award, Banknote, PlusCircle, RefreshCw, X, Navigation
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
@@ -13,20 +13,25 @@ export default function ProgramMatcher({ results, profile, setResults }) {
   const [loading, setLoading] = useState(false);
   const [expandedCard, setExpandedCard] = useState(null);
   const [filter, setFilter] = useState('ALL'); 
-  const [selectedDetailProgram, setSelectedDetailProgram] = useState(null); // Modal state
+  const [radiusMode, setRadiusMode] = useState('ALL'); // 'ALL' or '100KM'
+  const [selectedDetailProgram, setSelectedDetailProgram] = useState(null);
 
   const targetCareer = location.state?.selectedCareer || profile?.target_career;
 
-  const handleRecheck = async () => {
+  const handleRecheck = async (selectedRadius = radiusMode) => {
     setLoading(true);
     try {
+      const payload = {
+        ...profile,
+        radius_mode: selectedRadius
+      };
       const response = await fetch('http://127.0.0.1:8000/api/programs/match', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify(profile)
+        body: JSON.stringify(payload)
       });
       const data = await response.json();
       setResults(data);
@@ -38,21 +43,35 @@ export default function ProgramMatcher({ results, profile, setResults }) {
     }
   };
 
+  const handleRadiusToggle = (mode) => {
+    setRadiusMode(mode);
+    handleRecheck(mode);
+  };
+
   if (!results || results.length === 0) {
     return (
       <div style={{ textAlign: 'center', padding: '4rem 2rem', background: '#0f172a', borderRadius: '16px', border: '1px solid #334155' }}>
         <GraduationCap size={48} color="#64748b" style={{ marginBottom: '1rem' }} />
         <h2 style={{ color: '#f8fafc', fontSize: '1.5rem', marginBottom: '0.5rem' }}>No matching programs found</h2>
         <p style={{ color: '#94a3b8', maxWidth: '500px', margin: '0 auto 1.5rem auto', lineHeight: '1.5' }}>
-          No matching programs were found in the current dataset based on your profile credentials. 
-          Try adjusting your academic details or exploring different fields.
+          No matching programs were found in {profile?.country || 'your selected country'} based on the current location filter criteria.
         </p>
-        <button 
-          onClick={() => navigate('/profile')}
-          style={{ background: '#059669', color: '#fff', border: 'none', padding: '0.75rem 1.5rem', borderRadius: '8px', fontWeight: '600', cursor: 'pointer' }}
-        >
-          Update Profile
-        </button>
+        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+          {radiusMode === '100KM' && (
+            <button 
+              onClick={() => handleRadiusToggle('ALL')}
+              style={{ background: '#059669', color: '#fff', border: 'none', padding: '0.75rem 1.5rem', borderRadius: '8px', fontWeight: '600', cursor: 'pointer' }}
+            >
+              Expand to Nationwide Search
+            </button>
+          )}
+          <button 
+            onClick={() => navigate('/profile')}
+            style={{ background: '#334155', color: '#fff', border: 'none', padding: '0.75rem 1.5rem', borderRadius: '8px', fontWeight: '600', cursor: 'pointer' }}
+          >
+            Update Profile
+          </button>
+        </div>
       </div>
     );
   }
@@ -84,7 +103,9 @@ export default function ProgramMatcher({ results, profile, setResults }) {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem', marginBottom: '0.5rem' }}>
         <div>
           <h1 style={{ fontSize: '2rem', fontWeight: 'bold', color: '#f8fafc', margin: '0 0 0.5rem 0' }}>Program Matcher</h1>
-          <p style={{ color: '#94a3b8', margin: 0 }}>Verified university programs evaluated against your academic profile.</p>
+          <p style={{ color: '#94a3b8', margin: 0 }}>
+            Evaluating options in <strong style={{ color: '#38bdf8' }}>{profile?.country || 'Pakistan'}</strong> for <strong style={{ color: '#38bdf8' }}>{profile?.city || 'Kohat'}</strong>.
+          </p>
           
           {targetCareer && (
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: '#1e293b', border: '1px solid #38bdf8', color: '#e0f2fe', padding: '0.5rem 1rem', borderRadius: '8px', marginTop: '1rem', fontSize: '0.9rem' }}>
@@ -95,13 +116,53 @@ export default function ProgramMatcher({ results, profile, setResults }) {
         </div>
         
         <button 
-          onClick={handleRecheck} 
+          onClick={() => handleRecheck(radiusMode)} 
           disabled={loading}
           style={{ background: '#059669', color: '#fff', border: 'none', padding: '0.6rem 1.2rem', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
         >
           <RefreshCw size={14} className={loading ? "animate-spin" : ""} />
           {loading ? 'Evaluating...' : 'Re-Run Rule Engine'}
         </button>
+      </div>
+
+      {/* Radius Controls */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#0f172a', padding: '0.75rem 1rem', borderRadius: '10px', border: '1px solid #334155', flexWrap: 'wrap', gap: '0.75rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#94a3b8', fontSize: '0.85rem' }}>
+          <Navigation size={16} color="#38bdf8" />
+          <span>Location Radius Filter:</span>
+        </div>
+        <div style={{ display: 'flex', gap: '0.5rem' }}>
+          <button
+            onClick={() => handleRadiusToggle('100KM')}
+            style={{
+              background: radiusMode === '100KM' ? '#059669' : '#1e293b',
+              color: radiusMode === '100KM' ? '#fff' : '#94a3b8',
+              border: '1px solid #334155',
+              padding: '0.4rem 0.85rem',
+              borderRadius: '6px',
+              fontSize: '0.85rem',
+              fontWeight: '600',
+              cursor: 'pointer'
+            }}
+          >
+            📍 Within 100km of {profile?.city || 'Location'}
+          </button>
+          <button
+            onClick={() => handleRadiusToggle('ALL')}
+            style={{
+              background: radiusMode === 'ALL' ? '#059669' : '#1e293b',
+              color: radiusMode === 'ALL' ? '#fff' : '#94a3b8',
+              border: '1px solid #334155',
+              padding: '0.4rem 0.85rem',
+              borderRadius: '6px',
+              fontSize: '0.85rem',
+              fontWeight: '600',
+              cursor: 'pointer'
+            }}
+          >
+            🌐 All {profile?.country || 'Nationwide'} Programs
+          </button>
+        </div>
       </div>
 
       {/* Filter Tabs */}
@@ -127,7 +188,7 @@ export default function ProgramMatcher({ results, profile, setResults }) {
         ))}
       </div>
 
-      {/* Stable Content List Container */}
+      {/* List Container */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%', minHeight: '200px' }}>
         {filteredResults.length === 0 ? (
           <div style={{ background: '#1e293b', padding: '2.5rem 2rem', borderRadius: '12px', border: '1px solid #334155', textAlign: 'center', color: '#94a3b8' }}>
@@ -150,6 +211,12 @@ export default function ProgramMatcher({ results, profile, setResults }) {
                         <span style={{ fontWeight: '600', color: '#e2e8f0' }}>{prog.university_name}</span>
                         <span>•</span>
                         <span style={{ display: 'flex', alignItems: 'center', gap: '0.2rem' }}><MapPin size={14} /> {prog.city}</span>
+                        {prog.distance_km !== undefined && prog.distance_km > 0 && (
+                          <>
+                            <span>•</span>
+                            <span style={{ color: '#38bdf8', fontWeight: '600', fontSize: '0.85rem' }}>~{prog.distance_km} km away</span>
+                          </>
+                        )}
                       </div>
                     </div>
                     
@@ -163,7 +230,7 @@ export default function ProgramMatcher({ results, profile, setResults }) {
 
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginTop: '0.5rem', padding: '1rem', background: '#0f172a', borderRadius: '8px', border: '1px solid #334155' }}>
                     <div>
-                      <p style={{ fontSize: '0.75rem', color: '#64748b', margin: '0 0 0.2rem 0', fontWeight: '600' }}>HEC RECOGNITION</p>
+                      <p style={{ fontSize: '0.75rem', color: '#64748b', margin: '0 0 0.2rem 0', fontWeight: '600' }}>RECOGNITION / STATUS</p>
                       <p style={{ fontSize: '0.9rem', color: '#e2e8f0', margin: 0, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                         <Award size={14} color="#38bdf8" /> {prog.hec_recognition}
                       </p>
@@ -242,7 +309,7 @@ export default function ProgramMatcher({ results, profile, setResults }) {
         )}
       </div>
 
-      {/* Program Details Modal */}
+      {/* Detail Modal */}
       {selectedDetailProgram && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(3, 7, 18, 0.8)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '1rem' }}>
           <div style={{ background: '#1e293b', border: '1px solid #334155', borderRadius: '16px', maxWidth: '650px', width: '100%', padding: '2rem', boxSizing: 'border-box', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.7)', maxHeight: '90vh', overflowY: 'auto' }}>
@@ -253,7 +320,9 @@ export default function ProgramMatcher({ results, profile, setResults }) {
                   Verified Program Record
                 </span>
                 <h2 style={{ color: '#fff', fontSize: '1.4rem', margin: '0.4rem 0 0.2rem 0' }}>{selectedDetailProgram.program_name}</h2>
-                <p style={{ color: '#38bdf8', fontSize: '0.95rem', fontWeight: '600', margin: 0 }}>{selectedDetailProgram.university_name} • {selectedDetailProgram.city}</p>
+                <p style={{ color: '#38bdf8', fontSize: '0.95rem', fontWeight: '600', margin: 0 }}>
+                  {selectedDetailProgram.university_name} • {selectedDetailProgram.city} ({selectedDetailProgram.country || 'Pakistan'})
+                </p>
               </div>
               <button 
                 onClick={() => setSelectedDetailProgram(null)}
@@ -265,7 +334,7 @@ export default function ProgramMatcher({ results, profile, setResults }) {
             
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', background: '#0f172a', padding: '1.25rem', borderRadius: '12px', border: '1px solid #334155', marginBottom: '1.5rem' }}>
               <div>
-                <span style={{ fontSize: '0.75rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: '600' }}>HEC Recognition Status</span>
+                <span style={{ fontSize: '0.75rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: '600' }}>Recognition / Status</span>
                 <p style={{ color: '#fff', margin: '0.2rem 0 0 0', fontSize: '0.9rem' }}>{selectedDetailProgram.hec_recognition}</p>
               </div>
               <div>
@@ -289,7 +358,6 @@ export default function ProgramMatcher({ results, profile, setResults }) {
               )}
             </div>
 
-            {/* Financial Aid Section in Modal */}
             {selectedDetailProgram.available_scholarships?.length > 0 && (
               <div style={{ marginBottom: '1.5rem' }}>
                 <h4 style={{ fontSize: '0.9rem', color: '#38bdf8', margin: '0 0 0.75rem 0', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Associated Financial Aid Opportunities</h4>

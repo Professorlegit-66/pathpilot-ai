@@ -1,90 +1,122 @@
 [
   {
-    "id": "software_engineer",
-    "name": "Software Engineer",
-    "related_fields": [
-      "Computer Science",
-      "Software Engineering",
-      "Computer Engineering"
-    ],
-    "skills": [
-      "programming",
-      "data structures and algorithms",
-      "software design",
-      "databases",
-      "version control"
-    ],
-    "source_basis": "Career mapping seed; not a claim of guaranteed employment."
+    "career_id": "car_software_engineer",
+    "title": "Software Engineer / ML Track",
+    "field_category": "Computer Science",
+    "description": "Building scalable software, AI pipelines, and backend architectures.",
+    "top_skills": [
+      "Python",
+      "Data Structures",
+      "Web Development",
+      "SQL"
+    ]
   },
   {
-    "id": "ml_engineer",
-    "name": "Machine Learning Engineer",
-    "related_fields": [
-      "Computer Science",
-      "Artificial Intelligence",
-      "Data Science"
-    ],
-    "skills": [
-      "Python",
-      "machine learning",
-      "statistics",
-      "linear algebra",
-      "model deployment",
-      "software engineering"
-    ],
-    "source_basis": "Career mapping seed for recommendation logic."
-  },
-  {
-    "id": "data_scientist",
-    "name": "Data Scientist",
-    "related_fields": [
-      "Data Science",
-      "Computer Science",
-      "Artificial Intelligence",
-      "Statistics"
-    ],
-    "skills": [
-      "Python",
-      "statistics",
+    "career_id": "car_data_engineer",
+    "title": "Data Engineer",
+    "field_category": "Computer Science",
+    "description": "Designing reliable data platforms, ETL pipelines, warehouses, and analytics infrastructure.",
+    "top_skills": [
       "SQL",
-      "machine learning",
-      "data visualization"
-    ],
-    "source_basis": "Career mapping seed for recommendation logic."
-  },
-  {
-    "id": "ai_engineer",
-    "name": "AI Engineer",
-    "related_fields": [
-      "Artificial Intelligence",
-      "Computer Science",
-      "Data Science"
-    ],
-    "skills": [
       "Python",
-      "machine learning",
-      "deep learning",
-      "APIs",
-      "deployment",
-      "LLM/AI systems"
-    ],
-    "source_basis": "Career mapping seed for recommendation logic."
+      "ETL",
+      "Data Warehousing"
+    ]
   },
   {
-    "id": "cybersecurity_engineer",
-    "name": "Cybersecurity Engineer",
-    "related_fields": [
-      "Cyber Security",
-      "Computer Science",
-      "Information Technology"
-    ],
-    "skills": [
-      "networking",
+    "career_id": "car_ml_engineer",
+    "title": "Machine Learning Engineer",
+    "field_category": "Computer Science",
+    "description": "Developing, evaluating, and deploying machine-learning systems and models.",
+    "top_skills": [
+      "Python",
+      "Machine Learning",
+      "Statistics",
+      "MLOps"
+    ]
+  },
+  {
+    "career_id": "car_data_scientist",
+    "title": "Data Scientist",
+    "field_category": "Computer Science",
+    "description": "Using statistical and computational methods to analyze data and support decisions.",
+    "top_skills": [
+      "Python",
+      "Statistics",
+      "SQL",
+      "Data Visualization"
+    ]
+  },
+  {
+    "career_id": "car_cybersecurity",
+    "title": "Cybersecurity Engineer",
+    "field_category": "Computer Science",
+    "description": "Protecting systems, networks, applications, and data through security engineering practices.",
+    "top_skills": [
+      "Networking",
       "Linux",
-      "security fundamentals",
-      "scripting",
-      "incident response"
-    ],
-    "source_basis": "Career mapping seed for recommendation logic."
+      "Security Fundamentals",
+      "Python"
+    ]
+  },
+  {
+    "career_id": "car_cloud_engineer",
+    "title": "Cloud / DevOps Engineer",
+    "field_category": "Computer Science",
+    "description": "Automating software delivery and operating scalable cloud infrastructure.",
+    "top_skills": [
+      "Linux",
+      "Cloud Computing",
+      "Docker",
+      "CI/CD"
+    ]
+  },
+  {
+    "career_id": "car_product",
+    "title": "Product / Technology Analyst",
+    "field_category": "Computer Science",
+    "description": "Connecting technical systems, user needs, analytics, and product strategy.",
+    "top_skills": [
+      "SQL",
+      "Analytics",
+      "Communication",
+      "Product Thinking"
+    ]
+  },
+  {
+    "career_id": "car_ai_research",
+    "title": "AI Research Track",
+    "field_category": "Computer Science",
+    "description": "Investigating algorithms, models, and computational methods for artificial intelligence.",
+    "top_skills": [
+      "Linear Algebra",
+      "Probability",
+      "Python",
+      "Research Methods"
+    ]
+  },
+  {
+    "career_id": "car_web",
+    "title": "Full-Stack Web Developer",
+    "field_category": "Computer Science",
+    "description": "Building user-facing applications and the services that power them.",
+    "top_skills": [
+      "JavaScript",
+      "Python",
+      "APIs",
+      "Databases"
+    ]
+  },
+  {
+    "career_id": "car_database",
+    "title": "Database Engineer",
+    "field_category": "Computer Science",
+    "description": "Designing, optimizing, securing, and operating database systems.",
+    "top_skills": [
+      "SQL",
+      "Database Design",
+      "Indexing",
+      "Performance Tuning"
+    ]
   }
 ]

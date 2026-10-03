@@ -15,18 +15,19 @@ export default function ProgramMatcher({ results, profile, setResults }) {
   const [filter, setFilter] = useState('ALL'); 
   
   const [radiusMode, setRadiusMode] = useState(() => {
-    return profile?.radius_mode || sessionStorage.getItem('radius_mode') || 'ALL';
+    return sessionStorage.getItem('radius_mode') || profile?.radius_mode || 'ALL';
   });
   
   const [selectedDetailProgram, setSelectedDetailProgram] = useState(null);
 
-  const targetCareer = location.state?.selectedCareer || profile?.target_career;
+  const targetCareer = location.state?.selectedCareer || profile?.target_career || sessionStorage.getItem('roadmap_target_career') || profile?.preferred_field || "Software Engineering";
 
   const handleRecheck = async (selectedRadius = radiusMode) => {
     setLoading(true);
     try {
       const payload = {
         ...(profile || {}),
+        target_career: targetCareer,
         radius_mode: selectedRadius
       };
       const response = await fetch('http://127.0.0.1:8000/api/programs/match', {
@@ -48,8 +49,12 @@ export default function ProgramMatcher({ results, profile, setResults }) {
   };
 
   useEffect(() => {
+    const savedRadius = sessionStorage.getItem('radius_mode') || 'ALL';
+    if (savedRadius !== radiusMode) {
+      setRadiusMode(savedRadius);
+    }
     if ((!results || results.length === 0) && !loading) {
-      handleRecheck(radiusMode);
+      handleRecheck(savedRadius);
     }
   }, []);
 
@@ -273,7 +278,12 @@ export default function ProgramMatcher({ results, profile, setResults }) {
                           View Details
                         </button>
                         <button 
-                          onClick={() => navigate('/roadmap', { state: { selectedProgram: prog, selectedCareer: targetCareer } })}
+                          onClick={() => {
+                            sessionStorage.removeItem('roadmap_is_reset');
+                            sessionStorage.setItem('roadmap_selected_program', JSON.stringify(prog));
+                            sessionStorage.setItem('roadmap_target_career', targetCareer);
+                            navigate('/roadmap', { state: { selectedProgram: prog, selectedCareer: targetCareer } });
+                          }}
                           style={{ background: '#059669', color: '#fff', border: 'none', padding: '0.6rem 1.25rem', borderRadius: '8px', fontSize: '0.9rem', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem' }} 
                         >
                           <PlusCircle size={16} /> Add to My Roadmap

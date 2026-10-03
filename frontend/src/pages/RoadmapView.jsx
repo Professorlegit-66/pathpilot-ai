@@ -27,6 +27,11 @@ export default function RoadmapView({ profile, results, setResults }) {
   const { token } = useAuth();
   const [loading, setLoading] = useState(false);
 
+  // Clear reset flag if state or session storage has valid selections
+  if (location.state?.selectedProgram || location.state?.selectedCareer || sessionStorage.getItem('roadmap_selected_program')) {
+    sessionStorage.removeItem('roadmap_is_reset');
+  }
+
   const [selectedProgram, setSelectedProgram] = useState(() => {
     if (location.state?.selectedProgram) {
       sessionStorage.setItem('roadmap_selected_program', JSON.stringify(location.state.selectedProgram));
@@ -42,7 +47,7 @@ export default function RoadmapView({ profile, results, setResults }) {
       return location.state.selectedCareer;
     }
     const saved = sessionStorage.getItem('roadmap_target_career');
-    return saved || profile?.target_career || "";
+    return saved || profile?.target_career || profile?.preferred_field || "Software Engineering";
   });
 
   const [isEditingCareer, setIsEditingCareer] = useState(false);
@@ -60,14 +65,20 @@ export default function RoadmapView({ profile, results, setResults }) {
     }
   }, [selectedProgram]);
 
-  const [isReset, setIsReset] = useState(() => sessionStorage.getItem('roadmap_is_reset') === 'true');
+  const [isReset, setIsReset] = useState(() => {
+    if (location.state?.selectedProgram || location.state?.selectedCareer || sessionStorage.getItem('roadmap_selected_program')) {
+      return false;
+    }
+    return sessionStorage.getItem('roadmap_is_reset') === 'true';
+  });
 
   const rawList = Array.isArray(results) ? results : (results?.eligible_programs || results?.programs || []);
-  const isEvaluated = !isReset && targetCareer && results !== null && results !== undefined && rawList.length > 0;
+  const isEvaluated = !isReset && Boolean(targetCareer) && (results !== null && results !== undefined && rawList.length > 0 || Boolean(selectedProgram));
 
+  // Auto-fetch programs if coming from Career Explorer or Add to Roadmap without pre-loaded results
   useEffect(() => {
     const fetchProgramsForCareer = async () => {
-      if ((!results || results.length === 0) && targetCareer && !loading) {
+      if ((!results || results.length === 0) && targetCareer && !loading && !isReset) {
         setLoading(true);
         try {
           const payload = {
@@ -85,8 +96,6 @@ export default function RoadmapView({ profile, results, setResults }) {
           });
           const data = await response.json();
           if (setResults) setResults(data);
-          sessionStorage.removeItem('roadmap_is_reset');
-          setIsReset(false);
         } catch (err) {
           console.error("Auto-fetch failed:", err);
         } finally {
@@ -95,7 +104,7 @@ export default function RoadmapView({ profile, results, setResults }) {
       }
     };
     fetchProgramsForCareer();
-  }, [targetCareer, results]);
+  }, [targetCareer, results, isReset]);
 
   useEffect(() => {
     if (!selectedProgram && rawList.length > 0) {
@@ -109,6 +118,8 @@ export default function RoadmapView({ profile, results, setResults }) {
       const newCareer = tempCareer.trim();
       setTargetCareer(newCareer);
       sessionStorage.setItem('roadmap_target_career', newCareer);
+      sessionStorage.removeItem('roadmap_is_reset');
+      setIsReset(false);
     }
     setIsEditingCareer(false);
   };

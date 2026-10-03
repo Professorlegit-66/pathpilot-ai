@@ -14,6 +14,19 @@ class StudentProfile(BaseModel):
     preferred_field: str = Field("Computer Science", json_schema_extra={"example": "Computer Science"})
     financial_need_status: bool = Field(default=True)
 
+class UserCreate(BaseModel):
+    full_name: str
+    email: str
+    password: str
+
+class UserLogin(BaseModel):
+    email: str
+    password: str
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
 class EligibilityResult(BaseModel):
     program_id: str
     program_name: str

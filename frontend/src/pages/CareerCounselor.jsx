@@ -57,18 +57,21 @@ export default function CareerCounselor({ profile }) {
     }
   };
 
-  // Advanced pre-processor to clean raw LLM brackets into structured readable text
+  // Smart Pre-processor: Keeps table rows on a single line while formatting normal text
   const cleanMarkdown = (text) => {
     if (!text) return '';
-    let cleaned = text.replace(/<br\s*\/?>/gi, '\n');
-    
-    // Transform raw bracket metadata into clean bolded bullet points
-    cleaned = cleaned.replace(/\[\s*([A-Za-z\s]+)\s*\Vert{}\s*([^\]]+)\s*\]/g, '\n* **$1**: $2');
-    cleaned = cleaned.replace(/\[\s*([^\]]+)\s*\]/g, '\n### $1\n');
-    
-    // Clean up excessive spacing and line breaks
-    cleaned = cleaned.replace(/\n{3,}/g, '\n\n');
-    return cleaned;
+    const lines = text.split('\n');
+    const processedLines = lines.map(line => {
+      const trimmed = line.trim();
+      // If line is part of a markdown table, replace <br> with a clean separator so table rows don't break
+      if (trimmed.startsWith('|') || (trimmed.includes('|') && trimmed.split('|').length > 2)) {
+        return line.replace(/<\s*br\s*\/?>/gi, '; ');
+      } else {
+        // Outside tables, convert <br> into proper newlines
+        return line.replace(/<\s*br\s*\/?>/gi, '\n');
+      }
+    });
+    return processedLines.join('\n');
   };
 
   const quickPrompts = [
@@ -118,7 +121,7 @@ export default function CareerCounselor({ profile }) {
         </button>
       </div>
 
-      {/* Chat Container (Locked width and fluid layout to prevent sidebar reflow jump) */}
+      {/* Chat Container */}
       <div style={{ flex: 1, width: '100%', background: '#090d16', border: '1px solid #1e293b', borderRadius: '16px', display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.5)', minHeight: 0, boxSizing: 'border-box' }}>
         
         {/* Message Feed */}
@@ -142,7 +145,6 @@ export default function CareerCounselor({ profile }) {
                 overflowX: 'auto',
                 width: '100%',
                 boxSizing: 'border-box',
-                whiteSpace: 'pre-wrap',
                 wordBreak: 'break-word'
               }}>
                 {msg.sender === 'bot' ? (
@@ -152,15 +154,15 @@ export default function CareerCounselor({ profile }) {
                       components={{
                         p: ({node, ...props}) => <p style={{ margin: '0 0 0.75rem 0', lineHeight: '1.6' }} {...props} />,
                         table: ({node, ...props}) => (
-                          <div style={{ overflowX: 'auto', margin: '1rem 0', borderRadius: '8px', border: '1px solid #334155' }}>
-                            <table style={{ borderCollapse: 'collapse', width: '100%', fontSize: '0.85rem' }} {...props} />
+                          <div style={{ width: '100%', overflowX: 'auto', margin: '1rem 0', borderRadius: '8px', border: '1px solid #334155', background: '#0f172a' }}>
+                            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem', textAlign: 'left', minWidth: '600px' }} {...props} />
                           </div>
                         ),
-                        th: ({node, ...props}) => <th style={{ borderBottom: '1px solid #334155', background: '#0f172a', padding: '0.75rem 1rem', textAlign: 'left', color: '#34d399', fontWeight: '600' }} {...props} />,
-                        td: ({node, ...props}) => <td style={{ borderBottom: '1px solid #1e293b', padding: '0.75rem 1rem', color: '#e2e8f0', verticalAlign: 'top' }} {...props} />,
+                        th: ({node, ...props}) => <th style={{ background: '#1e293b', color: '#38bdf8', padding: '0.75rem 1rem', borderBottom: '1px solid #334155', fontWeight: '600' }} {...props} />,
+                        td: ({node, ...props}) => <td style={{ padding: '0.75rem 1rem', borderBottom: '1px solid #1e293b', color: '#cbd5e1', verticalAlign: 'top' }} {...props} />,
                         h3: ({node, ...props}) => <h3 style={{ fontSize: '1.05rem', color: '#38bdf8', margin: '1rem 0 0.4rem 0', fontWeight: 'bold' }} {...props} />,
-                        ul: ({node, ...props}) => <ul style={{ paddingLeft: '1.25rem', margin: '0.4rem 0 0.8rem 0', display: 'flex', flexDirection: 'column', gap: '0.3rem' }} {...props} />,
-                        ol: ({node, ...props}) => <ol style={{ paddingLeft: '1.25rem', margin: '0.4rem 0 0.8rem 0', display: 'flex', flexDirection: 'column', gap: '0.3rem' }} {...props} />,
+                        ul: ({node, ...props}) => <ul style={{ paddingLeft: '1.25rem', margin: '0.4rem 0 0.8rem 0', display: 'flex', flexDirection: 'column', gap: '0.4rem' }} {...props} />,
+                        ol: ({node, ...props}) => <ol style={{ paddingLeft: '1.25rem', margin: '0.4rem 0 0.8rem 0', display: 'flex', flexDirection: 'column', gap: '0.4rem' }} {...props} />,
                         li: ({node, ...props}) => <li style={{ lineHeight: '1.5' }} {...props} />,
                         strong: ({node, ...props}) => <strong style={{ color: '#fff', fontWeight: '600' }} {...props} />
                       }}

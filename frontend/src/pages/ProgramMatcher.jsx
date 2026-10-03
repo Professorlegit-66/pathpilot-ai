@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { 
   GraduationCap, MapPin, CheckCircle2, XCircle, HelpCircle, 
@@ -13,7 +13,11 @@ export default function ProgramMatcher({ results, profile, setResults }) {
   const [loading, setLoading] = useState(false);
   const [expandedCard, setExpandedCard] = useState(null);
   const [filter, setFilter] = useState('ALL'); 
-  const [radiusMode, setRadiusMode] = useState('ALL'); // 'ALL' or '100KM'
+  
+  const [radiusMode, setRadiusMode] = useState(() => {
+    return profile?.radius_mode || sessionStorage.getItem('radius_mode') || 'ALL';
+  });
+  
   const [selectedDetailProgram, setSelectedDetailProgram] = useState(null);
 
   const targetCareer = location.state?.selectedCareer || profile?.target_career;
@@ -22,7 +26,7 @@ export default function ProgramMatcher({ results, profile, setResults }) {
     setLoading(true);
     try {
       const payload = {
-        ...profile,
+        ...(profile || {}),
         radius_mode: selectedRadius
       };
       const response = await fetch('http://127.0.0.1:8000/api/programs/match', {
@@ -43,38 +47,17 @@ export default function ProgramMatcher({ results, profile, setResults }) {
     }
   };
 
+  useEffect(() => {
+    if ((!results || results.length === 0) && !loading) {
+      handleRecheck(radiusMode);
+    }
+  }, []);
+
   const handleRadiusToggle = (mode) => {
     setRadiusMode(mode);
+    sessionStorage.setItem('radius_mode', mode);
     handleRecheck(mode);
   };
-
-  if (!results || results.length === 0) {
-    return (
-      <div style={{ textAlign: 'center', padding: '4rem 2rem', background: '#0f172a', borderRadius: '16px', border: '1px solid #334155' }}>
-        <GraduationCap size={48} color="#64748b" style={{ marginBottom: '1rem' }} />
-        <h2 style={{ color: '#f8fafc', fontSize: '1.5rem', marginBottom: '0.5rem' }}>No matching programs found</h2>
-        <p style={{ color: '#94a3b8', maxWidth: '500px', margin: '0 auto 1.5rem auto', lineHeight: '1.5' }}>
-          No matching programs were found in {profile?.country || 'your selected country'} based on the current location filter criteria.
-        </p>
-        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
-          {radiusMode === '100KM' && (
-            <button 
-              onClick={() => handleRadiusToggle('ALL')}
-              style={{ background: '#059669', color: '#fff', border: 'none', padding: '0.75rem 1.5rem', borderRadius: '8px', fontWeight: '600', cursor: 'pointer' }}
-            >
-              Expand to Nationwide Search
-            </button>
-          )}
-          <button 
-            onClick={() => navigate('/profile')}
-            style={{ background: '#334155', color: '#fff', border: 'none', padding: '0.75rem 1.5rem', borderRadius: '8px', fontWeight: '600', cursor: 'pointer' }}
-          >
-            Update Profile
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   const rawList = Array.isArray(results) ? results : (results?.eligible_programs || results?.programs || []);
   
@@ -104,7 +87,7 @@ export default function ProgramMatcher({ results, profile, setResults }) {
         <div>
           <h1 style={{ fontSize: '2rem', fontWeight: 'bold', color: '#f8fafc', margin: '0 0 0.5rem 0' }}>Program Matcher</h1>
           <p style={{ color: '#94a3b8', margin: 0 }}>
-            Evaluating options in <strong style={{ color: '#38bdf8' }}>{profile?.country || 'Pakistan'}</strong> for <strong style={{ color: '#38bdf8' }}>{profile?.city || 'Kohat'}</strong>.
+            Evaluating options in <strong style={{ color: '#38bdf8' }}>{profile?.country || 'United States'}</strong> for <strong style={{ color: '#38bdf8' }}>{profile?.city || 'Boston'}</strong>.
           </p>
           
           {targetCareer && (
@@ -145,7 +128,7 @@ export default function ProgramMatcher({ results, profile, setResults }) {
               cursor: 'pointer'
             }}
           >
-            📍 Within 100km of {profile?.city || 'Location'}
+            📍 Within 100km of {profile?.city || 'Boston'}
           </button>
           <button
             onClick={() => handleRadiusToggle('ALL')}
@@ -160,7 +143,7 @@ export default function ProgramMatcher({ results, profile, setResults }) {
               cursor: 'pointer'
             }}
           >
-            🌐 All {profile?.country || 'Nationwide'} Programs
+            🌐 All {profile?.country || 'United States'} Programs
           </button>
         </div>
       </div>
@@ -286,16 +269,12 @@ export default function ProgramMatcher({ results, profile, setResults }) {
                         <button 
                           onClick={() => setSelectedDetailProgram(prog)}
                           style={{ background: 'transparent', border: '1px solid #334155', color: '#f8fafc', padding: '0.6rem 1.25rem', borderRadius: '8px', fontSize: '0.9rem', fontWeight: '600', cursor: 'pointer', transition: 'background 0.2s' }} 
-                          onMouseEnter={e => e.target.style.background = '#334155'} 
-                          onMouseLeave={e => e.target.style.background = 'transparent'}
                         >
                           View Details
                         </button>
                         <button 
-                          onClick={() => navigate('/roadmap', { state: { selectedProgram: prog } })}
-                          style={{ background: '#059669', color: '#fff', border: 'none', padding: '0.6rem 1.25rem', borderRadius: '8px', fontSize: '0.9rem', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem', transition: 'opacity 0.2s' }} 
-                          onMouseEnter={e => e.target.style.opacity = 0.8} 
-                          onMouseLeave={e => e.target.style.opacity = 1}
+                          onClick={() => navigate('/roadmap', { state: { selectedProgram: prog, selectedCareer: targetCareer } })}
+                          style={{ background: '#059669', color: '#fff', border: 'none', padding: '0.6rem 1.25rem', borderRadius: '8px', fontSize: '0.9rem', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem' }} 
                         >
                           <PlusCircle size={16} /> Add to My Roadmap
                         </button>
@@ -366,20 +345,6 @@ export default function ProgramMatcher({ results, profile, setResults }) {
                 </div>
               )}
             </div>
-
-            {selectedDetailProgram.available_scholarships?.length > 0 && (
-              <div style={{ marginBottom: '1.5rem' }}>
-                <h4 style={{ fontSize: '0.9rem', color: '#38bdf8', margin: '0 0 0.75rem 0', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Associated Financial Aid Opportunities</h4>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                  {selectedDetailProgram.available_scholarships.map((sch, sIdx) => (
-                    <div key={sIdx} style={{ background: '#0f172a', padding: '0.85rem 1rem', borderRadius: '8px', border: '1px solid #334155' }}>
-                      <strong style={{ color: '#34d399', display: 'block', marginBottom: '0.2rem' }}>{sch.name}</strong>
-                      <span style={{ color: '#94a3b8', fontSize: '0.85rem' }}>{sch.type} • {sch.coverage}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
 
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
               <button 

@@ -2,24 +2,101 @@ import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { 
   Map, ArrowDown, Target, GraduationCap, Building2, 
-  CheckCircle2, XCircle, AlertCircle, Banknote, Brain, Rocket, ArrowRight 
+  CheckCircle2, XCircle, AlertCircle, Banknote, Brain, Rocket, ArrowRight, Edit2, RotateCcw, Check, Loader2 
 } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
-export default function RoadmapView({ profile, results }) {
+const getSkillsForCareer = (careerTitle) => {
+  const lower = (careerTitle || "").toLowerCase();
+  if (lower.includes('ml') || lower.includes('machine learning') || lower.includes('ai') || lower.includes('artificial intelligence')) {
+    return ['Python', 'PyTorch / TensorFlow', 'Machine Learning', 'Statistics', 'Linear Algebra', 'Model Deployment'];
+  } else if (lower.includes('cyber') || lower.includes('security') || lower.includes('infosec')) {
+    return ['Network Security', 'Ethical Hacking', 'Cryptography', 'Linux & Bash', 'Risk Assessment', 'SIEM Tools'];
+  } else if (lower.includes('cloud') || lower.includes('devops')) {
+    return ['AWS / Azure', 'Docker & Kubernetes', 'CI/CD Pipelines', 'Terraform', 'Linux Administration', 'Microservices'];
+  } else if (lower.includes('data') || lower.includes('analytics')) {
+    return ['SQL & NoSQL', 'Pandas & NumPy', 'Data Visualization', 'Tableau / PowerBI', 'ETL Pipelines', 'Statistics'];
+  } else {
+    return ['Data Structures & Algorithms', 'System Design', 'Git & Version Control', 'REST APIs', 'Object-Oriented Programming', 'Agile Methodologies'];
+  }
+};
+
+export default function RoadmapView({ profile, results, setResults }) {
   const location = useLocation();
   const navigate = useNavigate();
-  
-  // State for selected program (can be passed via location state or selected from alternatives)
-  const [selectedProgram, setSelectedProgram] = useState(location.state?.selectedProgram || null);
-  
-  // Target career from location state, profile, or fallback
-  const targetCareer = location.state?.selectedCareer || profile?.target_career || "Software Engineering / ML Track";
+  const { token } = useAuth();
+  const [loading, setLoading] = useState(false);
 
-  // Check if evaluation has occurred
-  const isEvaluated = results !== null && results !== undefined;
+  const [selectedProgram, setSelectedProgram] = useState(() => {
+    if (location.state?.selectedProgram) {
+      sessionStorage.setItem('roadmap_selected_program', JSON.stringify(location.state.selectedProgram));
+      return location.state.selectedProgram;
+    }
+    const saved = sessionStorage.getItem('roadmap_selected_program');
+    return saved ? JSON.parse(saved) : null;
+  });
+
+  const [targetCareer, setTargetCareer] = useState(() => {
+    if (location.state?.selectedCareer) {
+      sessionStorage.setItem('roadmap_target_career', location.state.selectedCareer);
+      return location.state.selectedCareer;
+    }
+    const saved = sessionStorage.getItem('roadmap_target_career');
+    return saved || profile?.target_career || "";
+  });
+
+  const [isEditingCareer, setIsEditingCareer] = useState(false);
+  const [tempCareer, setTempCareer] = useState(targetCareer);
+
+  useEffect(() => {
+    if (targetCareer) {
+      sessionStorage.setItem('roadmap_target_career', targetCareer);
+    }
+  }, [targetCareer]);
+
+  useEffect(() => {
+    if (selectedProgram) {
+      sessionStorage.setItem('roadmap_selected_program', JSON.stringify(selectedProgram));
+    }
+  }, [selectedProgram]);
+
+  const [isReset, setIsReset] = useState(() => sessionStorage.getItem('roadmap_is_reset') === 'true');
+
   const rawList = Array.isArray(results) ? results : (results?.eligible_programs || results?.programs || []);
+  const isEvaluated = !isReset && targetCareer && results !== null && results !== undefined && rawList.length > 0;
 
-  // Default to the first eligible/matched program if none explicitly selected
+  useEffect(() => {
+    const fetchProgramsForCareer = async () => {
+      if ((!results || results.length === 0) && targetCareer && !loading) {
+        setLoading(true);
+        try {
+          const payload = {
+            ...(profile || {}),
+            target_career: targetCareer,
+            preferred_field: profile?.preferred_field || "Computer Science"
+          };
+          const response = await fetch('http://127.0.0.1:8000/api/programs/match', {
+            method: 'POST',
+            headers: { 
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(payload)
+          });
+          const data = await response.json();
+          if (setResults) setResults(data);
+          sessionStorage.removeItem('roadmap_is_reset');
+          setIsReset(false);
+        } catch (err) {
+          console.error("Auto-fetch failed:", err);
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+    fetchProgramsForCareer();
+  }, [targetCareer, results]);
+
   useEffect(() => {
     if (!selectedProgram && rawList.length > 0) {
       const bestMatch = rawList.find(p => p.eligibility_status === "ELIGIBLE") || rawList[0];
@@ -27,36 +104,70 @@ export default function RoadmapView({ profile, results }) {
     }
   }, [rawList, selectedProgram]);
 
-  // Initial / Empty State (PRD Rule 18)
-  if (!isEvaluated || rawList.length === 0) {
+  const handleSaveCareer = () => {
+    if (tempCareer.trim()) {
+      const newCareer = tempCareer.trim();
+      setTargetCareer(newCareer);
+      sessionStorage.setItem('roadmap_target_career', newCareer);
+    }
+    setIsEditingCareer(false);
+  };
+
+  const handleResetRoadmap = () => {
+    sessionStorage.removeItem('roadmap_target_career');
+    sessionStorage.removeItem('roadmap_selected_program');
+    sessionStorage.setItem('roadmap_is_reset', 'true');
+    setIsReset(true);
+    setSelectedProgram(null);
+    setTargetCareer(""); 
+    if (setResults) {
+      setResults(null);
+    }
+    navigate('/roadmap', { replace: true, state: {} });
+  };
+
+  if (!isEvaluated || loading) {
     return (
       <div style={{ maxWidth: '800px', margin: '4rem auto', padding: '3rem 2rem', background: '#1e293b', border: '1px solid #334155', borderRadius: '16px', textAlign: 'center', boxSizing: 'border-box' }}>
         <div style={{ background: '#0f172a', width: '64px', height: '64px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem auto', border: '1px solid #334155' }}>
-          <AlertCircle size={32} color="#38bdf8" />
+          {loading ? <Loader2 className="animate-spin" size={32} color="#38bdf8" /> : <AlertCircle size={32} color="#38bdf8" />}
         </div>
         <h2 style={{ fontSize: '1.5rem', color: '#f8fafc', marginBottom: '0.75rem' }}>Your Roadmap</h2>
         <p style={{ color: '#94a3b8', fontSize: '0.95rem', lineHeight: '1.5', maxWidth: '500px', margin: '0 auto 2rem auto' }}>
-          Complete your profile and evaluate your options to generate your personalized roadmap.
+          {loading ? "Generating your personalized roadmap..." : isReset ? "Your roadmap has been successfully reset. Evaluate your profile or select a career from the Career Explorer to build a new roadmap." : "Complete your profile and evaluate your options to generate your personalized roadmap."}
         </p>
-        <button 
-          onClick={() => navigate('/programs')}
-          style={{
-            background: '#059669', color: '#fff', border: 'none', padding: '0.85rem 2rem',
-            borderRadius: '8px', fontWeight: '600', fontSize: '1rem', cursor: 'pointer',
-            display: 'inline-flex', alignItems: 'center', gap: '0.5rem', boxShadow: '0 4px 12px rgba(5, 150, 105, 0.3)'
-          }}
-        >
-          Evaluate My Profile <ArrowRight size={18} />
-        </button>
+        {!loading && (
+          <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <button 
+              onClick={() => { sessionStorage.removeItem('roadmap_is_reset'); navigate('/programs'); }}
+              style={{
+                background: '#059669', color: '#fff', border: 'none', padding: '0.85rem 2rem',
+                borderRadius: '8px', fontWeight: '600', fontSize: '1rem', cursor: 'pointer',
+                display: 'inline-flex', alignItems: 'center', gap: '0.5rem', boxShadow: '0 4px 12px rgba(5, 150, 105, 0.3)'
+              }}
+            >
+              Evaluate My Profile <ArrowRight size={18} />
+            </button>
+            <button 
+              onClick={() => { sessionStorage.removeItem('roadmap_is_reset'); navigate('/careers'); }}
+              style={{
+                background: '#1e293b', color: '#38bdf8', border: '1px solid #334155', padding: '0.85rem 2rem',
+                borderRadius: '8px', fontWeight: '600', fontSize: '1rem', cursor: 'pointer',
+                display: 'inline-flex', alignItems: 'center', gap: '0.5rem'
+              }}
+            >
+              Explore Careers <ArrowRight size={18} />
+            </button>
+          </div>
+        )}
       </div>
     );
   }
 
-  // Active Program (either user-selected or default)
   const activeProg = selectedProgram || rawList[0];
   const alternativePrograms = rawList.filter(p => p.program_id !== activeProg?.program_id && p.university_name !== activeProg?.university_name);
+  const currentSkills = getSkillsForCareer(targetCareer);
 
-  // Eligibility config mapping
   const getEligibilityBadge = (status) => {
     switch(status) {
       case 'ELIGIBLE':
@@ -75,29 +186,85 @@ export default function RoadmapView({ profile, results }) {
     <div style={{ maxWidth: '950px', width: '100%', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '1.5rem', boxSizing: 'border-box', paddingBottom: '4rem' }}>
       
       {/* Header */}
-      <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', color: '#34d399', fontSize: '0.8rem', fontWeight: '600', marginBottom: '0.5rem', letterSpacing: '0.1em' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem', marginBottom: '0.5rem' }}>
+        <div>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', color: '#34d399', fontSize: '0.8rem', fontWeight: '600', marginBottom: '0.5rem', letterSpacing: '0.1em' }}>
 
 <Map size={16} />
 END-TO-END STUDENT JOURNEY
+          </div>
+          <h1 style={{ fontSize: '2.2rem', fontWeight: 'bold', color: '#fff', margin: '0 0 0.5rem 0' }}>Personalized Career Roadmap</h1>
+          <p style={{ color: '#94a3b8', fontSize: '0.95rem', margin: 0 }}>
+            Grounded milestone progression for <strong>{profile?.name || 'Talha Ahmad'}</strong> based on verified institutional datasets.
+          </p>
         </div>
-        <h1 style={{ fontSize: '2.2rem', fontWeight: 'bold', color: '#fff', margin: '0 0 0.5rem 0' }}>Personalized Career Roadmap</h1>
-        <p style={{ color: '#94a3b8', fontSize: '0.95rem' }}>
-          Grounded milestone progression for <strong>{profile?.name || 'Student'}</strong> based on verified institutional datasets.
-        </p>
+
+        <div style={{ display: 'flex', gap: '0.75rem' }}>
+          <button 
+            onClick={() => navigate('/careers')}
+            style={{ background: '#1e293b', border: '1px solid #334155', color: '#38bdf8', padding: '0.6rem 1rem', borderRadius: '8px', fontSize: '0.85rem', fontWeight: '600', cursor: 'pointer' }}
+          >
+            Explore Careers
+          </button>
+          <button 
+            onClick={handleResetRoadmap}
+            style={{ background: '#7f1d1d', border: '1px solid #991b1b', color: '#fca5a5', padding: '0.6rem 1rem', borderRadius: '8px', fontSize: '0.85rem', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
+          >
+            <RotateCcw size={14} /> Reset Roadmap
+          </button>
+        </div>
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
 
         {/* 1. TARGET CAREER */}
         <div style={{ width: '100%', maxWidth: '650px', background: '#1e293b', border: '1px solid #334155', borderRadius: '16px', padding: '1.5rem', boxSizing: 'border-box' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem', color: '#38bdf8', fontSize: '0.85rem', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-            <Target size={18} /> Target Career
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#38bdf8', fontSize: '0.85rem', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              <Target size={18} /> Target Career
+            </div>
+            {!isEditingCareer ? (
+              <button 
+                onClick={() => { setTempCareer(targetCareer); setIsEditingCareer(true); }}
+                style={{ background: 'transparent', border: 'none', color: '#38bdf8', fontSize: '0.85rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.3rem', fontWeight: '600' }}
+              >
+                <Edit2 size={14} /> Edit Career
+              </button>
+            ) : null}
           </div>
-          <h3 style={{ margin: '0 0 0.5rem 0', fontSize: '1.3rem', color: '#f8fafc' }}>{targetCareer}</h3>
-          <p style={{ margin: 0, color: '#94a3b8', fontSize: '0.9rem', lineHeight: '1.5' }}>
-            Aligned with your profile interests in <strong style={{ color: '#cbd5e1' }}>{profile?.preferred_field || 'Computer Science'}</strong> and regional context in {profile?.city || 'Pakistan'}.
-          </p>
+
+          {!isEditingCareer ? (
+            <>
+              <h3 style={{ margin: '0 0 0.5rem 0', fontSize: '1.3rem', color: '#f8fafc' }}>{targetCareer}</h3>
+              <p style={{ margin: 0, color: '#94a3b8', fontSize: '0.9rem', lineHeight: '1.5' }}>
+                Aligned with your profile interests in <strong style={{ color: '#cbd5e1' }}>{profile?.preferred_field || 'Computer Science'}</strong> and regional context in {profile?.city || 'Boston'}.
+              </p>
+            </>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginTop: '0.5rem' }}>
+              <input 
+                type="text" 
+                value={tempCareer} 
+                onChange={(e) => setTempCareer(e.target.value)}
+                style={{ background: '#0f172a', border: '1px solid #38bdf8', color: '#fff', padding: '0.6rem 1rem', borderRadius: '8px', fontSize: '1rem', outline: 'none' }}
+                placeholder="Enter target career..."
+              />
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
+                <button 
+                  onClick={() => setIsEditingCareer(false)}
+                  style={{ background: 'transparent', border: '1px solid #334155', color: '#94a3b8', padding: '0.4rem 0.8rem', borderRadius: '6px', fontSize: '0.85rem', cursor: 'pointer' }}
+                >
+                  Cancel
+                </button>
+                <button 
+                  onClick={handleSaveCareer}
+                  style={{ background: '#059669', border: 'none', color: '#fff', padding: '0.4rem 0.8rem', borderRadius: '6px', fontSize: '0.85rem', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.3rem' }}
+                >
+                  <Check size={14} /> Save Target
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
         <ArrowDown size={24} color="#475569" style={{ margin: '0.5rem 0' }} />
@@ -107,7 +274,7 @@ END-TO-END STUDENT JOURNEY
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem', color: '#a855f7', fontSize: '0.85rem', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             <GraduationCap size={18} /> Education / Program
           </div>
-          <h3 style={{ margin: '0 0 0.25rem 0', fontSize: '1.3rem', color: '#f8fafc' }}>BS Computer Science</h3>
+          <h3 style={{ margin: '0 0 0.25rem 0', fontSize: '1.3rem', color: '#f8fafc' }}>{activeProg?.program_name || 'BS Computer Science'}</h3>
           <p style={{ margin: 0, color: '#94a3b8', fontSize: '0.9rem' }}>
             Bachelor's degree program bridging foundational software principles with modern computing tracks.
           </p>
@@ -121,7 +288,6 @@ END-TO-END STUDENT JOURNEY
             <Building2 size={18} /> University Options & Selection
           </div>
 
-          {/* Selected Program Card */}
           {activeProg && (
             <div style={{ background: '#0f172a', border: '1px solid #059669', borderRadius: '12px', padding: '1.25rem', marginBottom: '1rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
@@ -139,7 +305,6 @@ END-TO-END STUDENT JOURNEY
             </div>
           )}
 
-          {/* Alternative Programs */}
           {alternativePrograms.length > 0 && (
             <div>
               <p style={{ fontSize: '0.8rem', fontWeight: '600', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em', margin: '0 0 0.5rem 0' }}>
@@ -221,7 +386,7 @@ END-TO-END STUDENT JOURNEY
             Core competencies associated with <strong style={{ color: '#e2e8f0' }}>{targetCareer}</strong> from verified career mapping records:
           </p>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-            {['Python', 'Machine Learning', 'Statistics', 'Linear Algebra', 'Model Deployment', 'Software Engineering'].map((skill, skIdx) => (
+            {currentSkills.map((skill, skIdx) => (
               <span key={skIdx} style={{ background: '#0f172a', color: '#34d399', border: '1px solid #10b98140', padding: '0.3rem 0.75rem', borderRadius: '6px', fontSize: '0.85rem', fontWeight: '500' }}>
                 {skill}
               </span>
@@ -240,7 +405,7 @@ END-TO-END STUDENT JOURNEY
             <li>Review matched program options for <strong>{activeProg?.university_name}</strong>.</li>
             <li>Confirm your deterministic eligibility status (<strong>{eligBadge.text}</strong>).</li>
             <li>Examine available financial-aid and scholarship records.</li>
-            <li>Continue building technical skills aligned with your target career track.</li>
+            <li>Continue building technical skills aligned with your target career track: <strong>{targetCareer}</strong>.</li>
             <li>Use the AI Career Counselor for profile-grounded guidance anytime.</li>
           </ol>
         </div>

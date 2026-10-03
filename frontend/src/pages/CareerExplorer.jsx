@@ -100,7 +100,12 @@ export default function CareerExplorer() {
                 </div>
 
                 <button 
-                  onClick={() => navigate('/programs', { state: { selectedCareer: title } })}
+                  onClick={() => {
+                    // Clear reset flag and pass selected career straight to roadmap
+                    sessionStorage.removeItem('roadmap_is_reset');
+                    sessionStorage.setItem('roadmap_target_career', title);
+                    navigate('/roadmap', { state: { selectedCareer: title } });
+                  }}
                   style={{ background: '#059669', color: '#fff', border: 'none', padding: '0.75rem', borderRadius: '8px', fontWeight: '600', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem', marginTop: '1rem', transition: 'background 0.2s' }}
                   onMouseEnter={e => e.target.style.background = '#047857'}
                   onMouseLeave={e => e.target.style.background = '#059669'}

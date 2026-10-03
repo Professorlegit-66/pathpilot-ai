@@ -10,8 +10,12 @@ export default function Dashboard({ profile, results }) {
   const eligibleCount = isEvaluated ? rawList.filter(r => r.eligibility_status === "ELIGIBLE").length : 0;
   const totalScholarships = isEvaluated ? rawList.reduce((acc, curr) => acc + (curr.available_scholarships?.length || 0), 0) : 0;
   
-  // Dynamic Check: Mark status active if eligible programs are evaluated
-  const roadmapGenerated = isEvaluated && eligibleCount > 0;
+  // Check if roadmap was explicitly reset or if no target career is stored
+  const isReset = sessionStorage.getItem('roadmap_is_reset') === 'true';
+  const hasTargetCareer = Boolean(sessionStorage.getItem('roadmap_target_career'));
+  
+  // Dynamic Check: Mark status active only if evaluated, eligible programs exist, not reset, and target career is set
+  const roadmapGenerated = isEvaluated && eligibleCount > 0 && !isReset && hasTargetCareer;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', maxWidth: '1400px', margin: '0 auto', width: '100%', boxSizing: 'border-box' }}>
@@ -95,13 +99,13 @@ export default function Dashboard({ profile, results }) {
                 <Zap size={16} color="#fbbf24" /> Next Recommended Step
               </h3>
               <p style={{ margin: 0, color: '#cbd5e1', fontSize: '0.85rem' }}>
-                {eligibleCount > 0 
-                  ? "You have eligible programs! Generate your AI roadmap to start building the required skills." 
-                  : "Review your matching results or adjust your profile to find better opportunities."}
+                {roadmapGenerated 
+                  ? "Your roadmap is active. Continue building the required skills for your target career." 
+                  : "Generate your AI roadmap to start building the required skills."}
               </p>
             </div>
-            <Link to={eligibleCount > 0 ? "/roadmap" : "/programs"} style={{ background: '#059669', color: '#fff', padding: '0.5rem 1.25rem', borderRadius: '8px', textDecoration: 'none', fontWeight: '600', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-              {eligibleCount > 0 ? "Go to Roadmap" : "View Recommendations"} <ArrowRight size={15} />
+            <Link to={roadmapGenerated ? "/roadmap" : "/careers"} style={{ background: '#059669', color: '#fff', padding: '0.5rem 1.25rem', borderRadius: '8px', textDecoration: 'none', fontWeight: '600', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              {roadmapGenerated ? "Go to Roadmap" : "Explore Careers"} <ArrowRight size={15} />
             </Link>
           </div>
         </>

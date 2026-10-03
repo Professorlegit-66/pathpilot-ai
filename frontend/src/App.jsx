@@ -47,7 +47,7 @@ function AppContent() {
 
   const [matchingResults, setMatchingResults] = useState(null);
 
-  // Automatically fetch saved profile and run program match on login or refresh
+  // Automatically fetch saved profile and run program match on login or refresh, respecting saved radius mode
   useEffect(() => {
     if (!token) return;
 
@@ -60,11 +60,16 @@ function AppContent() {
         if (data && Object.keys(data).length > 0) {
           setStudentProfile(prev => ({ ...prev, ...data }));
           
-          // 2. Automatically compute matching results based on restored profile
+          const savedRadius = sessionStorage.getItem('radius_mode') || 'ALL';
+
+          // 2. Automatically compute matching results preserving user's radius preference
           return fetch('http://127.0.0.1:8000/api/programs/match', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-            body: JSON.stringify(data)
+            body: JSON.stringify({
+              ...data,
+              radius_mode: savedRadius
+            })
           });
         }
       })

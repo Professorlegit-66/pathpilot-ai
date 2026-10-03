@@ -9,7 +9,9 @@ export default function Dashboard({ profile, results }) {
   
   const eligibleCount = isEvaluated ? rawList.filter(r => r.eligibility_status === "ELIGIBLE").length : 0;
   const totalScholarships = isEvaluated ? rawList.reduce((acc, curr) => acc + (curr.available_scholarships?.length || 0), 0) : 0;
-  const roadmapGenerated = false; 
+  
+  // Dynamic Check: Mark status active if eligible programs are evaluated
+  const roadmapGenerated = isEvaluated && eligibleCount > 0;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', maxWidth: '1400px', margin: '0 auto', width: '100%', boxSizing: 'border-box' }}>

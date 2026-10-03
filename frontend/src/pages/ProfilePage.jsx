@@ -7,17 +7,21 @@ import CustomDropdown from '../components/CustomDropdown';
 export default function ProfilePage({ profile, setProfile, setResults }) {
   const navigate = useNavigate();
   const { token } = useAuth();
+  
+  // Initialize form state matching backend database schema keys (desired_degree, budget)
   const [formData, setFormData] = useState(profile || {
     name: '',
     country: 'Pakistan',
+    region: 'Khyber Pakhtunkhwa',
     city: '',
-    degree_level: "Bachelor's Degree (BS / BSc)",
+    desired_degree: "Bachelor's Degree (BS / BSc)",
     current_education_level: 'HSSC (Intermediate)',
     hssc_group: 'Pre-Engineering',
     ssc_percentage: 75.0,
     hssc_percentage: 75.0,
     mathematics_background: true,
     preferred_field: 'Computer Science',
+    budget: 'Rs. 300,000 / year',
     financial_need_status: true
   });
 
@@ -35,8 +39,26 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
     setSuccessMsg('');
 
     try {
-      setProfile(formData);
+      // 1. Send profile update to backend database for permanent persistence
+      const saveRes = await fetch('http://127.0.0.1:8000/api/profile/', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(formData)
+      });
       
+      if (!saveRes.ok) {
+        throw new Error("Failed to save profile to backend.");
+      }
+
+      const savedData = await saveRes.json();
+      
+      // 2. Update parent React state with the confirmed backend data
+      setProfile(prev => ({ ...prev, ...savedData }));
+      
+      // 3. Automatically re-run rule engine so recommendations update immediately
       const res = await fetch('http://127.0.0.1:8000/api/programs/match', {
         method: 'POST',
         headers: { 
@@ -48,7 +70,7 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
       const data = await res.json();
       setResults(data);
 
-      setSuccessMsg('Profile successfully saved and programs evaluated!');
+      setSuccessMsg('Profile successfully saved to database and programs evaluated!');
       setTimeout(() => {
         navigate('/programs');
       }, 1200);
@@ -103,7 +125,7 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
     <div style={{ maxWidth: '900px', width: '100%', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '2rem', paddingBottom: '4rem', boxSizing: 'border-box' }}>
       
       <div>
-        <h1 style={{ fontSize: '2rem', fontWeight: 'bold', color: '#f8fafc', margin: '0 0 0.5rem 0' }}>
+        <h1 style={{ fontSize: '2.2rem', fontWeight: 'bold', color: '#f8fafc', margin: '0 0 0.5rem 0' }}>
           Student Profile & Settings
         </h1>
         <p style={{ color: '#94a3b8', margin: 0, fontSize: '0.95rem' }}>
@@ -159,12 +181,12 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
             <div>
               <label style={labelStyle}>Desired Degree Level</label>
               <CustomDropdown 
-                value={formData.degree_level || "Bachelor's Degree (BS / BSc)"}
+                value={formData.desired_degree || "Bachelor's Degree (BS / BSc)"}
                 options={[
                   { label: "Bachelor's Degree (BS / BSc)", value: "Bachelor's Degree (BS / BSc)" },
                   { label: "Master's Degree (MS / MSc)", value: "Master's Degree (MS / MSc)" }
                 ]}
-                onChange={val => handleChange('degree_level', val)}
+                onChange={val => handleChange('desired_degree', val)}
                 icon={<ArrowUpDown size={14} />}
               />
             </div>
@@ -304,7 +326,7 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
             marginTop: '0.5rem'
           }}
         >
-          <Save size={18} /> {saving ? 'Saving & Evaluating...' : 'Save Profile & Evaluate Programs'}
+          <Save size={18} /> {saving ? 'Saving to Database...' : 'Save Profile & Evaluate Programs'}
         </button>
 
       </form>

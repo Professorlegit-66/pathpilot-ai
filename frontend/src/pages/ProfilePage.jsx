@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, MapPin, BookOpen, Target, AlertTriangle, Save, Trash2, CheckCircle, ShieldAlert, ArrowUpDown } from 'lucide-react';
+import { User, MapPin, BookOpen, Target, Save, Trash2, CheckCircle, ShieldAlert, ArrowUpDown } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import CustomDropdown from '../components/CustomDropdown';
 
@@ -30,6 +30,26 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
 
   const handleChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleCountryChange = (val) => {
+    let defaultStream = 'Pre-Engineering';
+    let defaultEduLevel = 'HSSC (Intermediate)';
+    
+    if (val === 'India') {
+      defaultStream = 'PCM';
+      defaultEduLevel = '12th Board';
+    } else if (val === 'United States') {
+      defaultStream = 'STEM Focus';
+      defaultEduLevel = 'High School Diploma';
+    }
+
+    setFormData(prev => ({
+      ...prev,
+      country: val,
+      hssc_group: defaultStream,
+      current_education_level: defaultEduLevel
+    }));
   };
 
   const handleSave = async (e) => {
@@ -116,6 +136,55 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
     letterSpacing: '0.05em'
   };
 
+  // Dynamic Options for Academic Section based on selected country
+  const getStreamOptions = () => {
+    switch (formData.country) {
+      case 'India':
+        return [
+          { label: 'PCM (Physics, Chem, Math)', value: 'PCM' },
+          { label: 'PCB (Physics, Chem, Bio)', value: 'PCB' },
+          { label: 'Commerce with Math', value: 'Commerce with Math' }
+        ];
+      case 'United States':
+        return [
+          { label: 'STEM Focus Track', value: 'STEM Focus' },
+          { label: 'General High School Track', value: 'General Track' }
+        ];
+      case 'Pakistan':
+      default:
+        return [
+          { label: 'Pre-Engineering', value: 'Pre-Engineering' },
+          { label: 'ICS (Computer Science)', value: 'ICS' },
+          { label: 'Pre-Medical', value: 'Pre-Medical' },
+          { label: 'General Science', value: 'General Science' }
+        ];
+    }
+  };
+
+  const getEducationLevelOptions = () => {
+    switch (formData.country) {
+      case 'India':
+        return [
+          { label: '12th Board Standard', value: '12th Board' },
+          { label: '10th Board Standard', value: '10th Board' },
+          { label: "Bachelor's Degree", value: "Bachelor's" }
+        ];
+      case 'United States':
+        return [
+          { label: 'High School Diploma', value: 'High School Diploma' },
+          { label: 'GED Equivalent', value: 'GED' },
+          { label: "Bachelor's Degree", value: "Bachelor's" }
+        ];
+      case 'Pakistan':
+      default:
+        return [
+          { label: 'HSSC (Intermediate)', value: 'HSSC (Intermediate)' },
+          { label: 'SSC (Matric)', value: 'SSC (Matric)' },
+          { label: "Bachelor's Degree", value: "Bachelor's" }
+        ];
+    }
+  };
+
   return (
     <div className="fluid-page-container" style={{ paddingBottom: '4rem' }}>
       
@@ -158,8 +227,12 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
               <label style={labelStyle}>Country of Education / Residence</label>
               <CustomDropdown 
                 value={formData.country || 'Pakistan'}
-                options={[{ label: 'Pakistan', value: 'Pakistan' }]}
-                onChange={val => handleChange('country', val)}
+                options={[
+                  { label: 'Pakistan', value: 'Pakistan' },
+                  { label: 'India', value: 'India' },
+                  { label: 'United States', value: 'United States' }
+                ]}
+                onChange={handleCountryChange}
                 icon={<ArrowUpDown size={14} />}
               />
             </div>
@@ -170,7 +243,7 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
                 value={formData.city || ''} 
                 onChange={e => handleChange('city', e.target.value)} 
                 style={inputStyle}
-                placeholder="e.g. Kohat, Islamabad, Peshawar"
+                placeholder="e.g. Kohat, Islamabad, Delhi, Boston"
               />
             </div>
             <div>
@@ -192,39 +265,34 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
         <div style={{ background: '#1e293b', border: '1px solid #334155', borderRadius: '16px', padding: '1.75rem', boxSizing: 'border-box' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#34d399', marginBottom: '1.25rem', paddingBottom: '0.75rem', borderBottom: '1px solid #334155' }}>
             <BookOpen size={20} />
-            <h2 style={{ margin: 0, fontSize: '1.15rem', fontWeight: 'bold', color: '#f8fafc' }}>Academic History (Pakistan System)</h2>
+            <h2 style={{ margin: 0, fontSize: '1.15rem', fontWeight: 'bold', color: '#f8fafc' }}>
+              Academic History ({formData.country || 'Pakistan'} System)
+            </h2>
           </div>
 
           <div className="fluid-grid" style={{ marginBottom: '1.25rem' }}>
             <div>
               <label style={labelStyle}>Current Education Level</label>
               <CustomDropdown 
-                value={formData.current_education_level || 'HSSC (Intermediate)'}
-                options={[
-                  { label: 'HSSC (Intermediate)', value: 'HSSC (Intermediate)' },
-                  { label: 'SSC (Matric)', value: 'SSC (Matric)' },
-                  { label: "Bachelor's", value: "Bachelor's" }
-                ]}
+                value={formData.current_education_level || getEducationLevelOptions()[0].value}
+                options={getEducationLevelOptions()}
                 onChange={val => handleChange('current_education_level', val)}
                 icon={<ArrowUpDown size={14} />}
               />
             </div>
             <div>
-              <label style={labelStyle}>HSSC Group / Specialization</label>
+              <label style={labelStyle}>Academic Specialization / Stream</label>
               <CustomDropdown 
-                value={formData.hssc_group || 'Pre-Engineering'}
-                options={[
-                  { label: 'Pre-Engineering', value: 'Pre-Engineering' },
-                  { label: 'ICS (Computer Science)', value: 'ICS' },
-                  { label: 'Pre-Medical', value: 'Pre-Medical' },
-                  { label: 'General Science', value: 'General Science' }
-                ]}
+                value={formData.hssc_group || getStreamOptions()[0].value}
+                options={getStreamOptions()}
                 onChange={val => handleChange('hssc_group', val)}
                 icon={<ArrowUpDown size={14} />}
               />
             </div>
             <div>
-              <label style={labelStyle}>SSC (Matric) %</label>
+              <label style={labelStyle}>
+                {formData.country === 'United States' ? 'Cumulative High School %' : formData.country === 'India' ? '10th Board %' : 'SSC (Matric) %'}
+              </label>
               <input 
                 type="number" 
                 step="0.1" 
@@ -236,7 +304,9 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
               />
             </div>
             <div>
-              <label style={labelStyle}>HSSC (Intermediate) %</label>
+              <label style={labelStyle}>
+                {formData.country === 'United States' ? 'GPA Equivalent % (e.g. 87.5)' : formData.country === 'India' ? '12th Board %' : 'HSSC (Intermediate) %'}
+              </label>
               <input 
                 type="number" 
                 step="0.1" 

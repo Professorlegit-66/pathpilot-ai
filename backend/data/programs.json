@@ -60,23 +60,23 @@
     "required_tests": ["NTS NAT"]
   },
   {
-    "program_id": "prog_pk_qau_cs",
+    "program_id": "prog_pk_qau_se",
     "university_id": "uni_pk_qau",
-    "program_name": "BS Computer Science",
+    "program_name": "BS Software Engineering",
     "degree_level": "Undergraduate",
-    "field_category": "Computer Science",
+    "field_category": "Software Engineering",
     "required_education_level": "HSSC / Intermediate",
-    "accepted_streams": ["Pre-Engineering", "ICS", "Pre-Medical"],
+    "accepted_streams": ["Pre-Engineering", "ICS"],
     "min_math_percent": 50.0,
     "min_overall_percent": 50.0,
     "required_tests": ["QAU Admission Test"]
   },
   {
-    "program_id": "prog_pk_pieas_cs",
+    "program_id": "prog_pk_pieas_ai",
     "university_id": "uni_pk_pieas",
-    "program_name": "BS Computer Science",
+    "program_name": "BS Artificial Intelligence",
     "degree_level": "Undergraduate",
-    "field_category": "Computer Science",
+    "field_category": "Artificial Intelligence",
     "required_education_level": "HSSC / Intermediate",
     "accepted_streams": ["Pre-Engineering", "ICS"],
     "min_math_percent": 60.0,
@@ -108,13 +108,13 @@
     "required_tests": ["Air University Entry Test"]
   },
   {
-    "program_id": "prog_pk_bahria_cs",
+    "program_id": "prog_pk_bahria_cyber",
     "university_id": "uni_pk_bahria",
-    "program_name": "BS Computer Science",
+    "program_name": "BS Cyber Security",
     "degree_level": "Undergraduate",
-    "field_category": "Computer Science",
+    "field_category": "Information Security",
     "required_education_level": "HSSC / Intermediate",
-    "accepted_streams": ["Pre-Engineering", "ICS", "Pre-Medical"],
+    "accepted_streams": ["Pre-Engineering", "ICS"],
     "min_math_percent": 50.0,
     "min_overall_percent": 50.0,
     "required_tests": ["Bahria Entry Test"]
@@ -168,11 +168,11 @@
     "required_tests": ["FAST Admission Test"]
   },
   {
-    "program_id": "prog_pk_lums_cs",
+    "program_id": "prog_pk_lums_ds",
     "university_id": "uni_pk_lums",
-    "program_name": "BS Computer Science",
+    "program_name": "BS Data Science",
     "degree_level": "Undergraduate",
-    "field_category": "Computer Science",
+    "field_category": "Data & Analytics",
     "required_education_level": "HSSC / Intermediate",
     "accepted_streams": ["Pre-Engineering", "ICS"],
     "min_math_percent": 70.0,
@@ -192,11 +192,11 @@
     "required_tests": ["IBA Aptitude Test"]
   },
   {
-    "program_id": "prog_pk_uetlahore_cs",
+    "program_id": "prog_pk_uetlahore_se",
     "university_id": "uni_pk_uetlahore",
-    "program_name": "BS Computer Science",
+    "program_name": "BS Software Engineering",
     "degree_level": "Undergraduate",
-    "field_category": "Computer Science",
+    "field_category": "Software Engineering",
     "required_education_level": "HSSC / Intermediate",
     "accepted_streams": ["Pre-Engineering", "ICS"],
     "min_math_percent": 60.0,
@@ -204,11 +204,11 @@
     "required_tests": ["ECAT Test"]
   },
   {
-    "program_id": "prog_pk_uettaxila_cs",
+    "program_id": "prog_pk_uettaxila_ai",
     "university_id": "uni_pk_uettaxila",
-    "program_name": "BS Computer Science",
+    "program_name": "BS Artificial Intelligence",
     "degree_level": "Undergraduate",
-    "field_category": "Computer Science",
+    "field_category": "Artificial Intelligence",
     "required_education_level": "HSSC / Intermediate",
     "accepted_streams": ["Pre-Engineering", "ICS"],
     "min_math_percent": 60.0,
@@ -216,11 +216,11 @@
     "required_tests": ["ECAT Test"]
   },
   {
-    "program_id": "prog_pk_punjab_cs",
+    "program_id": "prog_pk_punjab_ds",
     "university_id": "uni_pk_punjab",
-    "program_name": "BS Computer Science",
+    "program_name": "BS Data Science",
     "degree_level": "Undergraduate",
-    "field_category": "Computer Science",
+    "field_category": "Data & Analytics",
     "required_education_level": "HSSC / Intermediate",
     "accepted_streams": ["Pre-Engineering", "ICS"],
     "min_math_percent": 50.0,
@@ -228,11 +228,11 @@
     "required_tests": ["PU Entry Test"]
   },
   {
-    "program_id": "prog_pk_gculahore_cs",
+    "program_id": "prog_pk_gculahore_se",
     "university_id": "uni_pk_gculahore",
-    "program_name": "BS Computer Science",
+    "program_name": "BS Software Engineering",
     "degree_level": "Undergraduate",
-    "field_category": "Computer Science",
+    "field_category": "Software Engineering",
     "required_education_level": "HSSC / Intermediate",
     "accepted_streams": ["Pre-Engineering", "ICS"],
     "min_math_percent": 50.0,
@@ -240,11 +240,11 @@
     "required_tests": ["GCU Entrance Test"]
   },
   {
-    "program_id": "prog_pk_karachi_cs",
+    "program_id": "prog_pk_karachi_cyber",
     "university_id": "uni_pk_karachi",
-    "program_name": "BS Computer Science",
+    "program_name": "BS Cyber Security",
     "degree_level": "Undergraduate",
-    "field_category": "Computer Science",
+    "field_category": "Information Security",
     "required_education_level": "HSSC / Intermediate",
     "accepted_streams": ["Pre-Engineering", "ICS"],
     "min_math_percent": 50.0,
@@ -264,11 +264,11 @@
     "required_tests": ["University Test"]
   },
   {
-    "program_id": "prog_pk_uaf_cs",
+    "program_id": "prog_pk_uaf_ds",
     "university_id": "uni_pk_uaf",
-    "program_name": "BS Computer Science",
+    "program_name": "BS Data Science",
     "degree_level": "Undergraduate",
-    "field_category": "Computer Science",
+    "field_category": "Data & Analytics",
     "required_education_level": "HSSC / Intermediate",
     "accepted_streams": ["Pre-Engineering", "ICS"],
     "min_math_percent": 50.0,
@@ -276,11 +276,11 @@
     "required_tests": ["UAF Entry Test"]
   },
   {
-    "program_id": "prog_pk_uaar_cs",
+    "program_id": "prog_pk_uaar_se",
     "university_id": "uni_pk_uaar",
-    "program_name": "BS Computer Science",
+    "program_name": "BS Software Engineering",
     "degree_level": "Undergraduate",
-    "field_category": "Computer Science",
+    "field_category": "Software Engineering",
     "required_education_level": "HSSC / Intermediate",
     "accepted_streams": ["Pre-Engineering", "ICS"],
     "min_math_percent": 50.0,
@@ -288,11 +288,11 @@
     "required_tests": ["UAAR Entry Test"]
   },
   {
-    "program_id": "prog_pk_uvas_cs",
+    "program_id": "prog_pk_uvas_ai",
     "university_id": "uni_pk_uvas",
-    "program_name": "BS Computer Science",
+    "program_name": "BS Artificial Intelligence",
     "degree_level": "Undergraduate",
-    "field_category": "Computer Science",
+    "field_category": "Artificial Intelligence",
     "required_education_level": "HSSC / Intermediate",
     "accepted_streams": ["Pre-Engineering", "ICS"],
     "min_math_percent": 50.0,
@@ -312,11 +312,11 @@
     "required_tests": ["BZU Entrance Test"]
   },
   {
-    "program_id": "prog_pk_iub_cs",
+    "program_id": "prog_pk_iub_cyber",
     "university_id": "uni_pk_iub",
-    "program_name": "BS Computer Science",
+    "program_name": "BS Cyber Security",
     "degree_level": "Undergraduate",
-    "field_category": "Computer Science",
+    "field_category": "Information Security",
     "required_education_level": "HSSC / Intermediate",
     "accepted_streams": ["Pre-Engineering", "ICS"],
     "min_math_percent": 50.0,
@@ -348,11 +348,11 @@
     "required_tests": ["ETEA Entry Test"]
   },
   {
-    "program_id": "prog_pk_uop_cs",
+    "program_id": "prog_pk_uop_ai",
     "university_id": "uni_pk_uop",
-    "program_name": "BS Computer Science",
+    "program_name": "BS Artificial Intelligence",
     "degree_level": "Undergraduate",
-    "field_category": "Computer Science",
+    "field_category": "Artificial Intelligence",
     "required_education_level": "HSSC / Intermediate",
     "accepted_streams": ["Pre-Engineering", "ICS"],
     "min_math_percent": 50.0,
@@ -360,11 +360,11 @@
     "required_tests": ["UOP Entry Test"]
   },
   {
-    "program_id": "prog_pk_ned_cs",
+    "program_id": "prog_pk_ned_se",
     "university_id": "uni_pk_ned",
-    "program_name": "BS Computer Science",
+    "program_name": "BS Software Engineering",
     "degree_level": "Undergraduate",
-    "field_category": "Computer Science",
+    "field_category": "Software Engineering",
     "required_education_level": "HSSC / Intermediate",
     "accepted_streams": ["Pre-Engineering", "ICS"],
     "min_math_percent": 60.0,
@@ -372,11 +372,11 @@
     "required_tests": ["NED Entry Test"]
   },
   {
-    "program_id": "prog_pk_habib_cs",
+    "program_id": "prog_pk_habib_ds",
     "university_id": "uni_pk_habib",
-    "program_name": "BS Computer Science",
+    "program_name": "BS Data Science",
     "degree_level": "Undergraduate",
-    "field_category": "Computer Science",
+    "field_category": "Data & Analytics",
     "required_education_level": "HSSC / Intermediate",
     "accepted_streams": ["Pre-Engineering", "ICS"],
     "min_math_percent": 60.0,
@@ -409,18 +409,6 @@
     "required_tests": ["JEE Advanced"]
   },
   {
-    "program_id": "prog_in_iitm_cs",
-    "university_id": "uni_in_iitm",
-    "program_name": "B.Tech Computer Science",
-    "degree_level": "Undergraduate",
-    "field_category": "Computer Science",
-    "required_education_level": "12th Board",
-    "accepted_streams": ["PCM", "Commerce with Math"],
-    "min_math_percent": 60.0,
-    "min_overall_percent": 60.0,
-    "required_tests": ["JEE Advanced"]
-  },
-  {
     "program_id": "prog_in_iisc_cs",
     "university_id": "uni_in_iisc",
     "program_name": "BS Computer Science",
@@ -433,11 +421,11 @@
     "required_tests": ["JEE Main"]
   },
   {
-    "program_id": "prog_in_iitb_cs",
+    "program_id": "prog_in_iitb_se",
     "university_id": "uni_in_iitb",
-    "program_name": "B.Tech Computer Science & Engineering",
+    "program_name": "B.Tech Software Engineering",
     "degree_level": "Undergraduate",
-    "field_category": "Computer Science",
+    "field_category": "Software Engineering",
     "required_education_level": "12th Board",
     "accepted_streams": ["PCM"],
     "min_math_percent": 75.0,
@@ -445,11 +433,11 @@
     "required_tests": ["JEE Advanced"]
   },
   {
-    "program_id": "prog_in_iitd_cs",
+    "program_id": "prog_in_iitd_ai",
     "university_id": "uni_in_iitd",
-    "program_name": "B.Tech Computer Science",
+    "program_name": "B.Tech Artificial Intelligence",
     "degree_level": "Undergraduate",
-    "field_category": "Computer Science",
+    "field_category": "Artificial Intelligence",
     "required_education_level": "12th Board",
     "accepted_streams": ["PCM"],
     "min_math_percent": 60.0,
@@ -457,11 +445,11 @@
     "required_tests": ["JEE Advanced"]
   },
   {
-    "program_id": "prog_in_iitk_cs",
+    "program_id": "prog_in_iitk_ds",
     "university_id": "uni_in_iitk",
-    "program_name": "B.Tech Computer Science",
+    "program_name": "B.Tech Statistics & Data Science",
     "degree_level": "Undergraduate",
-    "field_category": "Computer Science",
+    "field_category": "Data & Analytics",
     "required_education_level": "12th Board",
     "accepted_streams": ["PCM"],
     "min_math_percent": 60.0,
@@ -469,11 +457,11 @@
     "required_tests": ["JEE Advanced"]
   },
   {
-    "program_id": "prog_in_iitkgp_cs",
+    "program_id": "prog_in_iitkgp_cyber",
     "university_id": "uni_in_iitkgp",
-    "program_name": "B.Tech Computer Science",
+    "program_name": "B.Tech Cyber Security",
     "degree_level": "Undergraduate",
-    "field_category": "Computer Science",
+    "field_category": "Information Security",
     "required_education_level": "12th Board",
     "accepted_streams": ["PCM"],
     "min_math_percent": 60.0,
@@ -481,11 +469,11 @@
     "required_tests": ["JEE Advanced"]
   },
   {
-    "program_id": "prog_in_iitr_cs",
+    "program_id": "prog_in_iitr_se",
     "university_id": "uni_in_iitr",
-    "program_name": "B.Tech Computer Science",
+    "program_name": "B.Tech Software Engineering",
     "degree_level": "Undergraduate",
-    "field_category": "Computer Science",
+    "field_category": "Software Engineering",
     "required_education_level": "12th Board",
     "accepted_streams": ["PCM"],
     "min_math_percent": 60.0,
@@ -493,11 +481,11 @@
     "required_tests": ["JEE Advanced"]
   },
   {
-    "program_id": "prog_in_iitg_cs",
+    "program_id": "prog_in_iitg_ds",
     "university_id": "uni_in_iitg",
-    "program_name": "B.Tech Computer Science",
+    "program_name": "B.Tech Data Science & Artificial Intelligence",
     "degree_level": "Undergraduate",
-    "field_category": "Computer Science",
+    "field_category": "Data & Analytics",
     "required_education_level": "12th Board",
     "accepted_streams": ["PCM"],
     "min_math_percent": 60.0,
@@ -505,11 +493,11 @@
     "required_tests": ["JEE Advanced"]
   },
   {
-    "program_id": "prog_in_iith_cs",
+    "program_id": "prog_in_iith_ai",
     "university_id": "uni_in_iith",
-    "program_name": "B.Tech Computer Science",
+    "program_name": "B.Tech Artificial Intelligence",
     "degree_level": "Undergraduate",
-    "field_category": "Computer Science",
+    "field_category": "Artificial Intelligence",
     "required_education_level": "12th Board",
     "accepted_streams": ["PCM"],
     "min_math_percent": 60.0,
@@ -529,11 +517,11 @@
     "required_tests": ["JEE Advanced"]
   },
   {
-    "program_id": "prog_in_jnu_cs",
+    "program_id": "prog_in_jnu_se",
     "university_id": "uni_in_jnu",
-    "program_name": "B.Tech Computer Science",
+    "program_name": "B.Tech Software Engineering",
     "degree_level": "Undergraduate",
-    "field_category": "Computer Science",
+    "field_category": "Software Engineering",
     "required_education_level": "12th Board",
     "accepted_streams": ["PCM"],
     "min_math_percent": 55.0,
@@ -541,11 +529,11 @@
     "required_tests": ["CUET / Entrance Test"]
   },
   {
-    "program_id": "prog_in_jamia_cs",
+    "program_id": "prog_in_jamia_cyber",
     "university_id": "uni_in_jamia",
-    "program_name": "B.Tech Computer Science",
+    "program_name": "B.Tech Cyber Security",
     "degree_level": "Undergraduate",
-    "field_category": "Computer Science",
+    "field_category": "Information Security",
     "required_education_level": "12th Board",
     "accepted_streams": ["PCM"],
     "min_math_percent": 55.0,
@@ -553,11 +541,11 @@
     "required_tests": ["JMI Entrance Exam"]
   },
   {
-    "program_id": "prog_in_du_cs",
+    "program_id": "prog_in_du_ds",
     "university_id": "uni_in_du",
-    "program_name": "B.Sc Computer Science (Hons)",
+    "program_name": "B.Sc Data Analytics",
     "degree_level": "Undergraduate",
-    "field_category": "Computer Science",
+    "field_category": "Data & Analytics",
     "required_education_level": "12th Board",
     "accepted_streams": ["PCM", "Commerce with Math"],
     "min_math_percent": 55.0,
@@ -577,11 +565,11 @@
     "required_tests": ["CUET UG"]
   },
   {
-    "program_id": "prog_in_ju_cs",
+    "program_id": "prog_in_ju_se",
     "university_id": "uni_in_ju",
-    "program_name": "B.Tech Computer Science",
+    "program_name": "B.Tech Software Engineering",
     "degree_level": "Undergraduate",
-    "field_category": "Computer Science",
+    "field_category": "Software Engineering",
     "required_education_level": "12th Board",
     "accepted_streams": ["PCM"],
     "min_math_percent": 60.0,
@@ -589,11 +577,11 @@
     "required_tests": ["WBJEE"]
   },
   {
-    "program_id": "prog_in_mahe_cs",
+    "program_id": "prog_in_mahe_ai",
     "university_id": "uni_in_mahe",
-    "program_name": "B.Tech Computer Science",
+    "program_name": "B.Tech Artificial Intelligence & Machine Learning",
     "degree_level": "Undergraduate",
-    "field_category": "Computer Science",
+    "field_category": "Artificial Intelligence",
     "required_education_level": "12th Board",
     "accepted_streams": ["PCM"],
     "min_math_percent": 50.0,
@@ -601,11 +589,11 @@
     "required_tests": ["MET Test"]
   },
   {
-    "program_id": "prog_in_amrita_cs",
+    "program_id": "prog_in_amrita_cyber",
     "university_id": "uni_in_amrita",
-    "program_name": "B.Tech Computer Science",
+    "program_name": "B.Tech Cyber Security",
     "degree_level": "Undergraduate",
-    "field_category": "Computer Science",
+    "field_category": "Information Security",
     "required_education_level": "12th Board",
     "accepted_streams": ["PCM"],
     "min_math_percent": 55.0,
@@ -625,11 +613,11 @@
     "required_tests": ["AMU Engineering Test"]
   },
   {
-    "program_id": "prog_in_uoh_cs",
+    "program_id": "prog_in_uoh_ds",
     "university_id": "uni_in_uoh",
-    "program_name": "B.Tech Computer Science",
+    "program_name": "B.Tech Data Science",
     "degree_level": "Undergraduate",
-    "field_category": "Computer Science",
+    "field_category": "Data & Analytics",
     "required_education_level": "12th Board",
     "accepted_streams": ["PCM"],
     "min_math_percent": 55.0,
@@ -637,11 +625,11 @@
     "required_tests": ["JEE Main"]
   },
   {
-    "program_id": "prog_in_anna_cs",
+    "program_id": "prog_in_anna_se",
     "university_id": "uni_in_anna",
-    "program_name": "B.E Computer Science",
+    "program_name": "B.E Software Engineering",
     "degree_level": "Undergraduate",
-    "field_category": "Computer Science",
+    "field_category": "Software Engineering",
     "required_education_level": "12th Board",
     "accepted_streams": ["PCM"],
     "min_math_percent": 50.0,
@@ -661,11 +649,11 @@
     "required_tests": ["JEE Main"]
   },
   {
-    "program_id": "prog_in_sppu_cs",
+    "program_id": "prog_in_sppu_cyber",
     "university_id": "uni_in_sppu",
-    "program_name": "B.Tech Computer Science",
+    "program_name": "B.Tech Cyber Security",
     "degree_level": "Undergraduate",
-    "field_category": "Computer Science",
+    "field_category": "Information Security",
     "required_education_level": "12th Board",
     "accepted_streams": ["PCM"],
     "min_math_percent": 50.0,
@@ -673,11 +661,11 @@
     "required_tests": ["MHT-CET"]
   },
   {
-    "program_id": "prog_in_chandigarh_cs",
+    "program_id": "prog_in_chandigarh_ai",
     "university_id": "uni_in_chandigarh",
-    "program_name": "B.Tech Computer Science",
+    "program_name": "B.Tech Artificial Intelligence",
     "degree_level": "Undergraduate",
-    "field_category": "Computer Science",
+    "field_category": "Artificial Intelligence",
     "required_education_level": "12th Board",
     "accepted_streams": ["PCM"],
     "min_math_percent": 50.0,
@@ -685,11 +673,11 @@
     "required_tests": ["CUCET"]
   },
   {
-    "program_id": "prog_in_bits_cs",
+    "program_id": "prog_in_bits_se",
     "university_id": "uni_in_bits",
-    "program_name": "B.E Computer Science",
+    "program_name": "B.E Software Engineering",
     "degree_level": "Undergraduate",
-    "field_category": "Computer Science",
+    "field_category": "Software Engineering",
     "required_education_level": "12th Board",
     "accepted_streams": ["PCM"],
     "min_math_percent": 65.0,
@@ -697,11 +685,11 @@
     "required_tests": ["BITSAT"]
   },
   {
-    "program_id": "prog_in_vit_cs",
+    "program_id": "prog_in_vit_ds",
     "university_id": "uni_in_vit",
-    "program_name": "B.Tech Computer Science",
+    "program_name": "B.Tech Data Science",
     "degree_level": "Undergraduate",
-    "field_category": "Computer Science",
+    "field_category": "Data & Analytics",
     "required_education_level": "12th Board",
     "accepted_streams": ["PCM"],
     "min_math_percent": 55.0,
@@ -715,18 +703,6 @@
     "program_name": "BS Artificial Intelligence & Decision Making",
     "degree_level": "Undergraduate",
     "field_category": "Artificial Intelligence",
-    "required_education_level": "High School Diploma",
-    "accepted_streams": ["STEM Focus"],
-    "min_math_percent": 3.8,
-    "min_overall_percent": 3.8,
-    "required_tests": ["SAT / ACT"]
-  },
-  {
-    "program_id": "prog_us_mit_cs",
-    "university_id": "uni_us_mit",
-    "program_name": "BS Computer Science",
-    "degree_level": "Undergraduate",
-    "field_category": "Computer Science",
     "required_education_level": "High School Diploma",
     "accepted_streams": ["STEM Focus", "General Track"],
     "min_math_percent": 3.0,
@@ -746,11 +722,11 @@
     "required_tests": []
   },
   {
-    "program_id": "prog_us_harvard_cs",
+    "program_id": "prog_us_harvard_se",
     "university_id": "uni_us_harvard",
-    "program_name": "BS Computer Science",
+    "program_name": "BS Software Engineering",
     "degree_level": "Undergraduate",
-    "field_category": "Computer Science",
+    "field_category": "Software Engineering",
     "required_education_level": "High School Diploma",
     "accepted_streams": ["STEM Focus", "General Track"],
     "min_math_percent": 3.0,
@@ -758,11 +734,11 @@
     "required_tests": []
   },
   {
-    "program_id": "prog_us_caltech_cs",
+    "program_id": "prog_us_caltech_ai",
     "university_id": "uni_us_caltech",
-    "program_name": "BS Computer Science",
+    "program_name": "BS Artificial Intelligence",
     "degree_level": "Undergraduate",
-    "field_category": "Computer Science",
+    "field_category": "Artificial Intelligence",
     "required_education_level": "High School Diploma",
     "accepted_streams": ["STEM Focus", "General Track"],
     "min_math_percent": 3.0,
@@ -770,11 +746,11 @@
     "required_tests": []
   },
   {
-    "program_id": "prog_us_upenn_cs",
+    "program_id": "prog_us_upenn_ds",
     "university_id": "uni_us_upenn",
-    "program_name": "BS Computer Science",
+    "program_name": "BS Data Science",
     "degree_level": "Undergraduate",
-    "field_category": "Computer Science",
+    "field_category": "Data & Analytics",
     "required_education_level": "High School Diploma",
     "accepted_streams": ["STEM Focus", "General Track"],
     "min_math_percent": 3.0,
@@ -782,11 +758,11 @@
     "required_tests": []
   },
   {
-    "program_id": "prog_us_cornell_cs",
+    "program_id": "prog_us_cornell_se",
     "university_id": "uni_us_cornell",
-    "program_name": "BS Computer Science",
+    "program_name": "BS Software Engineering",
     "degree_level": "Undergraduate",
-    "field_category": "Computer Science",
+    "field_category": "Software Engineering",
     "required_education_level": "High School Diploma",
     "accepted_streams": ["STEM Focus", "General Track"],
     "min_math_percent": 3.0,
@@ -806,11 +782,11 @@
     "required_tests": []
   },
   {
-    "program_id": "prog_us_jhu_cs",
+    "program_id": "prog_us_jhu_cyber",
     "university_id": "uni_us_jhu",
-    "program_name": "BS Computer Science",
+    "program_name": "BS Cyber Security",
     "degree_level": "Undergraduate",
-    "field_category": "Computer Science",
+    "field_category": "Information Security",
     "required_education_level": "High School Diploma",
     "accepted_streams": ["STEM Focus", "General Track"],
     "min_math_percent": 3.0,
@@ -818,11 +794,11 @@
     "required_tests": []
   },
   {
-    "program_id": "prog_us_berkeley_cs",
+    "program_id": "prog_us_berkeley_ds",
     "university_id": "uni_us_berkeley",
-    "program_name": "BS Computer Science",
+    "program_name": "BS Data Science",
     "degree_level": "Undergraduate",
-    "field_category": "Computer Science",
+    "field_category": "Data & Analytics",
     "required_education_level": "High School Diploma",
     "accepted_streams": ["STEM Focus", "General Track"],
     "min_math_percent": 3.0,
@@ -830,11 +806,11 @@
     "required_tests": []
   },
   {
-    "program_id": "prog_us_chicago_cs",
+    "program_id": "prog_us_chicago_ai",
     "university_id": "uni_us_chicago",
-    "program_name": "BS Computer Science",
+    "program_name": "BS Artificial Intelligence",
     "degree_level": "Undergraduate",
-    "field_category": "Computer Science",
+    "field_category": "Artificial Intelligence",
     "required_education_level": "High School Diploma",
     "accepted_streams": ["STEM Focus", "General Track"],
     "min_math_percent": 3.0,
@@ -854,11 +830,11 @@
     "required_tests": []
   },
   {
-    "program_id": "prog_us_columbia_cs",
+    "program_id": "prog_us_columbia_se",
     "university_id": "uni_us_columbia",
-    "program_name": "BS Computer Science",
+    "program_name": "BS Software Engineering",
     "degree_level": "Undergraduate",
-    "field_category": "Computer Science",
+    "field_category": "Software Engineering",
     "required_education_level": "High School Diploma",
     "accepted_streams": ["STEM Focus", "General Track"],
     "min_math_percent": 3.0,
@@ -866,11 +842,11 @@
     "required_tests": []
   },
   {
-    "program_id": "prog_us_northwestern_cs",
+    "program_id": "prog_us_northwestern_ds",
     "university_id": "uni_us_northwestern",
-    "program_name": "BS Computer Science",
+    "program_name": "BS Data Science",
     "degree_level": "Undergraduate",
-    "field_category": "Computer Science",
+    "field_category": "Data & Analytics",
     "required_education_level": "High School Diploma",
     "accepted_streams": ["STEM Focus", "General Track"],
     "min_math_percent": 3.0,
@@ -890,11 +866,11 @@
     "required_tests": []
   },
   {
-    "program_id": "prog_us_michigan_cs",
+    "program_id": "prog_us_michigan_se",
     "university_id": "uni_us_michigan",
-    "program_name": "BS Computer Science",
+    "program_name": "BS Software Engineering",
     "degree_level": "Undergraduate",
-    "field_category": "Computer Science",
+    "field_category": "Software Engineering",
     "required_education_level": "High School Diploma",
     "accepted_streams": ["STEM Focus", "General Track"],
     "min_math_percent": 3.0,
@@ -926,11 +902,11 @@
     "required_tests": []
   },
   {
-    "program_id": "prog_us_nyu_cs",
+    "program_id": "prog_us_nyu_cyber",
     "university_id": "uni_us_nyu",
-    "program_name": "BS Computer Science",
+    "program_name": "BS Cyber Security",
     "degree_level": "Undergraduate",
-    "field_category": "Computer Science",
+    "field_category": "Information Security",
     "required_education_level": "High School Diploma",
     "accepted_streams": ["STEM Focus", "General Track"],
     "min_math_percent": 3.0,
@@ -938,11 +914,11 @@
     "required_tests": []
   },
   {
-    "program_id": "prog_us_brown_cs",
+    "program_id": "prog_us_brown_ai",
     "university_id": "uni_us_brown",
-    "program_name": "BS Computer Science",
+    "program_name": "BS Artificial Intelligence",
     "degree_level": "Undergraduate",
-    "field_category": "Computer Science",
+    "field_category": "Artificial Intelligence",
     "required_education_level": "High School Diploma",
     "accepted_streams": ["STEM Focus", "General Track"],
     "min_math_percent": 3.0,
@@ -950,11 +926,11 @@
     "required_tests": []
   },
   {
-    "program_id": "prog_us_duke_cs",
+    "program_id": "prog_us_duke_ds",
     "university_id": "uni_us_duke",
-    "program_name": "BS Computer Science",
+    "program_name": "BS Data Science",
     "degree_level": "Undergraduate",
-    "field_category": "Computer Science",
+    "field_category": "Data & Analytics",
     "required_education_level": "High School Diploma",
     "accepted_streams": ["STEM Focus", "General Track"],
     "min_math_percent": 3.0,
@@ -962,11 +938,11 @@
     "required_tests": []
   },
   {
-    "program_id": "prog_us_ut_cs",
+    "program_id": "prog_us_ut_se",
     "university_id": "uni_us_ut",
-    "program_name": "BS Computer Science",
+    "program_name": "BS Software Engineering",
     "degree_level": "Undergraduate",
-    "field_category": "Computer Science",
+    "field_category": "Software Engineering",
     "required_education_level": "High School Diploma",
     "accepted_streams": ["STEM Focus", "General Track"],
     "min_math_percent": 3.0,
@@ -986,11 +962,11 @@
     "required_tests": []
   },
   {
-    "program_id": "prog_us_ucsd_cs",
+    "program_id": "prog_us_ucsd_cyber",
     "university_id": "uni_us_ucsd",
-    "program_name": "BS Computer Science",
+    "program_name": "BS Cyber Security",
     "degree_level": "Undergraduate",
-    "field_category": "Computer Science",
+    "field_category": "Information Security",
     "required_education_level": "High School Diploma",
     "accepted_streams": ["STEM Focus", "General Track"],
     "min_math_percent": 3.0,
@@ -998,11 +974,11 @@
     "required_tests": []
   },
   {
-    "program_id": "prog_us_psu_cs",
+    "program_id": "prog_us_psu_se",
     "university_id": "uni_us_psu",
-    "program_name": "BS Computer Science",
+    "program_name": "BS Software Engineering",
     "degree_level": "Undergraduate",
-    "field_category": "Computer Science",
+    "field_category": "Software Engineering",
     "required_education_level": "High School Diploma",
     "accepted_streams": ["STEM Focus", "General Track"],
     "min_math_percent": 3.0,
@@ -1010,11 +986,11 @@
     "required_tests": []
   },
   {
-    "program_id": "prog_us_wash_cs",
+    "program_id": "prog_us_wash_ai",
     "university_id": "uni_us_wash",
-    "program_name": "BS Computer Science",
+    "program_name": "BS Artificial Intelligence",
     "degree_level": "Undergraduate",
-    "field_category": "Computer Science",
+    "field_category": "Artificial Intelligence",
     "required_education_level": "High School Diploma",
     "accepted_streams": ["STEM Focus", "General Track"],
     "min_math_percent": 3.0,

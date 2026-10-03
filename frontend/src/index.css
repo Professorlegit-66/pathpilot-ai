@@ -1,21 +1,20 @@
-/* 1. Global Reset (Kills the white borders) */
-* {
+/* 1. Global Reset & Box Sizing */
+*, *::before, *::after {
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
 }
 
-body, html {
+html, body, #root {
   margin: 0;
   padding: 0;
   width: 100%;
   height: 100%;
-  background-color: #0f172a;
+  overflow: hidden;
+  background-color: #070b14;
   color: #f8fafc;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
-/* Custom Dark Theme Scrollbar */
+/* 2. Custom Dark Theme Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -31,6 +30,7 @@ body, html {
   background: #475569; 
 }
 
+/* 3. Interactive Card Hover Effects */
 .interactive-card {
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
@@ -39,7 +39,7 @@ body, html {
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
 }
 
-/* 4. Button Polish */
+/* 4. Global Button Polish */
 button {
   transition: all 0.2s ease;
 }

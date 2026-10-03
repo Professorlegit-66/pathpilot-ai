@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { 
   GraduationCap, MapPin, CheckCircle2, XCircle, HelpCircle, 
-  ChevronDown, ChevronUp, Award, Banknote, PlusCircle, ArrowRight, RefreshCw
+  ChevronDown, ChevronUp, Award, Banknote, PlusCircle, ArrowRight, RefreshCw, X
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
@@ -13,6 +13,7 @@ export default function ProgramMatcher({ results, profile, setResults }) {
   const [loading, setLoading] = useState(false);
   const [expandedCard, setExpandedCard] = useState(null);
   const [filter, setFilter] = useState('ALL'); 
+  const [selectedDetailProgram, setSelectedDetailProgram] = useState(null); // Modal state
 
   const targetCareer = location.state?.selectedCareer || profile?.target_career;
 
@@ -77,7 +78,7 @@ export default function ProgramMatcher({ results, profile, setResults }) {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', maxWidth: '1000px', margin: '0 auto', width: '100%' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', maxWidth: '1000px', margin: '0 auto', width: '100%', paddingBottom: '3rem' }}>
       
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem', marginBottom: '1rem' }}>
         <div>
@@ -210,12 +211,19 @@ export default function ProgramMatcher({ results, profile, setResults }) {
                     )}
 
                     <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end', marginTop: '1rem' }}>
-                      <button style={{ background: 'transparent', border: '1px solid #334155', color: '#f8fafc', padding: '0.6rem 1.25rem', borderRadius: '8px', fontSize: '0.9rem', fontWeight: '600', cursor: 'pointer', transition: 'background 0.2s' }} onMouseEnter={e => e.target.style.background = '#334155'} onMouseLeave={e => e.target.style.background = 'transparent'}>
+                      <button 
+                        onClick={() => setSelectedDetailProgram(prog)}
+                        style={{ background: 'transparent', border: '1px solid #334155', color: '#f8fafc', padding: '0.6rem 1.25rem', borderRadius: '8px', fontSize: '0.9rem', fontWeight: '600', cursor: 'pointer', transition: 'background 0.2s' }} 
+                        onMouseEnter={e => e.target.style.background = '#334155'} 
+                        onMouseLeave={e => e.target.style.background = 'transparent'}
+                      >
                         View Details
                       </button>
                       <button 
                         onClick={() => navigate('/roadmap', { state: { selectedProgram: prog } })}
-                        style={{ background: '#059669', color: '#fff', border: 'none', padding: '0.6rem 1.25rem', borderRadius: '8px', fontSize: '0.9rem', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem', transition: 'opacity 0.2s' }} onMouseEnter={e => e.target.style.opacity = 0.8} onMouseLeave={e => e.target.style.opacity = 1}
+                        style={{ background: '#059669', color: '#fff', border: 'none', padding: '0.6rem 1.25rem', borderRadius: '8px', fontSize: '0.9rem', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem', transition: 'opacity 0.2s' }} 
+                        onMouseEnter={e => e.target.style.opacity = 0.8} 
+                        onMouseLeave={e => e.target.style.opacity = 1}
                       >
                         <PlusCircle size={16} /> Add to My Roadmap
                       </button>
@@ -227,6 +235,81 @@ export default function ProgramMatcher({ results, profile, setResults }) {
           );
         })
       )}
+
+      {/* Program Details Modal */}
+      {selectedDetailProgram && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(3, 7, 18, 0.8)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '1rem' }}>
+          <div style={{ background: '#1e293b', border: '1px solid #334155', borderRadius: '16px', maxWidth: '650px', width: '100%', padding: '2rem', boxSizing: 'border-box', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.7)', maxHeight: '90vh', overflowY: 'auto' }}>
+            
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.25rem' }}>
+              <div>
+                <span style={{ background: '#064e3b', color: '#34d399', fontSize: '0.7rem', fontWeight: '700', padding: '0.2rem 0.5rem', borderRadius: '4px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  Verified Program Record
+                </span>
+                <h2 style={{ color: '#fff', fontSize: '1.4rem', margin: '0.4rem 0 0.2rem 0' }}>{selectedDetailProgram.program_name}</h2>
+                <p style={{ color: '#38bdf8', fontSize: '0.95rem', fontWeight: '600', margin: 0 }}>{selectedDetailProgram.university_name} • {selectedDetailProgram.city}</p>
+              </div>
+              <button 
+                onClick={() => setSelectedDetailProgram(null)}
+                style={{ background: '#0f172a', border: '1px solid #334155', color: '#94a3b8', borderRadius: '50%', width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
+              >
+                <X size={18} />
+              </button>
+            </div>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', background: '#0f172a', padding: '1.25rem', borderRadius: '12px', border: '1px solid #334155', marginBottom: '1.5rem' }}>
+              <div>
+                <span style={{ fontSize: '0.75rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: '600' }}>HEC Recognition Status</span>
+                <p style={{ color: '#fff', margin: '0.2rem 0 0 0', fontSize: '0.9rem' }}>{selectedDetailProgram.hec_recognition}</p>
+              </div>
+              <div>
+                <span style={{ fontSize: '0.75rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: '600' }}>Program Accreditation Body</span>
+                <p style={{ color: '#fff', margin: '0.2rem 0 0 0', fontSize: '0.9rem' }}>{selectedDetailProgram.accreditation}</p>
+              </div>
+              <div>
+                <span style={{ fontSize: '0.75rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: '600' }}>Deterministic Eligibility</span>
+                <p style={{ color: selectedDetailProgram.eligibility_status === 'ELIGIBLE' ? '#34d399' : '#f87171', margin: '0.2rem 0 0 0', fontSize: '0.9rem', fontWeight: '600' }}>{selectedDetailProgram.eligibility_status}</p>
+              </div>
+              
+              {selectedDetailProgram.why_this_appears && selectedDetailProgram.why_this_appears.length > 0 && (
+                <div>
+                  <span style={{ fontSize: '0.75rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: '600' }}>Evaluation Criteria Breakdown</span>
+                  <ul style={{ margin: '0.4rem 0 0 0', paddingLeft: '1.25rem', color: '#cbd5e1', fontSize: '0.85rem', display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
+                    {selectedDetailProgram.why_this_appears.map((reason, rIdx) => (
+                      <li key={rIdx}>{reason.substring(1).trim()}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+
+            {/* Financial Aid Section in Modal */}
+            {selectedDetailProgram.available_scholarships?.length > 0 && (
+              <div style={{ marginBottom: '1.5rem' }}>
+                <h4 style={{ fontSize: '0.9rem', color: '#38bdf8', margin: '0 0 0.75rem 0', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Associated Financial Aid Opportunities</h4>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                  {selectedDetailProgram.available_scholarships.map((sch, sIdx) => (
+                    <div key={sIdx} style={{ background: '#0f172a', padding: '0.85rem 1rem', borderRadius: '8px', border: '1px solid #334155' }}>
+                      <strong style={{ color: '#34d399', display: 'block', marginBottom: '0.2rem' }}>{sch.name}</strong>
+                      <span style={{ color: '#94a3b8', fontSize: '0.85rem' }}>{sch.type} • {sch.coverage}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
+              <button 
+                onClick={() => setSelectedDetailProgram(null)}
+                style={{ background: '#334155', color: '#fff', border: 'none', padding: '0.75rem 1.5rem', borderRadius: '8px', fontWeight: '600', cursor: 'pointer' }}
+              >
+                Close Modal
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

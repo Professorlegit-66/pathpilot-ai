@@ -343,7 +343,16 @@ export default function ProgramMatcher({ results, profile, setResults }) {
               </div>
               <div>
                 <span style={{ fontSize: '0.75rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: '600' }}>Deterministic Eligibility</span>
-                <p style={{ color: selectedDetailProgram.eligibility_status === 'ELIGIBLE' ? '#34d399' : '#f87171', margin: '0.2rem 0 0 0', fontSize: '0.9rem', fontWeight: '600' }}>{selectedDetailProgram.eligibility_status}</p>
+                <p style={{ 
+                  color: selectedDetailProgram.eligibility_status === 'ELIGIBLE' ? '#34d399' : '#f87171', 
+                  margin: '0.2rem 0 0 0', 
+                  fontSize: '0.9rem', 
+                  fontWeight: '600' 
+                }}>
+                  {selectedDetailProgram.eligibility_status === 'ELIGIBLE' ? 'Eligible' : 
+                   selectedDetailProgram.eligibility_status === 'NOT_ELIGIBLE' ? 'Not Eligible' : 
+                   selectedDetailProgram.eligibility_status}
+                </p>
               </div>
               
               {selectedDetailProgram.why_this_appears && selectedDetailProgram.why_this_appears.length > 0 && (

@@ -2,7 +2,7 @@
   {
     "career_id": "car_software_engineer",
     "title": "Software Engineer / ML Track",
-    "field_category": "Computer Science",
+    "field_category": "Software Engineering",
     "description": "Building scalable software, AI pipelines, and backend architectures.",
     "top_skills": [
       "Python",
@@ -14,7 +14,7 @@
   {
     "career_id": "car_data_engineer",
     "title": "Data Engineer",
-    "field_category": "Computer Science",
+    "field_category": "Data & Analytics",
     "description": "Designing reliable data platforms, ETL pipelines, warehouses, and analytics infrastructure.",
     "top_skills": [
       "SQL",
@@ -26,7 +26,7 @@
   {
     "career_id": "car_ml_engineer",
     "title": "Machine Learning Engineer",
-    "field_category": "Computer Science",
+    "field_category": "Artificial Intelligence",
     "description": "Developing, evaluating, and deploying machine-learning systems and models.",
     "top_skills": [
       "Python",
@@ -38,7 +38,7 @@
   {
     "career_id": "car_data_scientist",
     "title": "Data Scientist",
-    "field_category": "Computer Science",
+    "field_category": "Data & Analytics",
     "description": "Using statistical and computational methods to analyze data and support decisions.",
     "top_skills": [
       "Python",
@@ -50,7 +50,7 @@
   {
     "career_id": "car_cybersecurity",
     "title": "Cybersecurity Engineer",
-    "field_category": "Computer Science",
+    "field_category": "Information Security",
     "description": "Protecting systems, networks, applications, and data through security engineering practices.",
     "top_skills": [
       "Networking",
@@ -62,7 +62,7 @@
   {
     "career_id": "car_cloud_engineer",
     "title": "Cloud / DevOps Engineer",
-    "field_category": "Computer Science",
+    "field_category": "Cloud & Infrastructure",
     "description": "Automating software delivery and operating scalable cloud infrastructure.",
     "top_skills": [
       "Linux",
@@ -74,7 +74,7 @@
   {
     "career_id": "car_product",
     "title": "Product / Technology Analyst",
-    "field_category": "Computer Science",
+    "field_category": "Tech Management",
     "description": "Connecting technical systems, user needs, analytics, and product strategy.",
     "top_skills": [
       "SQL",
@@ -86,7 +86,7 @@
   {
     "career_id": "car_ai_research",
     "title": "AI Research Track",
-    "field_category": "Computer Science",
+    "field_category": "Artificial Intelligence",
     "description": "Investigating algorithms, models, and computational methods for artificial intelligence.",
     "top_skills": [
       "Linear Algebra",
@@ -98,7 +98,7 @@
   {
     "career_id": "car_web",
     "title": "Full-Stack Web Developer",
-    "field_category": "Computer Science",
+    "field_category": "Software Engineering",
     "description": "Building user-facing applications and the services that power them.",
     "top_skills": [
       "JavaScript",
@@ -110,7 +110,7 @@
   {
     "career_id": "car_database",
     "title": "Database Engineer",
-    "field_category": "Computer Science",
+    "field_category": "Cloud & Infrastructure",
     "description": "Designing, optimizing, securing, and operating database systems.",
     "top_skills": [
       "SQL",

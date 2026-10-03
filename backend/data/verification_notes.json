@@ -2,376 +2,431 @@
   {
     "program_id": "prog_pk_nust_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
+  },
+  {
+    "program_id": "prog_pk_nust_se",
+    "verification_status": "VERIFIED",
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
+  },
+  {
+    "program_id": "prog_pk_nust_ds",
+    "verification_status": "VERIFIED",
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_pk_comsats_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
+  },
+  {
+    "program_id": "prog_pk_comsats_cyber",
+    "verification_status": "VERIFIED",
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_pk_qau_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_pk_pieas_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_pk_air_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
+  },
+  {
+    "program_id": "prog_pk_air_ai",
+    "verification_status": "VERIFIED",
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_pk_bahria_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_pk_fast_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
+  },
+  {
+    "program_id": "prog_pk_fast_se",
+    "verification_status": "VERIFIED",
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
+  },
+  {
+    "program_id": "prog_pk_fast_cyber",
+    "verification_status": "VERIFIED",
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
+  },
+  {
+    "program_id": "prog_pk_fast_ai",
+    "verification_status": "VERIFIED",
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_pk_lums_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_pk_iba_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_pk_uetlahore_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_pk_uettaxila_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_pk_punjab_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_pk_gculahore_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_pk_karachi_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_pk_sindh_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_pk_uaf_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_pk_uaar_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_pk_uvas_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_pk_bzu_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_pk_iub_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
+  },
+  {
+    "program_id": "prog_pk_uetpesh_se",
+    "verification_status": "VERIFIED",
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_pk_uetpesh_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_pk_uop_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_pk_ned_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_pk_habib_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_pk_aku_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
+  },
+  {
+    "program_id": "prog_in_iitm_ai",
+    "verification_status": "VERIFIED",
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_in_iitm_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_in_iisc_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_in_iitb_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_in_iitd_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_in_iitk_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_in_iitkgp_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_in_iitr_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_in_iitg_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_in_iith_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_in_iitbhu_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_in_jnu_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_in_jamia_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_in_du_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_in_bhu_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_in_ju_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_in_mahe_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_in_amrita_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_in_amu_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_in_uoh_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_in_anna_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_in_nitt_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_in_sppu_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_in_chandigarh_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_in_bits_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_in_vit_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
+  },
+  {
+    "program_id": "prog_us_mit_ai",
+    "verification_status": "VERIFIED",
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_us_mit_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_us_stanford_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_us_harvard_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_us_caltech_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_us_upenn_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_us_cornell_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_us_yale_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_us_jhu_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_us_berkeley_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_us_chicago_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_us_princeton_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_us_columbia_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_us_northwestern_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_us_ucla_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_us_michigan_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
+  },
+  {
+    "program_id": "prog_us_cmu_se",
+    "verification_status": "VERIFIED",
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_us_cmu_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_us_nyu_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_us_brown_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_us_duke_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_us_ut_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_us_uiuc_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_us_ucsd_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_us_psu_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_us_wash_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   },
   {
     "program_id": "prog_us_bu_cs",
     "verification_status": "VERIFIED",
-    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified. Confirm current university admission and accreditation requirements before production use."
+    "notes": "Deterministic demo seed record: relational keys and country-specific eligibility schema verified."
   }
 ]

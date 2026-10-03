@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { 
   GraduationCap, MapPin, CheckCircle2, XCircle, HelpCircle, 
-  ChevronDown, ChevronUp, Award, Banknote, PlusCircle, ArrowRight, RefreshCw, X
+  ChevronDown, ChevronUp, Award, Banknote, PlusCircle, RefreshCw, X
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
@@ -80,7 +80,8 @@ export default function ProgramMatcher({ results, profile, setResults }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', maxWidth: '1000px', margin: '0 auto', width: '100%', paddingBottom: '3rem' }}>
       
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem', marginBottom: '1rem' }}>
+      {/* Header */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem', marginBottom: '0.5rem' }}>
         <div>
           <h1 style={{ fontSize: '2rem', fontWeight: 'bold', color: '#f8fafc', margin: '0 0 0.5rem 0' }}>Program Matcher</h1>
           <p style={{ color: '#94a3b8', margin: 0 }}>Verified university programs evaluated against your academic profile.</p>
@@ -103,6 +104,7 @@ export default function ProgramMatcher({ results, profile, setResults }) {
         </button>
       </div>
 
+      {/* Filter Tabs */}
       <div style={{ display: 'flex', gap: '0.5rem', borderBottom: '1px solid #334155', paddingBottom: '1rem' }}>
         {['ALL', 'ELIGIBLE', 'NOT_ELIGIBLE'].map((tab) => (
           <button
@@ -116,7 +118,8 @@ export default function ProgramMatcher({ results, profile, setResults }) {
               borderRadius: '6px',
               cursor: 'pointer',
               fontWeight: '500',
-              fontSize: '0.9rem'
+              fontSize: '0.9rem',
+              transition: 'background 0.15s ease, color 0.15s ease'
             }}
           >
             {tab === 'ALL' ? `All Programs (${rawList.length})` : tab === 'ELIGIBLE' ? 'Eligible Only' : 'Not Eligible'}
@@ -124,117 +127,120 @@ export default function ProgramMatcher({ results, profile, setResults }) {
         ))}
       </div>
 
-      {filteredResults.length === 0 ? (
-        <div style={{ background: '#1e293b', padding: '2rem', borderRadius: '12px', border: '1px solid #334155', textAlign: 'center', color: '#94a3b8' }}>
-          No programs match the selected filter criteria.
-        </div>
-      ) : (
-        filteredResults.map((prog, idx) => {
-          const isExpanded = expandedCard === idx;
-          const elig = getEligibilityConfig(prog.eligibility_status);
+      {/* Stable Content List Container */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%', minHeight: '200px' }}>
+        {filteredResults.length === 0 ? (
+          <div style={{ background: '#1e293b', padding: '2.5rem 2rem', borderRadius: '12px', border: '1px solid #334155', textAlign: 'center', color: '#94a3b8' }}>
+            No programs match the selected filter criteria.
+          </div>
+        ) : (
+          filteredResults.map((prog, idx) => {
+            const isExpanded = expandedCard === idx;
+            const elig = getEligibilityConfig(prog.eligibility_status);
 
-          return (
-            <div key={idx} style={{ background: '#1e293b', border: `1px solid ${elig.bg}`, borderRadius: '12px', overflow: 'hidden', transition: 'all 0.2s' }}>
-              <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
-                  <div>
-                    <h2 style={{ fontSize: '1.4rem', fontWeight: 'bold', color: '#f8fafc', margin: '0 0 0.25rem 0' }}>
-                      {prog.program_name}
-                    </h2>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#94a3b8', fontSize: '0.95rem' }}>
-                      <span style={{ fontWeight: '600', color: '#e2e8f0' }}>{prog.university_name}</span>
-                      <span>•</span>
-                      <span style={{ display: 'flex', alignItems: 'center', gap: '0.2rem' }}><MapPin size={14} /> {prog.city}</span>
-                    </div>
-                  </div>
-                  
-                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', background: elig.bg, color: elig.color, padding: '0.4rem 0.8rem', borderRadius: '6px', fontWeight: '600', fontSize: '0.9rem' }}>
-                      {elig.icon} {elig.text}
-                    </div>
-                    <span style={{ fontSize: '0.75rem', color: '#94a3b8', marginTop: '0.25rem' }}>{elig.subtext}</span>
-                  </div>
-                </div>
-
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginTop: '0.5rem', padding: '1rem', background: '#0f172a', borderRadius: '8px', border: '1px solid #334155' }}>
-                  <div>
-                    <p style={{ fontSize: '0.75rem', color: '#64748b', margin: '0 0 0.2rem 0', fontWeight: '600' }}>HEC RECOGNITION</p>
-                    <p style={{ fontSize: '0.9rem', color: '#e2e8f0', margin: 0, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                      <Award size={14} color="#38bdf8" /> {prog.hec_recognition}
-                    </p>
-                  </div>
-                  <div>
-                    <p style={{ fontSize: '0.75rem', color: '#64748b', margin: '0 0 0.2rem 0', fontWeight: '600' }}>PROGRAM ACCREDITATION</p>
-                    <p style={{ fontSize: '0.9rem', color: '#e2e8f0', margin: 0 }}>{prog.accreditation}</p>
-                  </div>
-                  <div>
-                    <p style={{ fontSize: '0.75rem', color: '#64748b', margin: '0 0 0.2rem 0', fontWeight: '600' }}>FINANCIAL AID</p>
-                    <p style={{ fontSize: '0.9rem', color: prog.available_scholarships?.length ? '#34d399' : '#94a3b8', margin: 0, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                      <Banknote size={14} /> 
-                      {prog.available_scholarships?.length ? `${prog.available_scholarships.length} opportunities found` : 'Not available in dataset'}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div style={{ borderTop: '1px solid #334155' }}>
-                <button 
-                  onClick={() => setExpandedCard(isExpanded ? null : idx)}
-                  style={{ width: '100%', background: 'transparent', border: 'none', padding: '0.75rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: '#94a3b8', fontSize: '0.9rem', cursor: 'pointer', fontWeight: '500' }}
-                >
-                  Why this appears
-                  {isExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-                </button>
-                
-                {isExpanded && (
-                  <div style={{ padding: '0 1.5rem 1.5rem 1.5rem' }}>
-                    <ul style={{ margin: '0.5rem 0 1.5rem 0', paddingLeft: '1.5rem', color: '#cbd5e1', fontSize: '0.9rem', lineHeight: '1.6' }}>
-                      {prog.why_this_appears && prog.why_this_appears.map((reason, rIdx) => (
-                        <li key={rIdx} style={{ color: reason.startsWith('✕') ? '#fca5a5' : reason.startsWith('⚠') ? '#fcd34d' : '#a7f3d0' }}>
-                          <span style={{ color: '#e2e8f0' }}>{reason.substring(1).trim()}</span>
-                        </li>
-                      ))}
-                    </ul>
-
-                    {prog.available_scholarships?.length > 0 && (
-                      <div style={{ marginBottom: '1.5rem' }}>
-                        <h4 style={{ fontSize: '0.85rem', color: '#94a3b8', margin: '0 0 0.5rem 0' }}>Matching Financial Aid Records:</h4>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                          {prog.available_scholarships.map((sch, sIdx) => (
-                            <div key={sIdx} style={{ background: '#0f172a', padding: '0.75rem', borderRadius: '6px', border: '1px solid #334155', fontSize: '0.85rem' }}>
-                              <strong style={{ color: '#34d399', display: 'block' }}>{sch.name}</strong>
-                              <span style={{ color: '#64748b' }}>{sch.type} - {sch.coverage}</span>
-                            </div>
-                          ))}
-                        </div>
+            return (
+              <div key={prog.program_id || `${prog.program_name}-${idx}`} style={{ background: '#1e293b', border: `1px solid ${elig.bg}`, borderRadius: '12px', overflow: 'hidden' }}>
+                <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
+                    <div>
+                      <h2 style={{ fontSize: '1.4rem', fontWeight: 'bold', color: '#f8fafc', margin: '0 0 0.25rem 0' }}>
+                        {prog.program_name}
+                      </h2>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#94a3b8', fontSize: '0.95rem' }}>
+                        <span style={{ fontWeight: '600', color: '#e2e8f0' }}>{prog.university_name}</span>
+                        <span>•</span>
+                        <span style={{ display: 'flex', alignItems: 'center', gap: '0.2rem' }}><MapPin size={14} /> {prog.city}</span>
                       </div>
-                    )}
-
-                    <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end', marginTop: '1rem' }}>
-                      <button 
-                        onClick={() => setSelectedDetailProgram(prog)}
-                        style={{ background: 'transparent', border: '1px solid #334155', color: '#f8fafc', padding: '0.6rem 1.25rem', borderRadius: '8px', fontSize: '0.9rem', fontWeight: '600', cursor: 'pointer', transition: 'background 0.2s' }} 
-                        onMouseEnter={e => e.target.style.background = '#334155'} 
-                        onMouseLeave={e => e.target.style.background = 'transparent'}
-                      >
-                        View Details
-                      </button>
-                      <button 
-                        onClick={() => navigate('/roadmap', { state: { selectedProgram: prog } })}
-                        style={{ background: '#059669', color: '#fff', border: 'none', padding: '0.6rem 1.25rem', borderRadius: '8px', fontSize: '0.9rem', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem', transition: 'opacity 0.2s' }} 
-                        onMouseEnter={e => e.target.style.opacity = 0.8} 
-                        onMouseLeave={e => e.target.style.opacity = 1}
-                      >
-                        <PlusCircle size={16} /> Add to My Roadmap
-                      </button>
+                    </div>
+                    
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', background: elig.bg, color: elig.color, padding: '0.4rem 0.8rem', borderRadius: '6px', fontWeight: '600', fontSize: '0.9rem' }}>
+                        {elig.icon} {elig.text}
+                      </div>
+                      <span style={{ fontSize: '0.75rem', color: '#94a3b8', marginTop: '0.25rem' }}>{elig.subtext}</span>
                     </div>
                   </div>
-                )}
+
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginTop: '0.5rem', padding: '1rem', background: '#0f172a', borderRadius: '8px', border: '1px solid #334155' }}>
+                    <div>
+                      <p style={{ fontSize: '0.75rem', color: '#64748b', margin: '0 0 0.2rem 0', fontWeight: '600' }}>HEC RECOGNITION</p>
+                      <p style={{ fontSize: '0.9rem', color: '#e2e8f0', margin: 0, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                        <Award size={14} color="#38bdf8" /> {prog.hec_recognition}
+                      </p>
+                    </div>
+                    <div>
+                      <p style={{ fontSize: '0.75rem', color: '#64748b', margin: '0 0 0.2rem 0', fontWeight: '600' }}>PROGRAM ACCREDITATION</p>
+                      <p style={{ fontSize: '0.9rem', color: '#e2e8f0', margin: 0 }}>{prog.accreditation}</p>
+                    </div>
+                    <div>
+                      <p style={{ fontSize: '0.75rem', color: '#64748b', margin: '0 0 0.2rem 0', fontWeight: '600' }}>FINANCIAL AID</p>
+                      <p style={{ fontSize: '0.9rem', color: prog.available_scholarships?.length ? '#34d399' : '#94a3b8', margin: 0, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                        <Banknote size={14} /> 
+                        {prog.available_scholarships?.length ? `${prog.available_scholarships.length} opportunities found` : 'Not available in dataset'}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div style={{ borderTop: '1px solid #334155' }}>
+                  <button 
+                    onClick={() => setExpandedCard(isExpanded ? null : idx)}
+                    style={{ width: '100%', background: 'transparent', border: 'none', padding: '0.75rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: '#94a3b8', fontSize: '0.9rem', cursor: 'pointer', fontWeight: '500' }}
+                  >
+                    Why this appears
+                    {isExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                  </button>
+                  
+                  {isExpanded && (
+                    <div style={{ padding: '0 1.5rem 1.5rem 1.5rem' }}>
+                      <ul style={{ margin: '0.5rem 0 1.5rem 0', paddingLeft: '1.5rem', color: '#cbd5e1', fontSize: '0.9rem', lineHeight: '1.6' }}>
+                        {prog.why_this_appears && prog.why_this_appears.map((reason, rIdx) => (
+                          <li key={rIdx} style={{ color: reason.startsWith('✕') ? '#fca5a5' : reason.startsWith('⚠') ? '#fcd34d' : '#a7f3d0' }}>
+                            <span style={{ color: '#e2e8f0' }}>{reason.substring(1).trim()}</span>
+                          </li>
+                        ))}
+                      </ul>
+
+                      {prog.available_scholarships?.length > 0 && (
+                        <div style={{ marginBottom: '1.5rem' }}>
+                          <h4 style={{ fontSize: '0.85rem', color: '#94a3b8', margin: '0 0 0.5rem 0' }}>Matching Financial Aid Records:</h4>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                            {prog.available_scholarships.map((sch, sIdx) => (
+                              <div key={sIdx} style={{ background: '#0f172a', padding: '0.75rem', borderRadius: '6px', border: '1px solid #334155', fontSize: '0.85rem' }}>
+                                <strong style={{ color: '#34d399', display: 'block' }}>{sch.name}</strong>
+                                <span style={{ color: '#64748b' }}>{sch.type} - {sch.coverage}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end', marginTop: '1rem' }}>
+                        <button 
+                          onClick={() => setSelectedDetailProgram(prog)}
+                          style={{ background: 'transparent', border: '1px solid #334155', color: '#f8fafc', padding: '0.6rem 1.25rem', borderRadius: '8px', fontSize: '0.9rem', fontWeight: '600', cursor: 'pointer', transition: 'background 0.2s' }} 
+                          onMouseEnter={e => e.target.style.background = '#334155'} 
+                          onMouseLeave={e => e.target.style.background = 'transparent'}
+                        >
+                          View Details
+                        </button>
+                        <button 
+                          onClick={() => navigate('/roadmap', { state: { selectedProgram: prog } })}
+                          style={{ background: '#059669', color: '#fff', border: 'none', padding: '0.6rem 1.25rem', borderRadius: '8px', fontSize: '0.9rem', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem', transition: 'opacity 0.2s' }} 
+                          onMouseEnter={e => e.target.style.opacity = 0.8} 
+                          onMouseLeave={e => e.target.style.opacity = 1}
+                        >
+                          <PlusCircle size={16} /> Add to My Roadmap
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          );
-        })
-      )}
+            );
+          })
+        )}
+      </div>
 
       {/* Program Details Modal */}
       {selectedDetailProgram && (

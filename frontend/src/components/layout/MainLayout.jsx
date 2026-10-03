@@ -4,7 +4,7 @@ import Sidebar from './Sidebar';
 import TopNav from './TopNav';
 
 export default function MainLayout({ profile, onSignOut }) {
-  const location = useLocation(); // Track current route for animation key
+  const location = useLocation(); 
   const [isCollapsed, setIsCollapsed] = useState(() => {
     return localStorage.getItem('pathpilot_sidebar_collapsed') === 'true';
   });
@@ -29,9 +29,16 @@ export default function MainLayout({ profile, onSignOut }) {
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minWidth: 0 }}> 
         <TopNav profile={profile} onSignOut={onSignOut} />
         
-        {/* Main Workspace Area with Tab Change Animation */}
-        <main style={{ flex: 1, overflowY: 'auto', padding: '1.5rem 2rem', boxSizing: 'border-box', width: '100%' }}>
-          <div key={location.pathname} className="animate-fade-slide-in" style={{ width: '100%', height: '100%' }}>
+        {/* Main Content Area: Animate ONLY when location.pathname changes */}
+        <main style={{ 
+          flex: 1, 
+          overflowY: 'scroll', 
+          padding: '1.5rem 2rem', 
+          boxSizing: 'border-box', 
+          width: '100%',
+          scrollbarGutter: 'stable' 
+        }}>
+          <div key={location.pathname} className="animate-fade-slide-in" style={{ width: '100%' }}>
             <Outlet />
           </div>
         </main>

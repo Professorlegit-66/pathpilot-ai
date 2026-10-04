@@ -9,6 +9,7 @@ import CareerExplorer from './pages/CareerExplorer';
 import RoadmapView from './pages/RoadmapView';
 import AuthPage from './pages/AuthPage';
 import CareerCounselor from './pages/CareerCounselor';
+import './App.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://pathpilot-ai-exln.onrender.com';
 
@@ -44,6 +45,7 @@ function AppContent() {
     mathematics_background: true,
     preferred_field: 'Computer Science',
     target_career: sessionStorage.getItem('roadmap_target_career') || null,
+    selected_program: sessionStorage.getItem('roadmap_selected_program') ? JSON.parse(sessionStorage.getItem('roadmap_selected_program')) : null,
     financial_need_status: true
   });
 
@@ -72,11 +74,27 @@ function AppContent() {
 
           const activeCareer = data.target_career || sessionStorage.getItem('roadmap_target_career') || null;
 
+          if (activeCareer) {
+            sessionStorage.setItem('roadmap_target_career', activeCareer);
+            sessionStorage.removeItem('roadmap_is_reset');
+          }
+
+          let restoredProgram = null;
+          if (data.selected_program) {
+            try {
+              restoredProgram = typeof data.selected_program === 'string' ? JSON.parse(data.selected_program) : data.selected_program;
+              sessionStorage.setItem('roadmap_selected_program', JSON.stringify(restoredProgram));
+            } catch (e) {
+              console.error("Failed to parse persisted selected_program:", e);
+            }
+          }
+
           setStudentProfile(prev => ({ 
             ...prev, 
             ...data, 
             name: resolvedName,
-            target_career: activeCareer
+            target_career: activeCareer,
+            selected_program: restoredProgram !== null ? restoredProgram : prev.selected_program
           }));
 
           if (!activeCareer) {
@@ -125,11 +143,11 @@ function AppContent() {
           element={token ? <MainLayout profile={studentProfile} onSignOut={logout} /> : <Navigate to="/auth" replace />}
         >
           <Route index element={<Navigate to="/dashboard" replace />} />
-          <Route path="dashboard" element={<Dashboard profile={studentProfile} results={matchingResults} />} />
+          <Route path="dashboard" element={<Dashboard profile={studentProfile} results={matchingResults} setProfile={setStudentProfile} />} />
           <Route path="profile" element={<ProfilePage profile={studentProfile} setProfile={setStudentProfile} setResults={setMatchingResults} />} />
-          <Route path="programs" element={<ProgramMatcher results={matchingResults} profile={studentProfile} setResults={setMatchingResults} />} />
-          <Route path="careers" element={<CareerExplorer profile={studentProfile} setMatchingResults={setMatchingResults} />} />
-          <Route path="roadmap" element={<RoadmapView profile={studentProfile} results={matchingResults} setResults={setMatchingResults} />} />
+          <Route path="programs" element={<ProgramMatcher results={matchingResults} profile={studentProfile} setProfile={setStudentProfile} setResults={setMatchingResults} />} />
+          <Route path="careers" element={<CareerExplorer profile={studentProfile} setProfile={setStudentProfile} setMatchingResults={setMatchingResults} />} />
+          <Route path="roadmap" element={<RoadmapView profile={studentProfile} setProfile={setStudentProfile} results={matchingResults} setResults={setMatchingResults} />} />
           <Route path="counselor" element={<CareerCounselor profile={studentProfile} />} />
         </Route>
 

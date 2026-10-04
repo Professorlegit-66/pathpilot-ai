@@ -14,12 +14,12 @@ export default function CareerExplorer({ profile }) {
   useEffect(() => {
     const fetchCareers = async () => {
       try {
-        let res = await fetch(`${API_URL}/api/careers/`, {
+        let res = await fetch(`${API_URL}/api/data/careers`, {
           headers: token ? { 'Authorization': `Bearer ${token}` } : {}
         });
         
         if (!res.ok) {
-          res = await fetch(`${API_URL}/api/data/careers`, {
+          res = await fetch(`${API_URL}/api/careers/`, {
             headers: token ? { 'Authorization': `Bearer ${token}` } : {}
           });
         }
@@ -40,7 +40,6 @@ export default function CareerExplorer({ profile }) {
   }, [token]);
 
   const handleExplorePath = async (title) => {
-    // Clear old state & program selection to prevent auto-generating stale roadmaps
     sessionStorage.removeItem('roadmap_is_reset');
     sessionStorage.removeItem('roadmap_selected_program');
     sessionStorage.setItem('roadmap_target_career', title);
@@ -55,7 +54,8 @@ export default function CareerExplorer({ profile }) {
           },
           body: JSON.stringify({
             ...(profile || {}),
-            target_career: title
+            target_career: title,
+            selected_program: null
           })
         });
       } catch (err) {
@@ -63,7 +63,6 @@ export default function CareerExplorer({ profile }) {
       }
     }
 
-    // REQUIRED FLOW: Navigates to Program Matcher (roadmap remains unassigned until program added)
     navigate('/programs', { state: { selectedCareer: title } });
   };
 
@@ -96,7 +95,7 @@ export default function CareerExplorer({ profile }) {
             const skills = career.top_skills || career.skills || [];
 
             return (
-              <div key={career.career_id || index} className="interactive-card" style={{ background: '#1e293b', padding: '1.5rem', borderRadius: '16px', border: '1px solid #334155', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+              <div key={career.career_id || index} style={{ background: '#1e293b', padding: '1.5rem', borderRadius: '16px', border: '1px solid #334155', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                 
                 <div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
@@ -132,9 +131,8 @@ export default function CareerExplorer({ profile }) {
 
                 <button 
                   onClick={() => handleExplorePath(title)}
-                  style={{ background: '#059669', color: '#fff', border: 'none', padding: '0.75rem', borderRadius: '8px', fontWeight: '600', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem', marginTop: '1rem', transition: 'background 0.2s' }}
-                  onMouseEnter={e => e.target.style.background = '#047857'}
-                  onMouseLeave={e => e.target.style.background = '#059669'}
+                  className="interactive-btn"
+                  style={{ background: '#059669', color: '#fff', border: 'none', padding: '0.75rem', borderRadius: '8px', fontWeight: '600', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem', marginTop: '1rem' }}
                 >
                   Explore Path <ArrowRight size={16} />
                 </button>

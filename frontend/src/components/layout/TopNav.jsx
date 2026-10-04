@@ -41,16 +41,17 @@ export default function TopNav({ profile, onSignOut }) {
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
-        <button title="Help & Documentation" style={{ background: '#1e293b', border: '1px solid #334155', padding: '0.5rem', borderRadius: '50%', color: '#94a3b8', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <button title="Help & Documentation" className="interactive-btn" style={{ background: '#1e293b', border: '1px solid #334155', padding: '0.5rem', borderRadius: '50%', color: '#94a3b8', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <HelpCircle size={16} />
         </button>
-        <button title="Notifications" style={{ background: '#1e293b', border: '1px solid #334155', padding: '0.5rem', borderRadius: '50%', color: '#94a3b8', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <button title="Notifications" className="interactive-btn" style={{ background: '#1e293b', border: '1px solid #334155', padding: '0.5rem', borderRadius: '50%', color: '#94a3b8', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <Bell size={16} />
         </button>
 
         {/* User Profile Dropdown Container */}
         <div style={{ position: 'relative' }} ref={dropdownRef}>
           <button 
+            className="interactive-btn"
             onClick={() => setDropdownOpen(prev => !prev)}
             style={{ 
               display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.4rem 0.75rem', 
@@ -89,6 +90,7 @@ export default function TopNav({ profile, onSignOut }) {
 
               <div style={{ padding: '0.4rem' }}>
                 <button 
+                  className="interactive-btn"
                   onClick={() => { setDropdownOpen(false); navigate('/profile'); }}
                   style={{
                     width: '100%', display: 'flex', alignItems: 'center', gap: '0.75rem',
@@ -104,6 +106,7 @@ export default function TopNav({ profile, onSignOut }) {
                 </button>
 
                 <button 
+                  className="interactive-btn"
                   onClick={() => { setDropdownOpen(false); navigate('/dashboard'); }}
                   style={{
                     width: '100%', display: 'flex', alignItems: 'center', gap: '0.75rem',
@@ -121,6 +124,7 @@ export default function TopNav({ profile, onSignOut }) {
 
               <div style={{ borderTop: '1px solid #1e293b', padding: '0.4rem' }}>
                 <button 
+                  className="interactive-btn"
                   onClick={() => { setDropdownOpen(false); onSignOut(); }}
                   style={{
                     width: '100%', display: 'flex', alignItems: 'center', gap: '0.75rem',

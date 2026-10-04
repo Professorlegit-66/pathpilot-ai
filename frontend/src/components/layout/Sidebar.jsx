@@ -56,6 +56,7 @@ export default function Sidebar({ onSignOut, isCollapsed, toggleSidebar }) {
       <button 
         onClick={toggleSidebar}
         title={isCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
+        className="interactive-btn"
         style={{
           position: 'absolute',
           top: '25px',
@@ -95,6 +96,7 @@ export default function Sidebar({ onSignOut, isCollapsed, toggleSidebar }) {
             <NavLink
               key={item.path}
               to={item.path}
+              className="interactive-btn"
               title={isCollapsed ? item.label : ''}
               style={({ isActive }) => ({
                 display: 'flex',
@@ -126,6 +128,7 @@ export default function Sidebar({ onSignOut, isCollapsed, toggleSidebar }) {
       <div style={{ padding: '1rem 0.5rem', borderTop: '1px solid #1e293b', marginTop: 'auto', flexShrink: 0 }}>
         <button 
           onClick={onSignOut}
+          className="interactive-btn"
           title={isCollapsed ? "Sign Out" : ""}
           style={{ 
             width: '100%', 

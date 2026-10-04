@@ -31,7 +31,11 @@ export default function ScholarshipVault({ results }) {
           <DollarSign size={48} color="#64748b" style={{ marginBottom: '1rem' }} />
           <h3 style={{ margin: '0 0 0.5rem 0', color: '#f8fafc' }}>No Scholarships Discovered Yet</h3>
           <p style={{ color: '#94a3b8', margin: '0 0 1.5rem 0' }}>Run your program eligibility evaluation first to discover tied financial aid options.</p>
-          <Link to="/programs" style={{ background: '#059669', color: '#fff', padding: '0.75rem 1.5rem', borderRadius: '8px', textDecoration: 'none', fontWeight: '600' }}>
+          <Link 
+            to="/programs" 
+            className="interactive-btn"
+            style={{ background: '#059669', color: '#fff', padding: '0.75rem 1.5rem', borderRadius: '8px', textDecoration: 'none', fontWeight: '600' }}
+          >
             Go to Program Matcher
           </Link>
         </div>

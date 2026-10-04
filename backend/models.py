@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, Boolean, ForeignKey
+from sqlalchemy import Column, Integer, String, Float, Boolean, ForeignKey, Text
 from database import Base
 
 class User(Base):
@@ -26,6 +26,7 @@ class DBStudentProfile(Base):
     mathematics_background = Column(Boolean, default=True)
     preferred_field = Column(String, default="Computer Science")
     target_career = Column(String, nullable=True)
+    selected_program = Column(Text, nullable=True)
     budget = Column(String, default="Rs. 300,000 / year")
     financial_need_status = Column(Boolean, default=True)
     gpa_score = Column(String, nullable=True)

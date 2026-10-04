@@ -1,236 +1,97 @@
-import os
 import json
-from fastapi import APIRouter
-from typing import List, Optional, Dict, Any
+import jwt
+from fastapi import APIRouter, Depends, HTTPException, Header
+from sqlalchemy.orm import Session
+from typing import Dict, Any, Optional
 
-from utils import calculate_haversine_distance, CITY_COORDINATES
+from database import get_db
+import models
+from config import SECRET_KEY, ALGORITHM
 
-router = APIRouter(prefix="/api/programs", tags=["Programs & Eligibility"])
+router = APIRouter(prefix="/api/profile", tags=["Student Profile"])
 
-def load_dataset(filename: str) -> List[Dict[str, Any]]:
-    base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-    filepath = os.path.join(base_dir, "data", filename)
-    
-    if not os.path.exists(filepath):
-        print(f"[Warning] Dataset file not found at: {filepath}")
-        return []
-    
+def get_current_user_id(authorization: Optional[str] = Header(None)) -> int:
+    if not authorization or not authorization.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="Missing or invalid authorization token")
+    token = authorization.split(" ")[1]
     try:
-        with open(filepath, "r", encoding="utf-8") as f:
-            return json.load(f)
-    except Exception as e:
-        print(f"[Error] Failed to load {filename}: {e}")
-        return []
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        user_id = payload.get("id")
+        if user_id is None:
+            raise HTTPException(status_code=401, detail="Invalid token payload")
+        return user_id
+    except Exception:
+        raise HTTPException(status_code=401, detail="Could not validate credentials")
 
-def evaluate_eligibility(profile_data: dict, program: Dict, target_career: Optional[str] = None) -> Dict:
-    reqs = program.get("eligibility", {})
-    reasons = []
+@router.get("/")
+def get_user_profile(user_id: int = Depends(get_current_user_id), db: Session = Depends(get_db)):
+    profile = db.query(models.DBStudentProfile).filter(models.DBStudentProfile.user_id == user_id).first()
+    user = db.query(models.User).filter(models.User.id == user_id).first()
     
-    hssc_percentage = profile_data.get("hssc_percentage", 20.0)
-    ssc_percentage = profile_data.get("ssc_percentage", 75.0)
-    mathematics_background = profile_data.get("mathematics_background", True)
-    hssc_group = profile_data.get("hssc_group", "Pre-Engineering")
-    
-    # 1. HSSC / Grade Check
-    min_hssc = (
-        reqs.get("minimum_hssc_percent") or 
-        program.get("min_overall_percent") or 
-        program.get("min_percentage") or 
-        50.0
-    )
-    
-    if min_hssc is not None:
-        user_score = hssc_percentage
-        if min_hssc <= 4.0 and user_score > 4.0:
-            user_score = (hssc_percentage / 100.0) * 4.0
-            
-        if user_score >= min_hssc:
-            reasons.append(f"✓ Meets minimum academic requirement (Threshold: {min_hssc}, Your Score: {round(user_score, 2)})")
-        else:
-            return {"status": "NOT_ELIGIBLE", "reasons": [f"✕ Does not meet academic requirement (Requires {min_hssc}, you have {round(user_score, 2)})"]}
-            
-    # 2. SSC Percentage Check
-    min_ssc = reqs.get("minimum_ssc_percent")
-    if min_ssc is not None:
-        if ssc_percentage >= min_ssc:
-            reasons.append(f"✓ Meets minimum secondary school requirement ({min_ssc}%)")
-        else:
-            return {"status": "NOT_ELIGIBLE", "reasons": [f"✕ Does not meet secondary requirement (Requires {min_ssc}%, you have {ssc_percentage}%)"]}
+    if not profile:
+        return {
+            "name": user.full_name if user else "",
+            "country": "Pakistan",
+            "region": "Khyber Pakhtunkhwa",
+            "city": "Kohat",
+            "current_education_level": "HSSC",
+            "ssc_percentage": 75.0,
+            "hssc_percentage": 85.0,
+            "hssc_group": "Pre-Engineering",
+            "mathematics_background": True,
+            "preferred_field": "Computer Science",
+            "target_career": None,
+            "selected_program": None,
+            "financial_need_status": True
+        }
 
-    # 3. Math Background Check
-    requires_math = reqs.get("mathematics_required", False)
-    if requires_math:
-        if mathematics_background:
-            reasons.append("✓ Meets mathematics background requirement")
-        else:
-            return {"status": "NOT_ELIGIBLE", "reasons": ["✕ Does not meet the mathematics background requirement"]}
+    parsed_program = None
+    if profile.selected_program:
+        try:
+            parsed_program = json.loads(profile.selected_program) if isinstance(profile.selected_program, str) else profile.selected_program
+        except Exception:
+            parsed_program = None
 
-    # 4. Stream / Group Check
-    allowed_groups = reqs.get("hssc_groups", program.get("accepted_streams", []))
-    if allowed_groups:
-        if hssc_group in allowed_groups:
-            reasons.append(f"✓ Stream/Group ({hssc_group}) is accepted")
-        else:
-            return {"status": "NOT_ELIGIBLE", "reasons": [f"✕ Stream ({hssc_group}) is not eligible for this program"]}
-
-    field = program.get('field', program.get('field_category', 'Computer Science'))
-    reasons.append(f"✓ Matches preferred field ({field})")
-
-    if target_career:
-        reasons.append(f"✓ Aligned with target career ({target_career})")
-    
-    return {"status": "ELIGIBLE", "reasons": reasons}
-
-def match_scholarships_dict(profile_data: dict, university_id: str, university_name: str) -> List[Dict]:
-    scholarships = load_dataset("scholarships.json")
-    matched = []
-    
-    for sch in scholarships:
-        sch_uni_id = sch.get("university_id", "")
-        provider = sch.get("provider", "")
-        
-        is_match = (sch_uni_id and sch_uni_id == university_id) or \
-                   (provider and (provider.lower() in university_name.lower() or university_name.lower() in provider.lower()))
-        
-        if is_match:
-            sch_type = sch.get("type", "")
-            if sch_type in ["need_based", "need_based_loan"] and not profile_data.get("financial_need_status", True):
-                continue
-                
-            matched.append({
-                "name": sch.get("name", "Scholarship"),
-                "type": sch_type.replace("_", " ").title(),
-                "coverage": sch.get("coverage", "As per institutional policy")
-            })
-            
-    return matched
-
-@router.post("/match")
-def match_programs(payload: Dict[str, Any]):
-    programs_data = load_dataset("programs.json")
-    universities_data = load_dataset("universities.json")
-    
-    univ_map = {u.get("university_id", u.get("id")): u for u in universities_data}
-    
-    city = payload.get("city", "Kohat")
-    user_city = city.lower().strip()
-    user_lat, user_lon = CITY_COORDINATES.get(user_city, (33.5822, 71.4492))
-    
-    country = payload.get("country", "Pakistan")
-    user_country = country.lower().strip()
-    
-    # Unified radius mode parsing
-    raw_mode = str(payload.get("radius_mode") or payload.get("location_scope") or "ALL").upper()
-    is_100km_mode = raw_mode in ["100KM", "WITHIN_RADIUS"]
-    
-    preferred_field = payload.get("preferred_field", "Computer Science")
-    target_career = payload.get("target_career")
-    financial_need_status = payload.get("financial_need_status", True)
-    
-    hssc_percentage = None
-    for key in ["hssc_percentage", "cumulative_high_school_pct", "gpa_percentage", "percentage", "score", "grade"]:
-        if payload.get(key) is not None:
-            try:
-                hssc_percentage = float(payload.get(key))
-                break
-            except (ValueError, TypeError):
-                pass
-                
-    if hssc_percentage is None:
-        for k, v in payload.items():
-            if v is not None and any(term in k.lower() for term in ["percent", "pct", "gpa", "grade", "score", "hssc", "school"]):
-                try:
-                    hssc_percentage = float(v)
-                    break
-                except (ValueError, TypeError):
-                    pass
-                    
-    if hssc_percentage is None:
-        hssc_percentage = 20.0 
-        
-    ssc_percentage = float(payload.get("ssc_percentage", 75.0) or 75.0)
-    hssc_group = payload.get("hssc_group", "Pre-Engineering")
-    mathematics_background = bool(payload.get("mathematics_background", True))
-    
-    profile_data = {
-        "hssc_percentage": hssc_percentage,
-        "ssc_percentage": ssc_percentage,
-        "hssc_group": hssc_group,
-        "mathematics_background": mathematics_background,
-        "financial_need_status": financial_need_status
+    return {
+        "id": profile.id,
+        "user_id": profile.user_id,
+        "name": (user.full_name if user else None) or getattr(profile, "name", "") or "",
+        "country": profile.country or "Pakistan",
+        "region": profile.region or "Khyber Pakhtunkhwa",
+        "city": profile.city or "Kohat",
+        "current_education_level": profile.current_education_level or "HSSC",
+        "ssc_percentage": profile.ssc_percentage if profile.ssc_percentage is not None else 75.0,
+        "hssc_percentage": profile.hssc_percentage if profile.hssc_percentage is not None else 85.0,
+        "hssc_group": profile.hssc_group or "Pre-Engineering",
+        "mathematics_background": profile.mathematics_background if profile.mathematics_background is not None else True,
+        "preferred_field": profile.preferred_field or "Computer Science",
+        "target_career": profile.target_career,
+        "selected_program": parsed_program,
+        "financial_need_status": profile.financial_need_status if profile.financial_need_status is not None else True
     }
-    
-    results = []
-    for prog in programs_data:
-        prog_field = prog.get("field", prog.get("field_category", "Computer Science"))
-        
-        field_match = preferred_field.lower() in prog_field.lower()
-        career_match = target_career and target_career.lower() in prog.get("program_name", "").lower()
-        
-        if not (field_match or career_match):
-            continue
-            
-        uni_id = prog.get("university_id")
-        univ_details = univ_map.get(uni_id, {})
-        
-        uni_country = (univ_details.get("country") or "Pakistan").lower().strip()
-        if uni_country != user_country:
-            continue
-            
-        uni_lat = float(univ_details.get("latitude", 0.0))
-        uni_lon = float(univ_details.get("longitude", 0.0))
-        
-        dist_km = calculate_haversine_distance(user_lat, user_lon, uni_lat, uni_lon) if (uni_lat and uni_lon) else 0.0
-        
-        # Enforce strict 100km distance cutoff
-        if is_100km_mode and dist_km > 100.0:
-            continue
-            
-        full_univ_name = univ_details.get("name", univ_details.get("university_name", "Verified Institution"))
-        city_name = univ_details.get("city", prog.get("campus", "Islamabad"))
-            
-        eligibility = evaluate_eligibility(profile_data, prog, target_career)
-        
-        financial_aid = match_scholarships_dict(profile_data, uni_id, full_univ_name)
-        if financial_aid:
-            eligibility["reasons"].append("✓ Financial-aid information is available")
-            
-        if dist_km > 0:
-            eligibility["reasons"].append(f"📍 Distance: ~{round(dist_km, 1)} km from {city}")
 
-        raw_hec = univ_details.get("hec_recognition", univ_details.get("hec_recognition_status", "Recognized"))
-        if isinstance(raw_hec, bool):
-            hec_status = "HEC Recognized" if raw_hec else "Not Listed"
-        else:
-            cleaned_hec = str(raw_hec).replace("(seed record)", "").replace("(seed)", "").strip()
-            hec_status = cleaned_hec if cleaned_hec else "HEC Recognized"
+@router.post("/")
+def update_user_profile(payload: Dict[str, Any], user_id: int = Depends(get_current_user_id), db: Session = Depends(get_db)):
+    profile = db.query(models.DBStudentProfile).filter(models.DBStudentProfile.user_id == user_id).first()
+    if not profile:
+        profile = models.DBStudentProfile(user_id=user_id)
+        db.add(profile)
 
-        raw_acc = prog.get("accreditation", univ_details.get("accreditation"))
-        if not raw_acc or str(raw_acc).strip() == "" or raw_acc == "None":
-            acc_status = "Program accreditation information is not available in the current dataset."
-        elif isinstance(raw_acc, dict):
-            acc_status = f"{raw_acc.get('body', 'NCEAC')}: {raw_acc.get('status', 'Verified')}"
+    if "selected_program" in payload:
+        prog = payload["selected_program"]
+        if prog is None:
+            profile.selected_program = None
         else:
-            cleaned_acc = str(raw_acc).replace("(seed record)", "").strip()
-            if "institutional / program accreditation varies" in cleaned_acc.lower():
-                acc_status = "Program accreditation information is not available in the current dataset."
-            else:
-                acc_status = cleaned_acc
-            
-        status_enum = eligibility["status"]
-            
-        results.append({
-            "program_id": prog.get("program_id", prog.get("id", "prog_01")),
-            "university_name": full_univ_name,
-            "program_name": prog.get("program_name", prog.get("name", "BS Computer Science")),
-            "city": city_name,
-            "country": univ_details.get("country", "Pakistan"),
-            "distance_km": round(dist_km, 1),
-            "hec_recognition": hec_status,
-            "accreditation": acc_status,
-            "eligibility_status": status_enum,
-            "why_this_appears": eligibility["reasons"],
-            "available_scholarships": financial_aid
-        })
-        
-    return results
+            profile.selected_program = json.dumps(prog) if isinstance(prog, dict) else str(prog)
+
+    if "target_career" in payload:
+        profile.target_career = payload["target_career"]
+
+    for field in ["country", "region", "city", "current_education_level", "ssc_percentage", 
+                  "hssc_percentage", "hssc_group", "mathematics_background", "preferred_field", "financial_need_status"]:
+        if field in payload and hasattr(profile, field):
+            setattr(profile, field, payload[field])
+
+    db.commit()
+    db.refresh(profile)
+    return get_user_profile(user_id=user_id, db=db)

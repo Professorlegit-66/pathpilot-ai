@@ -20,8 +20,8 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
     desired_degree: profile?.desired_degree || "Bachelor's Degree (BS / BSc)",
     current_education_level: profile?.current_education_level || 'HSSC (Intermediate)',
     hssc_group: profile?.hssc_group || 'Pre-Engineering',
-    ssc_percentage: profile?.ssc_percentage ?? 75.0,
-    hssc_percentage: profile?.hssc_percentage ?? 75.0,
+    ssc_percentage: profile?.ssc_percentage !== undefined && profile?.ssc_percentage !== null ? profile.ssc_percentage : '',
+    hssc_percentage: profile?.hssc_percentage !== undefined && profile?.hssc_percentage !== null ? profile.hssc_percentage : '',
     mathematics_background: profile?.mathematics_background ?? true,
     preferred_field: profile?.preferred_field || 'Computer Science',
     target_career: profile?.target_career || sessionStorage.getItem('roadmap_target_career') || null,
@@ -39,7 +39,9 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
         ...prev,
         ...profile,
         name: activeName || prev.name,
-        target_career: profile.target_career || prev.target_career
+        target_career: profile.target_career || prev.target_career,
+        ssc_percentage: profile.ssc_percentage !== undefined && profile.ssc_percentage !== null ? profile.ssc_percentage : '',
+        hssc_percentage: profile.hssc_percentage !== undefined && profile.hssc_percentage !== null ? profile.hssc_percentage : ''
       }));
     }
   }, [profile]);
@@ -90,6 +92,8 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
 
       const payload = {
         ...formData,
+        ssc_percentage: formData.ssc_percentage === '' ? null : parseFloat(formData.ssc_percentage),
+        hssc_percentage: formData.hssc_percentage === '' ? null : parseFloat(formData.hssc_percentage),
         full_name: formData.name,
         name: formData.name,
         target_career: activeCareer
@@ -114,7 +118,6 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
       localStorage.setItem('user_full_name', updatedName);
       setProfile(prev => ({ ...prev, ...savedData, name: updatedName, target_career: activeCareer }));
 
-      // Recalculate program matching to invalidate stale evaluation results
       if (activeCareer) {
         const savedScope = sessionStorage.getItem('radius_mode') || '100KM';
         const matchRes = await fetch(`${API_URL}/api/programs/match`, {
@@ -260,7 +263,6 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
 
       <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
 
-        {/* SECTION 1: Location & Context */}
         <div style={{ background: '#1e293b', border: '1px solid #334155', borderRadius: '16px', padding: '1.75rem', boxSizing: 'border-box' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#38bdf8', marginBottom: '1.25rem', paddingBottom: '0.75rem', borderBottom: '1px solid #334155' }}>
             <MapPin size={20} />
@@ -316,7 +318,6 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
           </div>
         </div>
 
-        {/* SECTION 2: Academic History */}
         <div style={{ background: '#1e293b', border: '1px solid #334155', borderRadius: '16px', padding: '1.75rem', boxSizing: 'border-box' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#34d399', marginBottom: '1.25rem', paddingBottom: '0.75rem', borderBottom: '1px solid #334155' }}>
             <BookOpen size={20} />
@@ -353,9 +354,10 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
                 step="0.1"
                 min="0"
                 max="100"
-                value={formData.ssc_percentage ?? 75}
-                onChange={e => handleChange('ssc_percentage', parseFloat(e.target.value))}
+                value={formData.ssc_percentage}
+                onChange={e => handleChange('ssc_percentage', e.target.value)}
                 style={inputStyle}
+                placeholder="e.g. 85.5"
               />
             </div>
             <div>
@@ -367,9 +369,10 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
                 step="0.1"
                 min="0"
                 max="100"
-                value={formData.hssc_percentage ?? 75}
-                onChange={e => handleChange('hssc_percentage', parseFloat(e.target.value))}
+                value={formData.hssc_percentage}
+                onChange={e => handleChange('hssc_percentage', e.target.value)}
                 style={inputStyle}
+                placeholder="e.g. 82.0"
               />
             </div>
           </div>
@@ -388,7 +391,6 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
           </div>
         </div>
 
-        {/* SECTION 3: Targets & Financial Constraints */}
         <div style={{ background: '#1e293b', border: '1px solid #334155', borderRadius: '16px', padding: '1.75rem', boxSizing: 'border-box' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#a855f7', marginBottom: '1.25rem', paddingBottom: '0.75rem', borderBottom: '1px solid #334155' }}>
             <Target size={20} />
@@ -427,6 +429,7 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
 
         <button
           type="submit"
+          className="interactive-btn"
           disabled={saving}
           style={{
             background: 'linear-gradient(135deg, #059669 0%, #047857 100%)',
@@ -451,7 +454,6 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
 
       </form>
 
-      {/* Danger Zone */}
       <div style={{ background: '#1e293b', border: '1px solid #7f1d1d', borderRadius: '16px', padding: '1.75rem', boxSizing: 'border-box', marginTop: '1rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#ef4444', marginBottom: '0.75rem' }}>
           <ShieldAlert size={20} />
@@ -464,6 +466,7 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
         {!showDeleteConfirm ? (
           <button
             type="button"
+            className="interactive-btn"
             onClick={() => setShowDeleteConfirm(true)}
             style={{
               background: 'transparent',
@@ -490,6 +493,7 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
             <div style={{ display: 'flex', gap: '0.75rem' }}>
               <button
                 type="button"
+                className="interactive-btn"
                 onClick={handleDeleteAccount}
                 style={{
                   background: '#dc2626', color: '#fff', border: 'none', padding: '0.5rem 1rem',
@@ -500,6 +504,7 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
               </button>
               <button
                 type="button"
+                className="interactive-btn"
                 onClick={() => setShowDeleteConfirm(false)}
                 style={{
                   background: 'transparent', border: '1px solid #334155', color: '#cbd5e1',

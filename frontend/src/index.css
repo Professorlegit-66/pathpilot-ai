@@ -61,9 +61,6 @@
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
-.animate-fade-slide-in {
-  animation: fadeSlideIn 0.25s ease-out;
-}
 
 /* --- Fluid Responsive Layout Utilities --- */
 .fluid-page-container {
@@ -96,4 +93,19 @@
 
 .animate-fade-slide-in {
   animation: fadeSlideIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* --- Universal Button Interaction Class --- */
+.interactive-btn {
+  transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1), filter 0.15s ease-out !important;
+  cursor: pointer;
+}
+
+.interactive-btn:hover {
+  filter: brightness(1.15);
+}
+
+.interactive-btn:active {
+  transform: scale(0.95);
+  filter: brightness(0.9);
 }

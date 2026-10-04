@@ -155,7 +155,7 @@ export default function AuthPage({ onLogin }) {
                   <input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="Password" style={inputStyle} required />
                 </div>
               </div>
-              <button type="submit" style={{ background: 'linear-gradient(135deg, #059669 0%, #047857 100%)', color: '#fff', border: 'none', padding: '0.8rem', borderRadius: '10px', fontWeight: '600', fontSize: '0.95rem', cursor: 'pointer', marginTop: '1.25rem' }}>
+              <button type="submit" className="interactive-btn" style={{ background: 'linear-gradient(135deg, #059669 0%, #047857 100%)', color: '#fff', border: 'none', padding: '0.8rem', borderRadius: '10px', fontWeight: '600', fontSize: '0.95rem', cursor: 'pointer', marginTop: '1.25rem' }}>
                 Sign In
               </button>
             </form>
@@ -219,7 +219,7 @@ export default function AuthPage({ onLogin }) {
                 </div>
               </div>
 
-              <button type="submit" style={{ background: 'linear-gradient(135deg, #059669 0%, #047857 100%)', color: '#fff', border: 'none', padding: '0.8rem', borderRadius: '10px', fontWeight: '600', fontSize: '0.95rem', cursor: 'pointer', marginTop: '1.25rem' }}>
+              <button type="submit" className="interactive-btn" style={{ background: 'linear-gradient(135deg, #059669 0%, #047857 100%)', color: '#fff', border: 'none', padding: '0.8rem', borderRadius: '10px', fontWeight: '600', fontSize: '0.95rem', cursor: 'pointer', marginTop: '1.25rem' }}>
                 Send Verification OTP Code
               </button>
             </form>
@@ -257,12 +257,13 @@ export default function AuthPage({ onLogin }) {
                 </div>
               </div>
 
-              <button type="submit" style={{ background: 'linear-gradient(135deg, #059669 0%, #047857 100%)', color: '#fff', border: 'none', padding: '0.8rem', borderRadius: '10px', fontWeight: '600', fontSize: '0.95rem', cursor: 'pointer', marginTop: '0.5rem' }}>
+              <button type="submit" className="interactive-btn" style={{ background: 'linear-gradient(135deg, #059669 0%, #047857 100%)', color: '#fff', border: 'none', padding: '0.8rem', borderRadius: '10px', fontWeight: '600', fontSize: '0.95rem', cursor: 'pointer', marginTop: '0.5rem' }}>
                 Verify & Create Account
               </button>
 
               <button
                 type="button"
+                className="interactive-btn"
                 onClick={() => setRegStep('form')}
                 style={{ background: 'transparent', border: 'none', color: '#94a3b8', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem', fontSize: '0.85rem', marginTop: '0.5rem' }}
               >
@@ -278,6 +279,7 @@ export default function AuthPage({ onLogin }) {
             {isRegister ? 'Already have an account? ' : "Don't have an account? "}
             <button
               type="button"
+              className="interactive-btn"
               onClick={() => { setIsRegister(!isRegister); setRegStep('form'); setError(''); }}
               style={{ background: 'transparent', border: 'none', color: '#34d399', fontWeight: '600', cursor: 'pointer', padding: 0, fontSize: '0.85rem' }}
             >

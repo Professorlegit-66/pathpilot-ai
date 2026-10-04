@@ -40,6 +40,7 @@ export default function Dashboard({ profile, results }) {
           <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
             <button 
               onClick={() => navigate('/careers')}
+              className="interactive-btn"
               style={{ background: '#059669', color: '#fff', border: 'none', padding: '0.66rem 1.5rem', borderRadius: '8px', fontWeight: '600', fontSize: '0.9rem', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.4rem', boxShadow: '0 4px 12px rgba(5, 150, 105, 0.3)' }}
             >
               Explore Careers <ArrowRight size={16} />
@@ -102,7 +103,7 @@ export default function Dashboard({ profile, results }) {
                   : "Explore careers to generate your AI roadmap."}
               </p>
             </div>
-            <Link to={roadmapGenerated ? "/roadmap" : "/careers"} style={{ background: '#059669', color: '#fff', padding: '0.5rem 1.25rem', borderRadius: '8px', textDecoration: 'none', fontWeight: '600', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+            <Link to={roadmapGenerated ? "/roadmap" : "/careers"} className="interactive-btn" style={{ background: '#059669', color: '#fff', padding: '0.5rem 1.25rem', borderRadius: '8px', textDecoration: 'none', fontWeight: '600', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
               {roadmapGenerated ? "Go to Roadmap" : "Explore Careers"} <ArrowRight size={15} />
             </Link>
           </div>

@@ -59,17 +59,14 @@ export default function CareerCounselor({ profile }) {
     }
   };
 
-  // Smart Pre-processor: Keeps table rows on a single line while formatting normal text
   const cleanMarkdown = (text) => {
     if (!text) return '';
     const lines = text.split('\n');
     const processedLines = lines.map(line => {
       const trimmed = line.trim();
-      // If line is part of a markdown table, replace <br> with a clean separator so table rows don't break
       if (trimmed.startsWith('|') || (trimmed.includes('|') && trimmed.split('|').length > 2)) {
         return line.replace(/<\s*br\s*\/?>/gi, '; ');
       } else {
-        // Outside tables, convert <br> into proper newlines
         return line.replace(/<\s*br\s*\/?>/gi, '\n');
       }
     });
@@ -87,7 +84,6 @@ export default function CareerCounselor({ profile }) {
   return (
     <div style={{ width: '100%', height: 'calc(100vh - 110px)', margin: '0 auto', padding: '0 1.5rem', display: 'flex', flexDirection: 'column', boxSizing: 'border-box', overflow: 'hidden' }}>
       
-      {/* Inline keyframe for reliable spinning loader animation */}
       <style>{`
         @keyframes customSpin {
           0% { transform: rotate(0deg); }
@@ -95,7 +91,6 @@ export default function CareerCounselor({ profile }) {
         }
       `}</style>
 
-      {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '1rem', flexShrink: 0 }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#34d399', fontSize: '0.8rem', fontWeight: '600', marginBottom: '0.2rem' }}>
@@ -109,24 +104,20 @@ export default function CareerCounselor({ profile }) {
 
         <button 
           onClick={handleClearChat}
+          className="interactive-btn"
           title="Clear Conversation"
           style={{
             background: '#1e293b', border: '1px solid #334155', color: '#f87171',
             padding: '0.5rem 0.85rem', borderRadius: '8px', cursor: 'pointer',
-            display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8rem', fontWeight: '600',
-            transition: 'background 0.2s'
+            display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8rem', fontWeight: '600'
           }}
-          onMouseEnter={e => e.currentTarget.style.backgroundColor = '#7f1d1d33'}
-          onMouseLeave={e => e.currentTarget.style.backgroundColor = '#1e293b'}
         >
           <Trash2 size={14} /> Clear Chat
         </button>
       </div>
 
-      {/* Chat Container */}
       <div style={{ flex: 1, width: '100%', background: '#090d16', border: '1px solid #1e293b', borderRadius: '16px', display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.5)', minHeight: 0, boxSizing: 'border-box' }}>
         
-        {/* Message Feed */}
         <div style={{ flex: 1, overflowY: 'auto', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%', boxSizing: 'border-box' }}>
           {messages.map((msg, idx) => (
             <div key={idx} style={{ display: 'flex', gap: '0.75rem', alignSelf: msg.sender === 'user' ? 'flex-end' : 'flex-start', width: '100%', maxWidth: msg.sender === 'user' ? '75%' : '92%' }}>
@@ -185,7 +176,6 @@ export default function CareerCounselor({ profile }) {
             </div>
           ))}
 
-          {/* Working Spinning Loading Indicator */}
           {loading && (
             <div style={{ display: 'flex', gap: '0.75rem', alignSelf: 'flex-start', alignItems: 'center' }}>
               <div style={{ background: '#059669', width: '32px', height: '32px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -199,21 +189,18 @@ export default function CareerCounselor({ profile }) {
           )}
         </div>
 
-        {/* Quick Prompts */}
         {messages.length <= 2 && !loading && (
           <div style={{ padding: '0.75rem 1.25rem', display: 'flex', gap: '0.5rem', overflowX: 'auto', flexWrap: 'nowrap', borderTop: '1px solid #1e293b', background: '#0f172a' }}>
             {quickPrompts.map((prompt, i) => (
               <button 
                 key={i}
+                className="interactive-btn"
                 onClick={() => handleSendMessage(null, prompt)}
                 style={{ 
                   background: '#1e293b', color: '#38bdf8', border: '1px solid #334155', 
                   padding: '0.5rem 1rem', borderRadius: '20px', fontSize: '0.85rem', 
-                  whiteSpace: 'nowrap', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem',
-                  transition: 'background 0.2s'
+                  whiteSpace: 'nowrap', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem'
                 }}
-                onMouseEnter={e => e.currentTarget.style.background = '#334155'}
-                onMouseLeave={e => e.currentTarget.style.background = '#1e293b'}
               >
                 <MessageSquare size={14} /> {prompt}
               </button>
@@ -221,7 +208,6 @@ export default function CareerCounselor({ profile }) {
           </div>
         )}
 
-        {/* Input Bar */}
         <form onSubmit={handleSendMessage} style={{ padding: '1rem 1.25rem', background: '#0f172a', borderTop: '1px solid #1e293b', display: 'flex', gap: '0.75rem', flexShrink: 0 }}>
           <input 
             type="text" 
@@ -232,6 +218,7 @@ export default function CareerCounselor({ profile }) {
           />
           <button 
             type="submit" 
+            className="interactive-btn"
             disabled={loading}
             style={{ background: 'linear-gradient(135deg, #059669 0%, #047857 100%)', color: '#fff', border: 'none', padding: '0 1.25rem', borderRadius: '10px', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', boxShadow: '0 4px 12px rgba(5, 150, 105, 0.3)', opacity: loading ? 0.7 : 1 }}
           >

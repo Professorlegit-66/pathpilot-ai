@@ -52,12 +52,11 @@ export default function RoadmapView({ profile, results, setResults }) {
   const [loading, setLoading] = useState(false);
   const [availableCareers, setAvailableCareers] = useState(ALL_10_CAREERS);
 
-  // Fetch verified careers from dataset
   useEffect(() => {
     const fetchCareersDataset = async () => {
       try {
         const activeToken = token || localStorage.getItem('token');
-        const res = await fetch(`${API_URL}/api/careers/`, {
+        const res = await fetch(`${API_URL}/api/data/careers`, {
           headers: activeToken ? { 'Authorization': `Bearer ${activeToken}` } : {}
         });
         if (res.ok) {
@@ -80,14 +79,17 @@ export default function RoadmapView({ profile, results, setResults }) {
     sessionStorage.removeItem('roadmap_is_reset');
   }
 
-  // Selected program MUST be explicitly chosen by student via "Add to My Roadmap"
   const [selectedProgram, setSelectedProgram] = useState(() => {
     if (location.state?.selectedProgram) {
       sessionStorage.setItem('roadmap_selected_program', JSON.stringify(location.state.selectedProgram));
       return location.state.selectedProgram;
     }
     const saved = sessionStorage.getItem('roadmap_selected_program');
-    return saved ? JSON.parse(saved) : null;
+    if (saved) return JSON.parse(saved);
+    if (profile?.selected_program) {
+      return typeof profile.selected_program === 'string' ? JSON.parse(profile.selected_program) : profile.selected_program;
+    }
+    return null;
   });
 
   const [targetCareer, setTargetCareer] = useState(() => {
@@ -102,6 +104,26 @@ export default function RoadmapView({ profile, results, setResults }) {
     if (profile?.target_career) return profile.target_career === "Cyber Security" ? "Cybersecurity" : profile.target_career;
     return null; 
   });
+
+  useEffect(() => {
+    if (profile?.target_career && !targetCareer) {
+      const norm = profile.target_career === "Cyber Security" ? "Cybersecurity" : profile.target_career;
+      setTargetCareer(norm);
+      sessionStorage.setItem('roadmap_target_career', norm);
+    }
+  }, [profile?.target_career]);
+
+  useEffect(() => {
+    if (profile?.selected_program && !selectedProgram) {
+      try {
+        const progObj = typeof profile.selected_program === 'string' ? JSON.parse(profile.selected_program) : profile.selected_program;
+        setSelectedProgram(progObj);
+        sessionStorage.setItem('roadmap_selected_program', JSON.stringify(progObj));
+      } catch (e) {
+        console.error("Failed to sync selected_program from profile:", e);
+      }
+    }
+  }, [profile?.selected_program]);
 
   const [isEditingCareer, setIsEditingCareer] = useState(false);
   const [tempCareer, setTempCareer] = useState(targetCareer || "");
@@ -127,7 +149,6 @@ export default function RoadmapView({ profile, results, setResults }) {
 
   const rawList = Array.isArray(results) ? results : (results?.eligible_programs || results?.programs || []);
   
-  // Roadmap requires BOTH an explicit target career AND an explicitly selected program option
   const isEvaluated = !isReset && Boolean(targetCareer) && Boolean(selectedProgram);
 
   useEffect(() => {
@@ -161,12 +182,11 @@ export default function RoadmapView({ profile, results, setResults }) {
     fetchProgramsForCareer();
   }, [targetCareer, isReset]);
 
-  const handleSaveCareer = () => {
+  const handleSaveCareer = async () => {
     if (tempCareer && tempCareer.trim()) {
       const trimmed = tempCareer.trim();
       const newCareer = trimmed === "Cyber Security" ? "Cybersecurity" : trimmed;
       
-      // Clear selected program when career changes so student re-evaluates options
       setSelectedProgram(null);
       sessionStorage.removeItem('roadmap_selected_program');
       
@@ -174,14 +194,33 @@ export default function RoadmapView({ profile, results, setResults }) {
       sessionStorage.setItem('roadmap_target_career', newCareer);
       sessionStorage.removeItem('roadmap_is_reset');
       setIsReset(false);
+
+      const activeToken = token || localStorage.getItem('token');
+      if (activeToken) {
+        try {
+          await fetch(`${API_URL}/api/profile/`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${activeToken}`
+            },
+            body: JSON.stringify({
+              ...(profile || {}),
+              target_career: newCareer,
+              selected_program: null
+            })
+          });
+        } catch (err) {
+          console.error("Failed to persist target career to database profile:", err);
+        }
+      }
       
-      // Navigate to Program Matcher to choose a new program for updated career
       navigate('/programs', { state: { selectedCareer: newCareer } });
     }
     setIsEditingCareer(false);
   };
 
-  const handleResetRoadmap = () => {
+  const handleResetRoadmap = async () => {
     sessionStorage.removeItem('roadmap_target_career');
     sessionStorage.removeItem('roadmap_selected_program');
     sessionStorage.setItem('roadmap_is_reset', 'true');
@@ -191,6 +230,27 @@ export default function RoadmapView({ profile, results, setResults }) {
     if (setResults) {
       setResults(null);
     }
+
+    const activeToken = token || localStorage.getItem('token');
+    if (activeToken) {
+      try {
+        await fetch(`${API_URL}/api/profile/`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${activeToken}`
+          },
+          body: JSON.stringify({
+            ...(profile || {}),
+            target_career: null,
+            selected_program: null
+          })
+        });
+      } catch (err) {
+        console.error("Failed to clear backend roadmap profile state:", err);
+      }
+    }
+
     navigate('/roadmap', { replace: true, state: {} });
   };
 
@@ -213,6 +273,7 @@ export default function RoadmapView({ profile, results, setResults }) {
             {!targetCareer ? (
               <button 
                 onClick={() => navigate('/careers')}
+                className="interactive-btn"
                 style={{
                   background: '#059669', color: '#fff', border: 'none', padding: '0.85rem 2rem',
                   borderRadius: '8px', fontWeight: '600', fontSize: '1rem', cursor: 'pointer',
@@ -224,6 +285,7 @@ export default function RoadmapView({ profile, results, setResults }) {
             ) : (
               <button 
                 onClick={() => navigate('/programs', { state: { selectedCareer: targetCareer } })}
+                className="interactive-btn"
                 style={{
                   background: '#059669', color: '#fff', border: 'none', padding: '0.85rem 2rem',
                   borderRadius: '8px', fontWeight: '600', fontSize: '1rem', cursor: 'pointer',
@@ -261,7 +323,6 @@ export default function RoadmapView({ profile, results, setResults }) {
   return (
     <div style={{ maxWidth: '950px', width: '100%', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '1.5rem', boxSizing: 'border-box', paddingBottom: '4rem' }}>
       
-      {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem', marginBottom: '0.5rem' }}>
         <div>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', color: '#34d399', fontSize: '0.8rem', fontWeight: '600', marginBottom: '0.5rem', letterSpacing: '0.1em' }}>
@@ -283,12 +344,14 @@ END-TO-END STUDENT JOURNEY
         <div style={{ display: 'flex', gap: '0.75rem' }}>
           <button 
             onClick={() => navigate('/careers')}
+            className="interactive-btn"
             style={{ background: '#1e293b', border: '1px solid #334155', color: '#38bdf8', padding: '0.6rem 1rem', borderRadius: '8px', fontSize: '0.85rem', fontWeight: '600', cursor: 'pointer' }}
           >
             Explore Careers
           </button>
           <button 
             onClick={handleResetRoadmap}
+            className="interactive-btn"
             style={{ background: '#7f1d1d', border: '1px solid #991b1b', color: '#fca5a5', padding: '0.6rem 1rem', borderRadius: '8px', fontSize: '0.85rem', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
           >
             <RotateCcw size={14} /> Reset Roadmap
@@ -298,7 +361,6 @@ END-TO-END STUDENT JOURNEY
 
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
 
-        {/* 1. TARGET CAREER */}
         <div style={{ width: '100%', maxWidth: '650px', background: '#1e293b', border: '1px solid #334155', borderRadius: '16px', padding: '1.5rem', boxSizing: 'border-box' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#38bdf8', fontSize: '0.85rem', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
@@ -307,6 +369,7 @@ END-TO-END STUDENT JOURNEY
             {!isEditingCareer ? (
               <button 
                 onClick={() => { setTempCareer(targetCareer || ""); setIsEditingCareer(true); }}
+                className="interactive-btn"
                 style={{ background: 'transparent', border: 'none', color: '#38bdf8', fontSize: '0.85rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.3rem', fontWeight: '600' }}
               >
                 <Edit2 size={14} /> Edit Career
@@ -333,12 +396,14 @@ END-TO-END STUDENT JOURNEY
               <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
                 <button 
                   onClick={() => setIsEditingCareer(false)}
+                  className="interactive-btn"
                   style={{ background: 'transparent', border: '1px solid #334155', color: '#94a3b8', padding: '0.45rem 0.9rem', borderRadius: '6px', fontSize: '0.85rem', cursor: 'pointer' }}
                 >
                   Cancel
                 </button>
                 <button 
                   onClick={handleSaveCareer}
+                  className="interactive-btn"
                   style={{ background: '#059669', border: 'none', color: '#fff', padding: '0.45rem 0.9rem', borderRadius: '6px', fontSize: '0.85rem', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.3rem' }}
                 >
                   <Check size={14} /> Save Target
@@ -350,7 +415,6 @@ END-TO-END STUDENT JOURNEY
 
         <ArrowDown size={24} color="#475569" style={{ margin: '0.5rem 0' }} />
 
-        {/* 2. EDUCATION / PROGRAM */}
         <div style={{ width: '100%', maxWidth: '650px', background: '#1e293b', border: '1px solid #334155', borderRadius: '16px', padding: '1.5rem', boxSizing: 'border-box' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem', color: '#a855f7', fontSize: '0.85rem', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             <GraduationCap size={18} /> Education / Program
@@ -363,7 +427,6 @@ END-TO-END STUDENT JOURNEY
 
         <ArrowDown size={24} color="#475569" style={{ margin: '0.5rem 0' }} />
 
-        {/* 3. UNIVERSITY OPTIONS */}
         <div style={{ width: '100%', maxWidth: '650px', background: '#1e293b', border: '1px solid #334155', borderRadius: '16px', padding: '1.5rem', boxSizing: 'border-box' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem', color: '#f43f5e', fontSize: '0.85rem', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             <Building2 size={18} /> University Options & Selection
@@ -403,6 +466,7 @@ END-TO-END STUDENT JOURNEY
                     </div>
                     <button 
                       onClick={() => setSelectedProgram(alt)}
+                      className="interactive-btn"
                       style={{ background: 'transparent', border: '1px solid #334155', color: '#38bdf8', padding: '0.3rem 0.75rem', borderRadius: '6px', fontSize: '0.8rem', fontWeight: '600', cursor: 'pointer' }}
                     >
                       Make Selected
@@ -416,7 +480,6 @@ END-TO-END STUDENT JOURNEY
 
         <ArrowDown size={24} color="#475569" style={{ margin: '0.5rem 0' }} />
 
-        {/* 4. ELIGIBILITY */}
         <div style={{ width: '100%', maxWidth: '650px', background: '#1e293b', border: '1px solid #334155', borderRadius: '16px', padding: '1.5rem', boxSizing: 'border-box' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem', color: '#10b981', fontSize: '0.85rem', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             <CheckCircle2 size={18} /> Deterministic Eligibility Engine
@@ -437,7 +500,6 @@ END-TO-END STUDENT JOURNEY
 
         <ArrowDown size={24} color="#475569" style={{ margin: '0.5rem 0' }} />
 
-        {/* 5. FINANCIAL AID */}
         <div style={{ width: '100%', maxWidth: '650px', background: '#1e293b', border: '1px solid #334155', borderRadius: '16px', padding: '1.5rem', boxSizing: 'border-box' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem', color: '#fbbf24', fontSize: '0.85rem', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             <Banknote size={18} /> Financial Aid & Scholarships
@@ -461,7 +523,6 @@ END-TO-END STUDENT JOURNEY
 
         <ArrowDown size={24} color="#475569" style={{ margin: '0.5rem 0' }} />
 
-        {/* 6. SKILLS */}
         <div style={{ width: '100%', maxWidth: '650px', background: '#1e293b', border: '1px solid #334155', borderRadius: '16px', padding: '1.5rem', boxSizing: 'border-box' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem', color: '#6366f1', fontSize: '0.85rem', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             <Brain size={18} /> Skills to Develop
@@ -480,7 +541,6 @@ END-TO-END STUDENT JOURNEY
 
         <ArrowDown size={24} color="#475569" style={{ margin: '0.5rem 0' }} />
 
-        {/* 7. NEXT STEPS */}
         <div style={{ width: '100%', maxWidth: '650px', background: 'linear-gradient(135deg, #059669 0%, #047857 100%)', borderRadius: '16px', padding: '1.75rem', boxSizing: 'border-box', boxShadow: '0 10px 25px -5px rgba(5, 150, 105, 0.4)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem', color: '#fff', fontSize: '0.85rem', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             <Rocket size={18} /> Next Steps

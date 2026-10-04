@@ -71,7 +71,6 @@ export default function ProgramMatcher({ results, profile, setResults }) {
 
   const rawList = (targetCareer && Array.isArray(results)) ? results : (targetCareer && (results?.eligible_programs || results?.programs)) || [];
   
-  // Enforce distance filtering on client-side as a safeguard
   const filteredResults = rawList.filter(item => {
     if (radiusMode === '100KM') {
       const dist = item.distance_km ?? item.distance ?? 0;
@@ -97,7 +96,6 @@ export default function ProgramMatcher({ results, profile, setResults }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', maxWidth: '1000px', margin: '0 auto', width: '100%', paddingBottom: '3rem' }}>
       
-      {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem', marginBottom: '0.5rem' }}>
         <div>
           <h1 style={{ fontSize: '2rem', fontWeight: 'bold', color: '#f8fafc', margin: '0 0 0.5rem 0' }}>University Matcher</h1>
@@ -108,12 +106,12 @@ export default function ProgramMatcher({ results, profile, setResults }) {
           {targetCareer ? (
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: '#1e293b', border: '1px solid #38bdf8', color: '#e0f2fe', padding: '0.5rem 1rem', borderRadius: '8px', marginTop: '1rem', fontSize: '0.9rem' }}>
               <span style={{ color: '#38bdf8', fontWeight: '600' }}>Exploring programs for:</span> {targetCareer}
-              <button onClick={() => navigate('/careers')} style={{ background: 'transparent', border: 'none', color: '#38bdf8', textDecoration: 'underline', cursor: 'pointer', padding: '0 0 0 0.5rem', fontSize: '0.85rem' }}>Change career</button>
+              <button onClick={() => navigate('/careers')} className="interactive-btn" style={{ background: 'transparent', border: 'none', color: '#38bdf8', textDecoration: 'underline', cursor: 'pointer', padding: '0 0 0 0.5rem', fontSize: '0.85rem' }}>Change career</button>
             </div>
           ) : (
             <div style={{ marginTop: '0.75rem', background: '#7f1d1d33', border: '1px solid #ef444455', padding: '0.5rem 1rem', borderRadius: '8px', display: 'inline-block' }}>
               <span style={{ color: '#fca5a5', fontSize: '0.85rem' }}>No career selected. </span>
-              <button onClick={() => navigate('/careers')} style={{ background: 'transparent', border: 'none', color: '#34d399', fontWeight: '600', cursor: 'pointer', textDecoration: 'underline' }}>
+              <button onClick={() => navigate('/careers')} className="interactive-btn" style={{ background: 'transparent', border: 'none', color: '#34d399', fontWeight: '600', cursor: 'pointer', textDecoration: 'underline' }}>
                 Choose from Career Explorer
               </button>
             </div>
@@ -124,6 +122,7 @@ export default function ProgramMatcher({ results, profile, setResults }) {
           <button 
             onClick={() => handleRecheck(radiusMode)} 
             disabled={loading}
+            className="interactive-btn"
             style={{ background: '#059669', color: '#fff', border: 'none', padding: '0.6rem 1.2rem', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
           >
             <RefreshCw size={14} className={loading ? "animate-spin" : ""} />
@@ -143,6 +142,7 @@ export default function ProgramMatcher({ results, profile, setResults }) {
           </p>
           <button 
             onClick={() => navigate('/careers')}
+            className="interactive-btn"
             style={{ background: '#059669', color: '#fff', border: 'none', padding: '0.75rem 1.75rem', borderRadius: '8px', fontWeight: '600', fontSize: '0.95rem', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.5rem', boxShadow: '0 4px 12px rgba(5, 150, 105, 0.3)' }}
           >
             Explore Careers <ArrowRight size={18} />
@@ -150,7 +150,6 @@ export default function ProgramMatcher({ results, profile, setResults }) {
         </div>
       ) : (
         <>
-          {/* Radius Controls */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#0f172a', padding: '0.75rem 1rem', borderRadius: '10px', border: '1px solid #334155', flexWrap: 'wrap', gap: '0.75rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#94a3b8', fontSize: '0.85rem' }}>
               <Navigation size={16} color="#38bdf8" />
@@ -159,6 +158,7 @@ export default function ProgramMatcher({ results, profile, setResults }) {
             <div style={{ display: 'flex', gap: '0.5rem' }}>
               <button
                 onClick={() => handleRadiusToggle('100KM')}
+                className="interactive-btn"
                 style={{
                   background: radiusMode === '100KM' ? '#059669' : '#1e293b',
                   color: radiusMode === '100KM' ? '#fff' : '#94a3b8',
@@ -174,6 +174,7 @@ export default function ProgramMatcher({ results, profile, setResults }) {
               </button>
               <button
                 onClick={() => handleRadiusToggle('ALL')}
+                className="interactive-btn"
                 style={{
                   background: radiusMode === 'ALL' ? '#059669' : '#1e293b',
                   color: radiusMode === 'ALL' ? '#fff' : '#94a3b8',
@@ -190,12 +191,12 @@ export default function ProgramMatcher({ results, profile, setResults }) {
             </div>
           </div>
 
-          {/* Filter Tabs */}
           <div style={{ display: 'flex', gap: '0.5rem', borderBottom: '1px solid #334155', paddingBottom: '1rem' }}>
             {['ALL', 'ELIGIBLE', 'NOT_ELIGIBLE'].map((tab) => (
               <button
                 key={tab}
                 onClick={() => setFilter(tab)}
+                className="interactive-btn"
                 style={{
                   background: filter === tab ? '#334155' : 'transparent',
                   color: filter === tab ? '#f8fafc' : '#94a3b8',
@@ -213,7 +214,6 @@ export default function ProgramMatcher({ results, profile, setResults }) {
             ))}
           </div>
 
-          {/* List Container */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%', minHeight: '200px' }}>
             {filteredResults.length === 0 ? (
               <div style={{ background: '#1e293b', padding: '2.5rem 2rem', borderRadius: '12px', border: '1px solid #334155', textAlign: 'center', color: '#94a3b8' }}>
@@ -273,21 +273,43 @@ export default function ProgramMatcher({ results, profile, setResults }) {
                         </div>
                       </div>
 
-                      {/* Primary Actions visible immediately on card */}
                       <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'flex-end', marginTop: '0.5rem', flexWrap: 'wrap' }}>
                         <button 
                           onClick={() => setSelectedDetailProgram(prog)}
+                          className="interactive-btn"
                           style={{ background: 'transparent', border: '1px solid #334155', color: '#f8fafc', padding: '0.55rem 1.15rem', borderRadius: '8px', fontSize: '0.88rem', fontWeight: '600', cursor: 'pointer', transition: 'background 0.2s' }} 
                         >
                           View Details
                         </button>
                         <button 
-                          onClick={() => {
+                          onClick={async () => {
                             sessionStorage.removeItem('roadmap_is_reset');
                             sessionStorage.setItem('roadmap_selected_program', JSON.stringify(prog));
                             if (targetCareer) sessionStorage.setItem('roadmap_target_career', targetCareer);
+
+                            const activeToken = token || localStorage.getItem('token');
+                            if (activeToken) {
+                              try {
+                                await fetch(`${API_URL}/api/profile/`, {
+                                  method: 'POST',
+                                  headers: {
+                                    'Content-Type': 'application/json',
+                                    'Authorization': `Bearer ${activeToken}`
+                                  },
+                                  body: JSON.stringify({
+                                    ...(profile || {}),
+                                    target_career: targetCareer,
+                                    selected_program: prog
+                                  })
+                                });
+                              } catch (err) {
+                                console.error("Failed to persist selected program to profile database:", err);
+                              }
+                            }
+
                             navigate('/roadmap', { state: { selectedProgram: prog, selectedCareer: targetCareer } });
                           }}
+                          className="interactive-btn"
                           style={{ background: '#059669', color: '#fff', border: 'none', padding: '0.55rem 1.15rem', borderRadius: '8px', fontSize: '0.88rem', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem' }} 
                         >
                           <PlusCircle size={16} /> Add to My Roadmap
@@ -298,6 +320,7 @@ export default function ProgramMatcher({ results, profile, setResults }) {
                     <div style={{ borderTop: '1px solid #334155' }}>
                       <button 
                         onClick={() => setExpandedCard(isExpanded ? null : idx)}
+                        className="interactive-btn"
                         style={{ width: '100%', background: 'transparent', border: 'none', padding: '0.75rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: '#94a3b8', fontSize: '0.9rem', cursor: 'pointer', fontWeight: '500' }}
                       >
                         Why this appears
@@ -338,7 +361,6 @@ export default function ProgramMatcher({ results, profile, setResults }) {
         </>
       )}
 
-      {/* Detail Modal */}
       {selectedDetailProgram && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(3, 7, 18, 0.8)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '1rem' }}>
           <div style={{ background: '#1e293b', border: '1px solid #334155', borderRadius: '16px', maxWidth: '650px', width: '100%', padding: '2rem', boxSizing: 'border-box', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.7)', maxHeight: '90vh', overflowY: 'auto' }}>
@@ -355,6 +377,7 @@ export default function ProgramMatcher({ results, profile, setResults }) {
               </div>
               <button 
                 onClick={() => setSelectedDetailProgram(null)}
+                className="interactive-btn"
                 style={{ background: '#0f172a', border: '1px solid #334155', color: '#94a3b8', borderRadius: '50%', width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
               >
                 <X size={18} />
@@ -399,6 +422,7 @@ export default function ProgramMatcher({ results, profile, setResults }) {
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
               <button 
                 onClick={() => setSelectedDetailProgram(null)}
+                className="interactive-btn"
                 style={{ background: '#334155', color: '#fff', border: 'none', padding: '0.75rem 1.5rem', borderRadius: '8px', fontWeight: '600', cursor: 'pointer' }}
               >
                 Close Modal

@@ -4,6 +4,8 @@
 
 An AI-powered education and career navigator that helps students discover suitable careers, programs, universities, scholarships, and personalized education pathways based on their academic profile, goals, location, and preferences.
 
+**Live app:** [PathPilot AI](https://pathpilot-ai-phi.vercel.app/)
+
 > Built as an education-focused hackathon MVP with an agentic AI layer for personalized, multi-step guidance.
 
 ---

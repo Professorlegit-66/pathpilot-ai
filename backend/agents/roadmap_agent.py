@@ -9,17 +9,18 @@ class RoadmapAgent:
     def __init__(self):
         self.client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
-    def generate_roadmap(self, profile: dict, eligibility_results: list) -> str:
+    def generate_roadmap(self, profile: dict, eligibility_results: list = None) -> str:
+        eligibility_results = eligibility_results or []
         system_instruction = """
         You are the AI Roadmap Agent for PathPilot AI.
-        You must use ONLY the structured data supplied to you below. The supplied dataset is the source of truth.
-        Never invent or assume universities, programs, scholarships, admission requirements, or fees.
-        If information is not present, explicitly state what is missing.
+        You help students build professional, structured learning and career roadmaps based on their profile and verified career tracks.
+        The supplied profile and tool results are your source of truth.
         
         CRITICAL FORMATTING RULES:
         1. STRICTLY PROHIBITED: NEVER generate markdown tables (no `|---|---|`).
         2. ALWAYS use standard bullet points (`- `).
-        3. Keep paragraphs concise and professional.
+        3. Keep paragraphs concise, professional, and actionable.
+        4. Provide clear milestones (Foundation, Practical Experience, Professional Application) tailored to the student's preferred field.
         """
         
         eligible_programs = [r for r in eligibility_results if "Eligible" in r.get("eligibility_status", "")]
@@ -28,15 +29,14 @@ class RoadmapAgent:
         STUDENT PROFILE:
         Name: {profile.get('name', 'Student')}
         Location: {profile.get('city')}, {profile.get('region')}, {profile.get('country')}
-        Field: {profile.get('preferred_field')}
+        Field: {profile.get('preferred_field', 'Computer Science')}
         
-        ELIGIBLE PROGRAMS (Determined by Eligibility Agent):
-        {json.dumps(eligible_programs, indent=2)}
+        VERIFIED ELIGIBLE PROGRAMS:
+        {json.dumps(eligible_programs, indent=2) if eligible_programs else "No specific institutional programs currently matched strict threshold criteria; focus roadmap on core skill acquisition and career competency milestones."}
         
         Based on this data, generate:
-        1. A brief explanation of career alignment based on their field.
-        2. A summary of the programs they are eligible for using bullet points.
-        3. A short, personalized learning roadmap with clear milestones.
+        1. A brief explanation of career alignment based on their preferred field.
+        2. A structured, milestone-based learning roadmap with actionable steps (using bullet points).
         """
 
         try:

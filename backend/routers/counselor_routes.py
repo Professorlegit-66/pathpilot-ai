@@ -1,88 +1,97 @@
 import os
 import json
+import traceback
 from fastapi import APIRouter
 from pydantic import BaseModel
 from typing import Optional, Dict, Any
+from dotenv import load_dotenv
 from dependencies import orchestrator
+
+load_dotenv()
 
 router = APIRouter(prefix="/api/counselor", tags=["AI Career Counselor"])
 
 class ChatRequest(BaseModel):
     profile: Optional[Dict[str, Any]] = None
     query: str
+    conversation_id: Optional[str] = "default_conv"
 
 @router.post("/chat")
 def counselor_chat(req: ChatRequest):
     profile_data = req.profile or {}
+    query_lower = req.query.lower()
     
-    # 1. Run the Agentic Orchestrator loop to gather verified tool outputs
-    agent_output = orchestrator.agent_decide_and_execute(profile_data, req.query)
-    executed_actions = agent_output.get("executed_actions", [])
+    # Run the formal Agentic Orchestrator loop using the tool registry
+    agent_output = orchestrator.execute_agent_loop(
+        profile=profile_data,
+        message=req.query,
+        conversation_id=req.conversation_id or "default_conv"
+    )
+    
+    executed_actions = agent_output.get("actions", [])
     agent_context = agent_output.get("context", {})
     
+    # --- DIRECT DETERMINISTIC RENDERER FOR ROADMAPS & CAREERS ---
+    if any(term in query_lower for term in ["roadmap", "plan", "complete", "milestone"]):
+        roadmap_data = agent_context.get("generate_roadmap", {})
+        res = roadmap_data.get("results", roadmap_data) if isinstance(roadmap_data, dict) else roadmap_data
+        
+        if isinstance(res, dict) and "milestones" in res:
+            lines = [f"## {res.get('roadmap_title', 'Personalized Career & Learning Roadmap')}"]
+            lines.append(f"**Target Field**: {res.get('field', profile_data.get('preferred_field', 'Software Engineering'))}\n")
+            for m in res.get("milestones", []):
+                lines.append(f"### {m.get('milestone', 'Milestone')}")
+                for action in m.get("actions", []):
+                    lines.append(f"- {action}")
+                lines.append("")
+            return {"response": "\n".join(lines)}
+        elif isinstance(res, str) and len(res.strip()) > 0:
+            return {"response": res}
+
+    if any(term in query_lower for term in ["career", "match"]):
+        career_data = agent_context.get("match_careers", {})
+        res = career_data.get("results", career_data) if isinstance(career_data, dict) else career_data
+        if isinstance(res, dict) and "results" in res:
+            careers = res["results"]
+            lines = [f"## Recommended Careers for {profile_data.get('name', 'Student')}\n"]
+            for c in careers:
+                lines.append(f"- **{c.get('title')}** ({c.get('field_category')}): {c.get('description')}")
+            return {"response": "\n".join(lines)}
+
+    # Fallback to Groq for general queries
     profile_str = json.dumps(profile_data, indent=2)
-    context_str = json.dumps(agent_context, indent=2)
+    tool_summaries = []
+    for tool_name, tool_data in agent_context.items():
+        results = tool_data.get("results", tool_data) if isinstance(tool_data, dict) else tool_data
+        if isinstance(results, str):
+            tool_summaries.append(f"### Tool Execution [{tool_name}]\n{results}")
+        else:
+            tool_summaries.append(f"### Tool Execution [{tool_name}]\n{json.dumps(results, indent=2)}")
     
-    # PRD Rule 21 & Strict Grounding System Prompt
+    combined_tool_text = "\n\n".join(tool_summaries) if tool_summaries else "No tools executed."
+
     system_prompt = """
-You are the Agentic AI Career Counselor for EduPath AI[cite: 21].
-You help the student explore careers, program eligibility, and roadmaps using verified tool results and structured datasets[cite: 21].
-The deterministic tool outputs and dataset are the absolute source of truth[cite: 21].
-
-Never invent or assume:
-- universities
-- programs
-- scholarships
-- admission requirements
-- fees
-- accreditation
-- recognition
-- deadlines
-- rankings
-- salaries
-- employment statistics[cite: 21]
-
-If information is not available in the tool results or dataset, state:
-"That information is not available in the current dataset."[cite: 21]
+You are the Agentic AI Career Counselor for EduPath AI.
+You help the student explore careers, program eligibility, scholarships, and roadmaps using verified tool results and structured datasets.
+The deterministic tool outputs and dataset are the absolute source of truth.
+CRITICAL: Do NOT greet the user, do not say "Hello", and do not use introductory filler. Get straight to the requested guidance.
 """
-
-    query_lower = req.query.lower()
-    if any(term in query_lower for term in ["salary", "earn", "pay", "ranking", "best university", "job guarantee"]):
-        return {"response": "That information is not available in the current dataset."}
 
     try:
-        from google import genai
-        api_key = os.getenv("GEMINI_API_KEY")
+        from groq import Groq
+        api_key = os.getenv("GROQ_API_KEY")
         if api_key:
-            client = genai.Client(api_key=api_key)
-            prompt = f"""
-{system_prompt}
-
-Student Profile:
-{profile_str}
-
-Agent Executed Actions: {executed_actions}
-Deterministic Tool Results (Source of Truth):
-{context_str}
-
-Student Query: {req.query}
-"""
-            response = client.models.generate_content(
-                model='gemini-2.5-flash',
-                contents=prompt
+            client = Groq(api_key=api_key)
+            completion = client.chat.completions.create(
+                model="openai/gpt-oss-120b",
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": f"Student Profile:\n{profile_str}\n\nTool Results:\n{combined_tool_text}\n\nQuery: {req.query}"}
+                ]
             )
-            return {"response": response.text}
+            return {"response": completion.choices[0].message.content}
     except Exception as e:
-        print(f"LLM integration warning: {e}")
+        print("❌ Groq API Exception Caught:")
+        traceback.print_exc()
 
-    # Grounded fallback response incorporating agent context
-    user_name = profile_data.get("name", "Student")
-    field = profile_data.get("preferred_field", "Computer Science")
-    roadmap_summary = agent_context.get("roadmap", "Review your personalized options above.")
-    
-    fallback_text = f"""
-Hello **{user_name}**! Based on your profile in **{field}**, I executed our deterministic tools (**Actions: {', '.join(executed_actions)}**)[cite: 22, 24, 25].
-
-{roadmap_summary}
-"""
-    return {"response": fallback_text.strip()}
+    return {"response": "That information is not available in the current dataset."}

@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 from typing import List, Optional
 
 class StudentProfile(BaseModel):
@@ -13,6 +13,13 @@ class StudentProfile(BaseModel):
     mathematics_background: Optional[bool] = Field(True, json_schema_extra={"example": True})
     preferred_field: str = Field("Computer Science", json_schema_extra={"example": "Computer Science"})
     financial_need_status: bool = Field(default=True)
+
+    @field_validator('preferred_field')
+    @classmethod
+    def normalize_preferred_field(cls, v: str) -> str:
+        if v and v.lower().replace(" ", "") == "cybersecurity":
+            return "Cybersecurity"
+        return v
 
 class UserCreate(BaseModel):
     full_name: str

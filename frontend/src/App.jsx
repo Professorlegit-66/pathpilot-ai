@@ -10,10 +10,11 @@ import RoadmapView from './pages/RoadmapView';
 import AuthPage from './pages/AuthPage';
 import CareerCounselor from './pages/CareerCounselor';
 
+const API_URL = import.meta.env.VITE_API_URL || 'https://pathpilot-ai-exln.onrender.com';
+
 function AppContent() {
   const { token, logout } = useAuth();
 
-  // Automatically adjust application scale based on window size/resolution like StudyVault AI
   useEffect(() => {
     const updateAppScale = () => {
       const height = window.innerHeight;
@@ -32,7 +33,7 @@ function AppContent() {
   }, []);
 
   const [studentProfile, setStudentProfile] = useState({
-    name: '',
+    name: localStorage.getItem('user_full_name') || '',
     country: 'Pakistan',
     region: 'Khyber Pakhtunkhwa',
     city: 'Kohat',
@@ -42,60 +43,97 @@ function AppContent() {
     hssc_group: 'Pre-Engineering',
     mathematics_background: true,
     preferred_field: 'Computer Science',
+    target_career: sessionStorage.getItem('roadmap_target_career') || null,
     financial_need_status: true
   });
 
   const [matchingResults, setMatchingResults] = useState(null);
 
-  // Automatically fetch saved profile and run program match on login or refresh, respecting saved radius mode
   useEffect(() => {
-    if (!token) return;
+    if (!token) {
+      setMatchingResults(null);
+      return;
+    }
 
-    // 1. Fetch Profile
-    fetch('http://127.0.0.1:8000/api/profile/', {
+    fetch(`${API_URL}/api/profile/`, {
       headers: { 'Authorization': `Bearer ${token}` }
     })
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+        return res.json();
+      })
       .then(data => {
         if (data && Object.keys(data).length > 0) {
-          setStudentProfile(prev => ({ ...prev, ...data }));
+          const resolvedName = data.name || data.full_name || localStorage.getItem('user_full_name') || '';
           
-          const savedRadius = sessionStorage.getItem('radius_mode') || 'ALL';
+          if (resolvedName) {
+            localStorage.setItem('user_full_name', resolvedName);
+          }
 
-          // 2. Automatically compute matching results preserving user's radius preference
-          return fetch('http://127.0.0.1:8000/api/programs/match', {
+          const activeCareer = data.target_career || sessionStorage.getItem('roadmap_target_career') || null;
+
+          setStudentProfile(prev => ({ 
+            ...prev, 
+            ...data, 
+            name: resolvedName,
+            target_career: activeCareer
+          }));
+
+          if (!activeCareer) {
+            setMatchingResults(null);
+            return null;
+          }
+          
+          const savedRadius = sessionStorage.getItem('radius_mode') || '100KM';
+
+          return fetch(`${API_URL}/api/programs/match`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+            headers: { 
+              'Content-Type': 'application/json', 
+              'Authorization': `Bearer ${token}` 
+            },
             body: JSON.stringify({
               ...data,
-              radius_mode: savedRadius
+              name: resolvedName,
+              target_career: activeCareer,
+              preferred_field: data.preferred_field || 'Computer Science',
+              radius_mode: savedRadius,
+              location_scope: savedRadius
             })
           });
         }
       })
       .then(res => res ? res.json() : null)
       .then(matchData => {
-        if (matchData) setMatchingResults(matchData);
+        if (matchData) {
+          setMatchingResults(matchData);
+        }
       })
-      .catch(err => console.error("Failed to sync profile/matches:", err));
+      .catch(err => console.error("Profile sync bypassed:", err.message));
   }, [token]);
-
-  if (!token) {
-    return <AuthPage />;
-  }
 
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<MainLayout profile={studentProfile} onSignOut={logout} />}>
+        <Route 
+          path="/auth" 
+          element={!token ? <AuthPage /> : <Navigate to="/dashboard" replace />} 
+        />
+
+        <Route 
+          path="/" 
+          element={token ? <MainLayout profile={studentProfile} onSignOut={logout} /> : <Navigate to="/auth" replace />}
+        >
           <Route index element={<Navigate to="/dashboard" replace />} />
           <Route path="dashboard" element={<Dashboard profile={studentProfile} results={matchingResults} />} />
           <Route path="profile" element={<ProfilePage profile={studentProfile} setProfile={setStudentProfile} setResults={setMatchingResults} />} />
           <Route path="programs" element={<ProgramMatcher results={matchingResults} profile={studentProfile} setResults={setMatchingResults} />} />
-          <Route path="careers" element={<CareerExplorer />} />
+          <Route path="careers" element={<CareerExplorer profile={studentProfile} setMatchingResults={setMatchingResults} />} />
           <Route path="roadmap" element={<RoadmapView profile={studentProfile} results={matchingResults} setResults={setMatchingResults} />} />
           <Route path="counselor" element={<CareerCounselor profile={studentProfile} />} />
         </Route>
+
+        <Route path="*" element={<Navigate to={token ? "/dashboard" : "/auth"} replace />} />
       </Routes>
     </Router>
   );

@@ -4,18 +4,14 @@ import { GraduationCap, Award, Map, ArrowRight, Zap, AlertCircle } from 'lucide-
 export default function Dashboard({ profile, results }) {
   const navigate = useNavigate();
 
-  const isEvaluated = results !== null && results !== undefined;
-  const rawList = Array.isArray(results) ? results : (results?.eligible_programs || results?.programs || []);
+  const isReset = sessionStorage.getItem('roadmap_is_reset') === 'true';
+  const hasTargetCareer = Boolean(sessionStorage.getItem('roadmap_target_career') || profile?.target_career);
+  const isEvaluated = results !== null && results !== undefined && hasTargetCareer && !isReset;
   
+  const rawList = Array.isArray(results) ? results : (results?.eligible_programs || results?.programs || []);
   const eligibleCount = isEvaluated ? rawList.filter(r => r.eligibility_status === "ELIGIBLE").length : 0;
   const totalScholarships = isEvaluated ? rawList.reduce((acc, curr) => acc + (curr.available_scholarships?.length || 0), 0) : 0;
-  
-  // Check if roadmap was explicitly reset or if no target career is stored
-  const isReset = sessionStorage.getItem('roadmap_is_reset') === 'true';
-  const hasTargetCareer = Boolean(sessionStorage.getItem('roadmap_target_career'));
-  
-  // Dynamic Check: Mark status active only if evaluated, eligible programs exist, not reset, and target career is set
-  const roadmapGenerated = isEvaluated && eligibleCount > 0 && !isReset && hasTargetCareer;
+  const roadmapGenerated = isEvaluated && eligibleCount > 0;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', maxWidth: '1400px', margin: '0 auto', width: '100%', boxSizing: 'border-box' }}>
@@ -39,18 +35,20 @@ export default function Dashboard({ profile, results }) {
           </div>
           <h2 style={{ fontSize: '1.25rem', color: '#f8fafc', marginBottom: '0.5rem' }}>Evaluation Required</h2>
           <p style={{ color: '#94a3b8', maxWidth: '450px', margin: '0 auto 1.25rem auto', fontSize: '0.9rem', lineHeight: '1.5' }}>
-            Your profile has not been evaluated against our verified dataset yet. Run the evaluation to discover eligible programs, financial aid, and career matches.
+            Select a target career path from our verified dataset to evaluate eligible programs, financial aid options, and your personalized roadmap.
           </p>
-          <button 
-            onClick={() => navigate('/programs')}
-            style={{ background: '#059669', color: '#fff', border: 'none', padding: '0.6rem 1.5rem', borderRadius: '8px', fontWeight: '600', fontSize: '0.9rem', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
-          >
-            Evaluate My Profile <ArrowRight size={16} />
-          </button>
+          <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <button 
+              onClick={() => navigate('/careers')}
+              style={{ background: '#059669', color: '#fff', border: 'none', padding: '0.66rem 1.5rem', borderRadius: '8px', fontWeight: '600', fontSize: '0.9rem', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.4rem', boxShadow: '0 4px 12px rgba(5, 150, 105, 0.3)' }}
+            >
+              Explore Careers <ArrowRight size={16} />
+            </button>
+          </div>
         </div>
       ) : (
         <>
-          {/* KPI Metric Cards (Compact & Balanced Grid) */}
+          {/* KPI Metric Cards */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem' }}>
             
             <div style={{ background: '#1e293b', padding: '1.15rem 1.25rem', borderRadius: '10px', border: '1px solid #334155' }}>
@@ -101,7 +99,7 @@ export default function Dashboard({ profile, results }) {
               <p style={{ margin: 0, color: '#cbd5e1', fontSize: '0.85rem' }}>
                 {roadmapGenerated 
                   ? "Your roadmap is active. Continue building the required skills for your target career." 
-                  : "Generate your AI roadmap to start building the required skills."}
+                  : "Explore careers to generate your AI roadmap."}
               </p>
             </div>
             <Link to={roadmapGenerated ? "/roadmap" : "/careers"} style={{ background: '#059669', color: '#fff', padding: '0.5rem 1.25rem', borderRadius: '8px', textDecoration: 'none', fontWeight: '600', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>

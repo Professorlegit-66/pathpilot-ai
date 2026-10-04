@@ -3,12 +3,10 @@ import json
 from fastapi import APIRouter
 from typing import List, Optional, Dict, Any
 
-# Import distance utilities from utils.py
 from utils import calculate_haversine_distance, CITY_COORDINATES
 
 router = APIRouter(prefix="/api/programs", tags=["Programs & Eligibility"])
 
-# --- Robust Absolute Path Dataset Loader ---
 def load_dataset(filename: str) -> List[Dict[str, Any]]:
     base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
     filepath = os.path.join(base_dir, "data", filename)
@@ -24,9 +22,7 @@ def load_dataset(filename: str) -> List[Dict[str, Any]]:
         print(f"[Error] Failed to load {filename}: {e}")
         return []
 
-# --- Core Deterministic Functions ---
-
-def evaluate_eligibility(profile_data: dict, program: Dict) -> Dict:
+def evaluate_eligibility(profile_data: dict, program: Dict, target_career: Optional[str] = None) -> Dict:
     reqs = program.get("eligibility", {})
     reasons = []
     
@@ -35,7 +31,7 @@ def evaluate_eligibility(profile_data: dict, program: Dict) -> Dict:
     mathematics_background = profile_data.get("mathematics_background", True)
     hssc_group = profile_data.get("hssc_group", "Pre-Engineering")
     
-    # 1. HSSC / Grade Check with Smart GPA vs Percentage Normalization
+    # 1. HSSC / Grade Check
     min_hssc = (
         reqs.get("minimum_hssc_percent") or 
         program.get("min_overall_percent") or 
@@ -45,10 +41,8 @@ def evaluate_eligibility(profile_data: dict, program: Dict) -> Dict:
     
     if min_hssc is not None:
         user_score = hssc_percentage
-        
-        # If the requirement is a US/International GPA scale (<= 4.0) and user entered a percentage (> 4.0)
         if min_hssc <= 4.0 and user_score > 4.0:
-            user_score = (hssc_percentage / 100.0) * 4.0  # Normalize percentage to 4.0 scale
+            user_score = (hssc_percentage / 100.0) * 4.0
             
         if user_score >= min_hssc:
             reasons.append(f"✓ Meets minimum academic requirement (Threshold: {min_hssc}, Your Score: {round(user_score, 2)})")
@@ -80,7 +74,10 @@ def evaluate_eligibility(profile_data: dict, program: Dict) -> Dict:
             return {"status": "NOT_ELIGIBLE", "reasons": [f"✕ Stream ({hssc_group}) is not eligible for this program"]}
 
     field = program.get('field', program.get('field_category', 'Computer Science'))
-    reasons.append(f"✓ Matches your preferred field ({field})")
+    reasons.append(f"✓ Matches preferred field ({field})")
+
+    if target_career:
+        reasons.append(f"✓ Aligned with target career ({target_career})")
     
     return {"status": "ELIGIBLE", "reasons": reasons}
 
@@ -108,8 +105,6 @@ def match_scholarships_dict(profile_data: dict, university_id: str, university_n
             
     return matched
 
-# --- API Endpoint ---
-
 @router.post("/match")
 def match_programs(payload: Dict[str, Any]):
     programs_data = load_dataset("programs.json")
@@ -123,11 +118,15 @@ def match_programs(payload: Dict[str, Any]):
     
     country = payload.get("country", "Pakistan")
     user_country = country.lower().strip()
+    
+    location_scope = payload.get("location_scope", "within_radius")
     radius_mode = str(payload.get("radius_mode", "ALL")).upper()
+    radius_km = float(payload.get("radius_km", 100.0) or 100.0)
+    
     preferred_field = payload.get("preferred_field", "Computer Science")
+    target_career = payload.get("target_career")
     financial_need_status = payload.get("financial_need_status", True)
     
-    # Extract percentage safely from any incoming key variant
     hssc_percentage = None
     for key in ["hssc_percentage", "cumulative_high_school_pct", "gpa_percentage", "percentage", "score", "grade"]:
         if payload.get(key) is not None:
@@ -164,7 +163,12 @@ def match_programs(payload: Dict[str, Any]):
     results = []
     for prog in programs_data:
         prog_field = prog.get("field", prog.get("field_category", "Computer Science"))
-        if preferred_field.lower() not in prog_field.lower():
+        
+        # Filter programs based on preferred field or target career alignment
+        field_match = preferred_field.lower() in prog_field.lower()
+        career_match = target_career and target_career.lower() in prog.get("program_name", "").lower()
+        
+        if not (field_match or career_match):
             continue
             
         uni_id = prog.get("university_id")
@@ -179,13 +183,14 @@ def match_programs(payload: Dict[str, Any]):
         
         dist_km = calculate_haversine_distance(user_lat, user_lon, uni_lat, uni_lon) if (uni_lat and uni_lon) else 0.0
         
-        if radius_mode == "100KM" and dist_km > 100.0:
+        # Enforce exact location radius filter
+        if (location_scope == "within_radius" or radius_mode == "100KM") and dist_km > radius_km:
             continue
             
         full_univ_name = univ_details.get("name", univ_details.get("university_name", "Verified Institution"))
         city_name = univ_details.get("city", prog.get("campus", "Islamabad"))
             
-        eligibility = evaluate_eligibility(profile_data, prog)
+        eligibility = evaluate_eligibility(profile_data, prog, target_career)
         
         financial_aid = match_scholarships_dict(profile_data, uni_id, full_univ_name)
         if financial_aid:
@@ -194,17 +199,27 @@ def match_programs(payload: Dict[str, Any]):
         if dist_km > 0:
             eligibility["reasons"].append(f"📍 Distance: ~{round(dist_km, 1)} km from {city}")
 
-        hec_status = univ_details.get("hec_recognition", univ_details.get("hec_recognition_status", "Recognized"))
-        if isinstance(hec_status, bool):
-            hec_status = "Recognized" if hec_status else "Not Listed"
-
-        acc_info = prog.get("accreditation", univ_details.get("accreditation", "Verified"))
-        if isinstance(acc_info, dict):
-            acc_status = f"{acc_info.get('body', 'NCEAC')}: {acc_info.get('status', 'Verified')}"
+        # Clean HEC recognition string (strip seed metadata)
+        raw_hec = univ_details.get("hec_recognition", univ_details.get("hec_recognition_status", "Recognized"))
+        if isinstance(raw_hec, bool):
+            hec_status = "HEC Recognized" if raw_hec else "Not Listed"
         else:
-            acc_status = str(acc_info)
+            cleaned_hec = str(raw_hec).replace("(seed record)", "").replace("(seed)", "").strip()
+            hec_status = cleaned_hec if cleaned_hec else "HEC Recognized"
+
+        # Handle accreditation cleanly without generic warnings
+        raw_acc = prog.get("accreditation", univ_details.get("accreditation"))
+        if not raw_acc or str(raw_acc).strip() == "" or raw_acc == "None":
+            acc_status = "Program accreditation information is not available in the current dataset."
+        elif isinstance(raw_acc, dict):
+            acc_status = f"{raw_acc.get('body', 'NCEAC')}: {raw_acc.get('status', 'Verified')}"
+        else:
+            cleaned_acc = str(raw_acc).replace("(seed record)", "").strip()
+            if "institutional / program accreditation varies" in cleaned_acc.lower():
+                acc_status = "Program accreditation information is not available in the current dataset."
+            else:
+                acc_status = cleaned_acc
             
-        # Keep exact uppercase enums for frontend switch matching
         status_enum = eligibility["status"]
             
         results.append({
@@ -216,7 +231,7 @@ def match_programs(payload: Dict[str, Any]):
             "distance_km": round(dist_km, 1),
             "hec_recognition": hec_status,
             "accreditation": acc_status,
-            "eligibility_status": status_enum, # Matches frontend filter check
+            "eligibility_status": status_enum,
             "why_this_appears": eligibility["reasons"],
             "available_scholarships": financial_aid
         })

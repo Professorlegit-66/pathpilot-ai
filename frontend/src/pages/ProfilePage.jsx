@@ -1,28 +1,48 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User, MapPin, BookOpen, Target, Save, Trash2, CheckCircle, ShieldAlert, ArrowUpDown } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import CustomDropdown from '../components/CustomDropdown';
 
+const API_URL = import.meta.env.VITE_API_URL || 'https://pathpilot-ai-exln.onrender.com';
+
 export default function ProfilePage({ profile, setProfile, setResults }) {
   const navigate = useNavigate();
   const { token } = useAuth();
-  
-  const [formData, setFormData] = useState(profile || {
-    name: '',
-    country: 'Pakistan',
-    region: 'Khyber Pakhtunkhwa',
-    city: '',
-    desired_degree: "Bachelor's Degree (BS / BSc)",
-    current_education_level: 'HSSC (Intermediate)',
-    hssc_group: 'Pre-Engineering',
-    ssc_percentage: 75.0,
-    hssc_percentage: 75.0,
-    mathematics_background: true,
-    preferred_field: 'Computer Science',
-    budget: 'Rs. 300,000 / year',
-    financial_need_status: true
+
+  // Read cached name fallback if available
+  const cachedName = localStorage.getItem('user_full_name') || '';
+
+  const [formData, setFormData] = useState({
+    name: profile?.name || profile?.full_name || cachedName || '',
+    country: profile?.country || 'Pakistan',
+    region: profile?.region || 'Khyber Pakhtunkhwa',
+    city: profile?.city || '',
+    desired_degree: profile?.desired_degree || "Bachelor's Degree (BS / BSc)",
+    current_education_level: profile?.current_education_level || 'HSSC (Intermediate)',
+    hssc_group: profile?.hssc_group || 'Pre-Engineering',
+    ssc_percentage: profile?.ssc_percentage ?? 75.0,
+    hssc_percentage: profile?.hssc_percentage ?? 75.0,
+    mathematics_background: profile?.mathematics_background ?? true,
+    preferred_field: profile?.preferred_field || 'Computer Science',
+    budget: profile?.budget || 'Rs. 300,000 / year',
+    financial_need_status: profile?.financial_need_status ?? true
   });
+
+  // Automatically sync form state whenever parent profile finishes async fetch
+  useEffect(() => {
+    if (profile) {
+      const activeName = profile.name || profile.full_name || localStorage.getItem('user_full_name') || '';
+      if (activeName) {
+        localStorage.setItem('user_full_name', activeName);
+      }
+      setFormData(prev => ({
+        ...prev,
+        ...profile,
+        name: activeName || prev.name
+      }));
+    }
+  }, [profile]);
 
   const [saving, setSaving] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
@@ -35,7 +55,7 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
   const handleCountryChange = (val) => {
     let defaultStream = 'Pre-Engineering';
     let defaultEduLevel = 'HSSC (Intermediate)';
-    
+
     if (val === 'India') {
       defaultStream = 'PCM';
       defaultEduLevel = '12th Board';
@@ -58,29 +78,46 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
     setSuccessMsg('');
 
     try {
-      const saveRes = await fetch('http://127.0.0.1:8000/api/profile/', {
+      const activeToken = token || localStorage.getItem('token');
+
+      if (!activeToken) {
+        alert("Session expired. Please sign in again.");
+        window.location.href = '/auth';
+        return;
+      }
+
+      const payload = {
+        ...formData,
+        full_name: formData.name,
+        name: formData.name
+      };
+
+      const saveRes = await fetch(`${API_URL}/api/profile/`, {
         method: 'POST',
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${activeToken}`
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(payload)
       });
-      
+
       if (!saveRes.ok) {
         throw new Error("Failed to save profile to backend.");
       }
 
       const savedData = await saveRes.json();
-      setProfile(prev => ({ ...prev, ...savedData }));
-      
-      const res = await fetch('http://127.0.0.1:8000/api/programs/match', {
+      const updatedName = savedData.name || savedData.full_name || formData.name;
+
+      localStorage.setItem('user_full_name', updatedName);
+      setProfile(prev => ({ ...prev, ...savedData, name: updatedName }));
+
+      const res = await fetch(`${API_URL}/api/programs/match`, {
         method: 'POST',
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${activeToken}`
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(payload)
       });
       const data = await res.json();
       setResults(data);
@@ -99,9 +136,10 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
 
   const handleDeleteAccount = async () => {
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/profile/', {
+      const activeToken = token || localStorage.getItem('token');
+      const res = await fetch(`${API_URL}/api/profile/`, {
         method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
+        headers: { 'Authorization': `Bearer ${activeToken}` }
       });
       if (res.ok) {
         localStorage.clear();
@@ -136,7 +174,6 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
     letterSpacing: '0.05em'
   };
 
-  // Dynamic Options for Academic Section based on selected country
   const getStreamOptions = () => {
     switch (formData.country) {
       case 'India':
@@ -187,7 +224,7 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
 
   return (
     <div className="fluid-page-container" style={{ paddingBottom: '4rem' }}>
-      
+
       <div>
         <h1 style={{ fontSize: '2.2rem', fontWeight: 'bold', color: '#f8fafc', margin: '0 0 0.5rem 0' }}>
           Student Profile & Settings
@@ -204,7 +241,7 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
       )}
 
       <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-        
+
         {/* SECTION 1: Location & Context */}
         <div style={{ background: '#1e293b', border: '1px solid #334155', borderRadius: '16px', padding: '1.75rem', boxSizing: 'border-box' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#38bdf8', marginBottom: '1.25rem', paddingBottom: '0.75rem', borderBottom: '1px solid #334155' }}>
@@ -215,17 +252,17 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
           <div className="fluid-grid">
             <div>
               <label style={labelStyle}>Full Name</label>
-              <input 
-                type="text" 
-                value={formData.name || ''} 
-                onChange={e => handleChange('name', e.target.value)} 
+              <input
+                type="text"
+                value={formData.name || ''}
+                onChange={e => handleChange('name', e.target.value)}
                 style={inputStyle}
                 placeholder="Enter your full name"
               />
             </div>
             <div>
               <label style={labelStyle}>Country of Education / Residence</label>
-              <CustomDropdown 
+              <CustomDropdown
                 value={formData.country || 'Pakistan'}
                 options={[
                   { label: 'Pakistan', value: 'Pakistan' },
@@ -238,17 +275,17 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
             </div>
             <div>
               <label style={labelStyle}>City / Region</label>
-              <input 
-                type="text" 
-                value={formData.city || ''} 
-                onChange={e => handleChange('city', e.target.value)} 
+              <input
+                type="text"
+                value={formData.city || ''}
+                onChange={e => handleChange('city', e.target.value)}
                 style={inputStyle}
                 placeholder="e.g. Kohat, Islamabad, Delhi, Boston"
               />
             </div>
             <div>
               <label style={labelStyle}>Desired Degree Level</label>
-              <CustomDropdown 
+              <CustomDropdown
                 value={formData.desired_degree || "Bachelor's Degree (BS / BSc)"}
                 options={[
                   { label: "Bachelor's Degree (BS / BSc)", value: "Bachelor's Degree (BS / BSc)" },
@@ -273,7 +310,7 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
           <div className="fluid-grid" style={{ marginBottom: '1.25rem' }}>
             <div>
               <label style={labelStyle}>Current Education Level</label>
-              <CustomDropdown 
+              <CustomDropdown
                 value={formData.current_education_level || getEducationLevelOptions()[0].value}
                 options={getEducationLevelOptions()}
                 onChange={val => handleChange('current_education_level', val)}
@@ -282,7 +319,7 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
             </div>
             <div>
               <label style={labelStyle}>Academic Specialization / Stream</label>
-              <CustomDropdown 
+              <CustomDropdown
                 value={formData.hssc_group || getStreamOptions()[0].value}
                 options={getStreamOptions()}
                 onChange={val => handleChange('hssc_group', val)}
@@ -293,13 +330,13 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
               <label style={labelStyle}>
                 {formData.country === 'United States' ? 'Cumulative High School %' : formData.country === 'India' ? '10th Board %' : 'SSC (Matric) %'}
               </label>
-              <input 
-                type="number" 
-                step="0.1" 
-                min="0" 
-                max="100" 
-                value={formData.ssc_percentage ?? 75} 
-                onChange={e => handleChange('ssc_percentage', parseFloat(e.target.value))} 
+              <input
+                type="number"
+                step="0.1"
+                min="0"
+                max="100"
+                value={formData.ssc_percentage ?? 75}
+                onChange={e => handleChange('ssc_percentage', parseFloat(e.target.value))}
                 style={inputStyle}
               />
             </div>
@@ -307,23 +344,23 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
               <label style={labelStyle}>
                 {formData.country === 'United States' ? 'GPA Equivalent % (e.g. 87.5)' : formData.country === 'India' ? '12th Board %' : 'HSSC (Intermediate) %'}
               </label>
-              <input 
-                type="number" 
-                step="0.1" 
-                min="0" 
-                max="100" 
-                value={formData.hssc_percentage ?? 75} 
-                onChange={e => handleChange('hssc_percentage', parseFloat(e.target.value))} 
+              <input
+                type="number"
+                step="0.1"
+                min="0"
+                max="100"
+                value={formData.hssc_percentage ?? 75}
+                onChange={e => handleChange('hssc_percentage', parseFloat(e.target.value))}
                 style={inputStyle}
               />
             </div>
           </div>
 
           <div style={{ marginTop: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem', background: '#0f172a', padding: '0.85rem 1rem', borderRadius: '10px', border: '1px solid #334155' }}>
-            <input 
-              type="checkbox" 
+            <input
+              type="checkbox"
               id="math_bg"
-              checked={formData.mathematics_background ?? true} 
+              checked={formData.mathematics_background ?? true}
               onChange={e => handleChange('mathematics_background', e.target.checked)}
               style={{ width: '18px', height: '18px', accentColor: '#059669', cursor: 'pointer' }}
             />
@@ -346,18 +383,18 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
               <CustomDropdown 
                 value={formData.preferred_field || 'Computer Science'}
                 options={[
-                  { label: 'Computer Science', value: 'Computer Science' },
-                  { label: 'Software Engineering', value: 'Software Engineering' },
-                  { label: 'Artificial Intelligence', value: 'Artificial Intelligence' },
-                  { label: 'Cyber Security', value: 'Cyber Security' }
-                ]}
-                onChange={val => handleChange('preferred_field', val)}
-                icon={<ArrowUpDown size={14} />}
-              />
-            </div>
+                { label: 'Computer Science', value: 'Computer Science' },
+                { label: 'Software Engineering', value: 'Software Engineering' },
+                { label: 'Artificial Intelligence', value: 'Artificial Intelligence' },
+                { label: 'Cyber Security', value: 'Cybersecurity' } // value fixed to 'Cybersecurity'
+              ]}
+            onChange={val => handleChange('preferred_field', val)}
+            icon={<ArrowUpDown size={14} />}
+          />
+        </div>
             <div>
               <label style={labelStyle}>Financial Need Status</label>
-              <CustomDropdown 
+              <CustomDropdown
                 value={formData.financial_need_status ? "true" : "false"}
                 options={[
                   { label: 'Yes (Evaluate Financial Aid / Need-Based Loans)', value: 'true' },
@@ -370,9 +407,8 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
           </div>
         </div>
 
-        {/* Primary Action Button */}
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           disabled={saving}
           style={{
             background: 'linear-gradient(135deg, #059669 0%, #047857 100%)',
@@ -397,7 +433,7 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
 
       </form>
 
-      {/* SECTION 4: Danger Zone */}
+      {/* Danger Zone */}
       <div style={{ background: '#1e293b', border: '1px solid #7f1d1d', borderRadius: '16px', padding: '1.75rem', boxSizing: 'border-box', marginTop: '1rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#ef4444', marginBottom: '0.75rem' }}>
           <ShieldAlert size={20} />
@@ -408,8 +444,8 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
         </p>
 
         {!showDeleteConfirm ? (
-          <button 
-            type="button" 
+          <button
+            type="button"
             onClick={() => setShowDeleteConfirm(true)}
             style={{
               background: 'transparent',
@@ -434,8 +470,8 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
               Are you absolutely sure you want to delete your account? All data will be lost permanently.
             </p>
             <div style={{ display: 'flex', gap: '0.75rem' }}>
-              <button 
-                type="button" 
+              <button
+                type="button"
                 onClick={handleDeleteAccount}
                 style={{
                   background: '#dc2626', color: '#fff', border: 'none', padding: '0.5rem 1rem',
@@ -444,8 +480,8 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
               >
                 Yes, Delete Permanently
               </button>
-              <button 
-                type="button" 
+              <button
+                type="button"
                 onClick={() => setShowDeleteConfirm(false)}
                 style={{
                   background: 'transparent', border: '1px solid #334155', color: '#cbd5e1',

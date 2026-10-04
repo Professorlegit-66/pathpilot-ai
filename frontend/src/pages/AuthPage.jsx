@@ -6,9 +6,9 @@ export default function AuthPage({ onLogin }) {
   const { login, register } = useAuth();
   const [isRegister, setIsRegister] = useState(false);
   const [error, setError] = useState('');
-  
+
   // Registration step state: 'form' or 'verify'
-  const [regStep, setRegStep] = useState('form'); 
+  const [regStep, setRegStep] = useState('form');
   const [enteredOtp, setEnteredOtp] = useState('');
   const [mockSentOtp, setMockSentOtp] = useState('');
 
@@ -31,7 +31,7 @@ export default function AuthPage({ onLogin }) {
   const handleRequestOtp = (e) => {
     e.preventDefault();
     setError('');
-    
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
       setError("Please enter a valid email address.");
@@ -41,9 +41,9 @@ export default function AuthPage({ onLogin }) {
     // Generate a mock 6-digit OTP
     const randomOtp = Math.floor(100000 + Math.random() * 900000).toString();
     setMockSentOtp(randomOtp);
-    
+
     alert(`[Demo Mode] Verification OTP sent to ${formData.email}\nYour OTP Code is: ${randomOtp}`);
-    
+
     setRegStep('verify');
   };
 
@@ -52,17 +52,32 @@ export default function AuthPage({ onLogin }) {
     e.preventDefault();
     setError('');
 
-    if (enteredOtp !== mockSentOtp) {
+    if (enteredOtp.trim() !== mockSentOtp.trim()) {
       setError("Invalid OTP code. Please check the code and try again.");
       return;
     }
 
-    // Register user in SQLite database
-    const result = await register(formData.name, formData.email, formData.password);
-    
+    // Explicitly cache name locally for new account
+    if (formData.name) {
+      localStorage.setItem('user_full_name', formData.name);
+    }
+
+    // Register user in backend with full details
+    const result = await register(
+      formData.name,
+      formData.email,
+      formData.password,
+      formData.country,
+      formData.region,
+      formData.city
+    );
+
     if (result.success) {
       if (typeof onLogin === 'function') {
-        onLogin(formData);
+        onLogin({
+          ...formData,
+          name: formData.name
+        });
       } else {
         window.location.reload();
       }
@@ -84,7 +99,7 @@ export default function AuthPage({ onLogin }) {
 
     // Log user in and fetch JWT
     const result = await login(formData.email, formData.password);
-    
+
     if (result.success) {
       if (typeof onLogin === 'function') {
         onLogin(formData);
@@ -105,7 +120,7 @@ export default function AuthPage({ onLogin }) {
   return (
     <div style={{ minHeight: '100vh', width: '100vw', background: '#070b14', display: 'flex', alignItems: 'center', justifyContent: 'center', overflowY: 'auto', padding: '3rem 1rem', boxSizing: 'border-box' }}>
       <div style={{ width: '100%', maxWidth: '460px', background: '#0f172a', border: '1px solid #1e293b', borderRadius: '20px', padding: '2.25rem', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.7)', margin: 'auto' }}>
-        
+
         {/* Brand Header */}
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: '1.25rem' }}>
           <div style={{ background: 'linear-gradient(135deg, #059669 0%, #047857 100%)', padding: '0.65rem', borderRadius: '12px', display: 'flex', boxShadow: '0 10px 15px -3px rgba(5, 150, 105, 0.3)', marginBottom: '0.5rem' }}>
@@ -214,8 +229,11 @@ export default function AuthPage({ onLogin }) {
         {/* --- VIEW C: REGISTER - STEP 2 (OTP Verification Code Input) --- */}
         {isRegister && regStep === 'verify' && (
           <>
-            <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
-              <ShieldCheck size={40} color="#34d399" style={{ marginBottom: '0.5rem' }} />
+            {/* Centered Icon Container */}
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: '1rem' }}>
+              <div style={{ background: '#34d3991a', padding: '0.65rem', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '0.75rem' }}>
+                <ShieldCheck size={36} color="#34d399" />
+              </div>
               <h2 style={{ fontSize: '1.1rem', fontWeight: '600', color: '#e2e8f0', margin: 0 }}>Verify Your Email</h2>
               <p style={{ color: '#94a3b8', fontSize: '0.85rem', marginTop: '0.5rem' }}>
                 We sent a 6-digit verification code to <span style={{ color: '#34d399', fontWeight: '600' }}>{formData.email}</span>
@@ -227,14 +245,14 @@ export default function AuthPage({ onLogin }) {
                 <label style={labelStyle}>Enter 6-Digit OTP Code</label>
                 <div style={inputWrapperStyle}>
                   <ShieldCheck size={18} style={iconStyle} />
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     maxLength="6"
-                    value={enteredOtp} 
-                    onChange={(e) => setEnteredOtp(e.target.value)} 
-                    placeholder="123456" 
-                    style={{ ...inputStyle, letterSpacing: '0.25rem', textAlign: 'center', fontWeight: 'bold', fontSize: '1.2rem' }} 
-                    required 
+                    value={enteredOtp}
+                    onChange={(e) => setEnteredOtp(e.target.value)}
+                    placeholder="123456"
+                    style={{ ...inputStyle, letterSpacing: '0.25rem', textAlign: 'center', fontWeight: 'bold', fontSize: '1.2rem' }}
+                    required
                   />
                 </div>
               </div>
@@ -243,8 +261,8 @@ export default function AuthPage({ onLogin }) {
                 Verify & Create Account
               </button>
 
-              <button 
-                type="button" 
+              <button
+                type="button"
                 onClick={() => setRegStep('form')}
                 style={{ background: 'transparent', border: 'none', color: '#94a3b8', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem', fontSize: '0.85rem', marginTop: '0.5rem' }}
               >
@@ -258,8 +276,8 @@ export default function AuthPage({ onLogin }) {
         <div style={{ textAlign: 'center', marginTop: '1.25rem' }}>
           <p style={{ color: '#94a3b8', fontSize: '0.85rem', margin: 0 }}>
             {isRegister ? 'Already have an account? ' : "Don't have an account? "}
-            <button 
-              type="button" 
+            <button
+              type="button"
               onClick={() => { setIsRegister(!isRegister); setRegStep('form'); setError(''); }}
               style={{ background: 'transparent', border: 'none', color: '#34d399', fontWeight: '600', cursor: 'pointer', padding: 0, fontSize: '0.85rem' }}
             >

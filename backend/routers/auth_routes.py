@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 from database import get_db
 import models
 from schemas import UserCreate, UserLogin, Token
-from config import SECRET_KEY, ALGORITHM  # <-- Import centralized config
+from config import SECRET_KEY, ALGORITHM
 
 router = APIRouter(prefix="/api/auth", tags=["Authentication"])
 
@@ -44,15 +44,42 @@ def register_user(user: UserCreate, db: Session = Depends(get_db)):
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
+
+    # Automatically create an linked student profile record upon registration
+    new_profile = models.DBStudentProfile(
+        user_id=new_user.id,
+        country="Pakistan",
+        region="Khyber Pakhtunkhwa",
+        city="Kohat"
+    )
+    db.add(new_profile)
+    db.commit()
     
     access_token = create_access_token(data={"sub": new_user.email, "id": new_user.id})
     return {"access_token": access_token, "token_type": "bearer"}
 
-@router.post("/login", response_model=Token)
-def login_user(user: UserLogin, db: Session = Depends(get_db)):
+@router.post("/register", response_model=Token)
+def register_user(user: UserCreate, db: Session = Depends(get_db)):
     db_user = db.query(models.User).filter(models.User.email == user.email).first()
-    if not db_user or not verify_password(user.password, db_user.hashed_password):
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
+    if db_user:
+        raise HTTPException(status_code=400, detail="Email already registered")
     
-    access_token = create_access_token(data={"sub": db_user.email, "id": db_user.id})
+    hashed_password = get_password_hash(user.password)
+    new_user = models.User(full_name=user.full_name, email=user.email, hashed_password=hashed_password)
+    
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+
+    # Automatically initialize linked student profile
+    new_profile = models.DBStudentProfile(
+        user_id=new_user.id,
+        country="Pakistan",
+        region="Khyber Pakhtunkhwa",
+        city="Kohat"
+    )
+    db.add(new_profile)
+    db.commit()
+    
+    access_token = create_access_token(data={"sub": new_user.email, "id": new_user.id})
     return {"access_token": access_token, "token_type": "bearer"}

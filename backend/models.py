@@ -25,6 +25,7 @@ class DBStudentProfile(Base):
     hssc_group = Column(String, default="Pre-Engineering")
     mathematics_background = Column(Boolean, default=True)
     preferred_field = Column(String, default="Computer Science")
+    target_career = Column(String, nullable=True)
     budget = Column(String, default="Rs. 300,000 / year")
     financial_need_status = Column(Boolean, default=True)
     gpa_score = Column(String, nullable=True)

@@ -2,7 +2,16 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @layer base {
-  html, body {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  html, body, #root {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100vh;
+    overflow-x: hidden;
     @apply bg-slate-100 text-slate-900 dark:bg-slate-900 dark:text-slate-100;
     transition-property: background-color;
     transition-duration: 300ms;
@@ -12,6 +21,7 @@
 
   html {
     color-scheme: light;
+    background-color: #070b14; /* Fallback for the scrollbar track */
   }
   html.dark {
     color-scheme: dark;

@@ -118,7 +118,7 @@ export default function AuthPage({ onLogin }) {
   const labelStyle = { fontSize: '0.8rem', fontWeight: '500', color: '#cbd5e1', display: 'block', textAlign: 'left', marginTop: '0.75rem' };
 
   return (
-    <div style={{ minHeight: '100vh', width: '100vw', background: '#070b14', display: 'flex', alignItems: 'center', justifyContent: 'center', overflowY: 'auto', padding: '3rem 1rem', boxSizing: 'border-box' }}>
+    <div style={{ minHeight: '100vh', width: '100%', background: '#070b14', display: 'flex', alignItems: 'center', justifyContent: 'center', overflowY: 'auto', padding: '3rem 1rem', boxSizing: 'border-box' }}>
       <div style={{ width: '100%', maxWidth: '460px', background: '#0f172a', border: '1px solid #1e293b', borderRadius: '20px', padding: '2.25rem', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.7)', margin: 'auto' }}>
 
         {/* Brand Header */}

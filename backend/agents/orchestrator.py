@@ -3,6 +3,7 @@ import json
 from agents.career_agent import CareerAgent
 from agents.eligibility_agent import EligibilityAgent
 from agents.roadmap_agent import RoadmapAgent
+from agents.scholarship_agent import ScholarshipAgent
 from agents.agent_core import EduPathAgent, ToolRegistry, AgentState, ActionTypes
 
 class AIOrchestrator:
@@ -11,6 +12,7 @@ class AIOrchestrator:
         self.career_agent = CareerAgent(data_dir=data_dir)
         self.eligibility_agent = EligibilityAgent(data_dir=data_dir)
         self.roadmap_agent = RoadmapAgent()
+        self.scholarship_agent = ScholarshipAgent(data_dir=data_dir)
         
         # Initialize Tool Registry with strict tool contracts
         self.registry = ToolRegistry()
@@ -41,7 +43,7 @@ class AIOrchestrator:
             name="match_scholarships",
             description="Match financial aid and scholarships from verified structured datasets.",
             input_schema={"profile": "StudentProfile"},
-            func=lambda profile: self._load_json("scholarships.json")
+            func=self.scholarship_agent.match
         )
 
     def _generate_robust_roadmap(self, profile: dict):

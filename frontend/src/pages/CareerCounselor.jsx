@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Send, Bot, User, Sparkles, Trash2, Loader2, MessageSquare } from 'lucide-react';
+import { Send, Bot, User, Sparkles, Trash2, Loader2, MessageSquare, CheckCircle2 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
@@ -19,20 +19,31 @@ export default function CareerCounselor({ profile }) {
         if (Array.isArray(parsed) && parsed.length > 0) return parsed;
       } catch (e) { /* fallback */ }
     }
-    return [{ sender: 'bot', text: getGreeting() }];
+    return [{ sender: 'bot', text: getGreeting(), actions: [] }];
   });
 
   const [inputQuery, setInputQuery] = useState('');
   const [loading, setLoading] = useState(false);
+  const [activeStep, setActiveStep] = useState('');
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
   }, [messages, STORAGE_KEY]);
 
   const handleClearChat = () => {
-    const defaultMsg = [{ sender: 'bot', text: getGreeting() }];
+    const defaultMsg = [{ sender: 'bot', text: getGreeting(), actions: [] }];
     setMessages(defaultMsg);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultMsg));
+  };
+
+  const formatActionName = (action) => {
+    switch(action) {
+      case 'match_careers': return 'Analyzing Career Compatibility';
+      case 'evaluate_eligibility': return 'Evaluating Program Eligibility';
+      case 'generate_roadmap': return 'Synthesizing Learning Roadmap';
+      case 'match_scholarships': return 'Matching Financial Aid & Scholarships';
+      default: return action.replace(/_/g, ' ');
+    }
   };
 
   const handleSendMessage = async (e, overrideText = null) => {
@@ -43,6 +54,9 @@ export default function CareerCounselor({ profile }) {
     setInputQuery('');
     setMessages(prev => [...prev, { sender: 'user', text: userMsg }]);
     setLoading(true);
+    setActiveStep('Initializing multi-agent orchestrator...');
+
+    setTimeout(() => setActiveStep('Executing deterministic tools...'), 600);
 
     try {
       const res = await fetch(`${API_URL}/api/counselor/chat`, {
@@ -51,11 +65,16 @@ export default function CareerCounselor({ profile }) {
         body: JSON.stringify({ profile, query: userMsg })
       });
       const data = await res.json();
-      setMessages(prev => [...prev, { sender: 'bot', text: data.response }]);
+      setMessages(prev => [...prev, { 
+        sender: 'bot', 
+        text: data.response,
+        actions: data.actions || [] 
+      }]);
     } catch (err) {
-      setMessages(prev => [...prev, { sender: 'bot', text: 'Error connecting to the Career Counselor Agent. Make sure the backend is running.' }]);
+      setMessages(prev => [...prev, { sender: 'bot', text: 'Error connecting to the Career Counselor Agent. Make sure the backend is running.', actions: [] }]);
     } finally {
       setLoading(false);
+      setActiveStep('');
     }
   };
 
@@ -78,7 +97,7 @@ export default function CareerCounselor({ profile }) {
     "Which programs fit my interests?",
     "Am I eligible for these programs?",
     "What financial-aid options are available?",
-    "Explain my roadmap"
+    "Give me a complete learning roadmap."
   ];
 
   return (
@@ -140,6 +159,17 @@ export default function CareerCounselor({ profile }) {
                 boxSizing: 'border-box',
                 wordBreak: 'break-word'
               }}>
+                {msg.sender === 'bot' && msg.actions && msg.actions.length > 0 && (
+                  <div style={{ marginBottom: '0.8rem', paddingBottom: '0.6rem', borderBottom: '1px solid #334155', display: 'flex', flexWrap: 'wrap', gap: '0.4rem', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: '600', marginRight: '0.2rem' }}>Executed Actions:</span>
+                    {msg.actions.map((act, i) => (
+                      <span key={i} style={{ background: '#0f172a', color: '#34d399', border: '1px solid #059669', padding: '0.15rem 0.5rem', borderRadius: '6px', fontSize: '0.75rem', display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}>
+                        <CheckCircle2 size={12} /> {formatActionName(act)}
+                      </span>
+                    ))}
+                  </div>
+                )}
+
                 {msg.sender === 'bot' ? (
                   <div className="markdown-content">
                     <ReactMarkdown 
@@ -183,7 +213,7 @@ export default function CareerCounselor({ profile }) {
               </div>
               <div style={{ background: '#1e293b', color: '#94a3b8', padding: '0.9rem 1.15rem', borderRadius: '12px', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '0.75rem', border: '1px solid #334155' }}>
                 <Loader2 size={18} color="#34d399" style={{ animation: 'customSpin 1s linear infinite', flexShrink: 0, display: 'inline-block' }} />
-                <span>Counselor is formulating advice...</span>
+                <span>{activeStep || 'Counselor is formulating advice...'}</span>
               </div>
             </div>
           )}

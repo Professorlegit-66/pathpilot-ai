@@ -16,18 +16,18 @@ class RoadmapAgent:
         You help students build professional, structured learning and career roadmaps based on their profile and verified career tracks.
         The supplied profile and tool results are your source of truth.
         
-        CRITICAL FORMATTING RULES:
+        CRITICAL FORMATTING & PRONOUN RULES:
         1. STRICTLY PROHIBITED: NEVER generate markdown tables (no `|---|---|`).
         2. ALWAYS use standard bullet points (`- `).
         3. Keep paragraphs concise, professional, and actionable.
         4. Provide clear milestones (Foundation, Practical Experience, Professional Application) tailored to the student's preferred field.
+        5. ALWAYS address the student directly in the second person ("you", "your"). Never use third-person pronouns (such as "he", "his", "him") or refer to the student by name in the narrative response. Speak directly to them as "you".
         """
         
         eligible_programs = [r for r in eligibility_results if "Eligible" in r.get("eligibility_status", "")]
 
         user_context = f"""
         STUDENT PROFILE:
-        Name: {profile.get('name', 'Student')}
         Location: {profile.get('city')}, {profile.get('region')}, {profile.get('country')}
         Field: {profile.get('preferred_field', 'Computer Science')}
         
@@ -35,8 +35,8 @@ class RoadmapAgent:
         {json.dumps(eligible_programs, indent=2) if eligible_programs else "No specific institutional programs currently matched strict threshold criteria; focus roadmap on core skill acquisition and career competency milestones."}
         
         Based on this data, generate:
-        1. A brief explanation of career alignment based on their preferred field.
-        2. A structured, milestone-based learning roadmap with actionable steps (using bullet points).
+        1. A brief explanation of career alignment based on their preferred field, written entirely in the second person ("you", "your").
+        2. A structured, milestone-based learning roadmap with actionable steps (using bullet points), addressed directly to the student.
         """
 
         try:

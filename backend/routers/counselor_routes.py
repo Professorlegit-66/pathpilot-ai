@@ -44,21 +44,24 @@ def counselor_chat(req: ChatRequest):
                 for action in m.get("actions", []):
                     lines.append(f"- {action}")
                 lines.append("")
-            return {"response": "\n".join(lines)}
+            return {"response": "\n".join(lines), "actions": executed_actions}
         elif isinstance(res, str) and len(res.strip()) > 0:
-            return {"response": res}
+            return {"response": res, "actions": executed_actions}
 
     if any(term in query_lower for term in ["career", "match"]):
         career_data = agent_context.get("match_careers", {})
         res = career_data.get("results", career_data) if isinstance(career_data, dict) else career_data
         if isinstance(res, dict) and "results" in res:
             careers = res["results"]
-            lines = [f"## Recommended Careers for {profile_data.get('name', 'Student')}\n"]
+            lines = [f"## Recommended Careers for You\n"]
             for c in careers:
                 lines.append(f"- **{c.get('title')}** ({c.get('field_category')}): {c.get('description')}")
-            return {"response": "\n".join(lines)}
+            return {"response": "\n".join(lines), "actions": executed_actions}
 
-    # Fallback to Groq for general queries
+    # NOTE: The deterministic eligibility renderer has been removed. 
+    # Eligibility queries will now fall through to the Groq synthesis block below.
+
+    # Fallback to Groq for general queries & eligibility synthesis with strict safety prompts
     profile_str = json.dumps(profile_data, indent=2)
     tool_summaries = []
     for tool_name, tool_data in agent_context.items():
@@ -74,7 +77,11 @@ def counselor_chat(req: ChatRequest):
 You are the Agentic AI Career Counselor for EduPath AI.
 You help the student explore careers, program eligibility, scholarships, and roadmaps using verified tool results and structured datasets.
 The deterministic tool outputs and dataset are the absolute source of truth.
-CRITICAL: Do NOT greet the user, do not say "Hello", and do not use introductory filler. Get straight to the requested guidance.
+CRITICAL INSTRUCTIONS:
+1. Do NOT greet the user, do not say "Hello", and do not use introductory filler. Get straight to the requested guidance.
+2. ALWAYS address the user directly in the second person ("you", "your"). Never use third-person pronouns (such as "he", "his", "him") or refer to the student by name.
+3. NEVER mention internal system terminology, developer functions, or tool names (such as "evaluate_eligibility", "match_careers", or "orchestrator") in your response.
+4. When answering eligibility questions, do not list every single program. Synthesize the data: highlight the top 3-5 programs the student is eligible for based on their profile, briefly explain why using a friendly, conversational tone, and summarize any remaining options concisely.
 """
 
     try:
@@ -89,9 +96,9 @@ CRITICAL: Do NOT greet the user, do not say "Hello", and do not use introductory
                     {"role": "user", "content": f"Student Profile:\n{profile_str}\n\nTool Results:\n{combined_tool_text}\n\nQuery: {req.query}"}
                 ]
             )
-            return {"response": completion.choices[0].message.content}
+            return {"response": completion.choices[0].message.content, "actions": executed_actions}
     except Exception as e:
         print("❌ Groq API Exception Caught:")
         traceback.print_exc()
 
-    return {"response": "That information is not available in the current dataset."}
+    return {"response": "That information is not available in the current dataset.", "actions": executed_actions}

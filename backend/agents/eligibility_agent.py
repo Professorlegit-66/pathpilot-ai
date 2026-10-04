@@ -15,81 +15,83 @@ class EligibilityAgent:
 
     def evaluate(self, profile: dict) -> list:
         results = []
-        preferred_field = profile.get("preferred_field", "Computer Science")
-        target_programs = [p for p in self.programs_db if p.get("field") == preferred_field]
+        preferred_field = profile.get("preferred_field", "Computer Science").strip().lower()
+        
+        # Match by field_category or program name, or fallback to all programs if none match strictly
+        target_programs = [
+            p for p in self.programs_db 
+            if preferred_field in p.get("field_category", "").strip().lower() or 
+               preferred_field in p.get("program_name", "").strip().lower()
+        ]
         
         if not target_programs:
-            return []
+            target_programs = self.programs_db  # Fallback to evaluate all available programs
 
         for program in target_programs:
-            program_name = program.get("name", "Unknown Program")
-            program_id = program.get("id") or program.get("program_id", "Unknown ID")
+            program_name = program.get("program_name", "Unknown Program")
+            program_id = program.get("program_id", "Unknown ID")
             university_id = program.get("university_id", "Unknown Uni")
             
-            rules = program.get("eligibility") or program.get("eligibility_rules") or {}
-            
-            if not rules:
-                results.append({
-                    "program_id": program_id,
-                    "program_name": program_name,
-                    "university_id": university_id,
-                    "eligibility_status": "Cannot determine from current dataset",
-                    "reasoning": ["Eligibility rules are not populated in the current dataset."]
-                })
-                continue
-                
             is_eligible = True
             reasons = []
 
-            # 1. Check Mathematics Requirement
-            req_math = rules.get("mathematics_required")
-            if req_math is not None:
-                has_math = profile.get("mathematics_background", True)
-                if req_math and not has_math:
-                    is_eligible = False
-                    reasons.append("Mathematics requirement not satisfied.")
-                else:
-                    reasons.append("Meets mathematics requirement.")
+            # 1. Check Mathematics Requirement (min_math_percent)
+            min_math = program.get("min_math_percent")
+            if min_math is not None:
+                if min_math > 4.0:  # Percentage-based threshold (e.g., Pakistan/India boards)
+                    has_math = profile.get("mathematics_background", True)
+                    if not has_math:
+                        is_eligible = False
+                        reasons.append("Mathematics background is required.")
+                    else:
+                        reasons.append(f"Meets mathematics prerequisite (Minimum requirement: {min_math}%).")
+                else:  # GPA-based threshold (e.g., US institutions like CMU)
+                    gpa = profile.get("gpa_score", 3.5)
+                    if gpa < min_math:
+                        is_eligible = False
+                        reasons.append(f"GPA score ({gpa}) is below minimum requirement ({min_math}).")
+                    else:
+                        reasons.append(f"Meets minimum GPA requirement ({min_math}).")
 
-            # 2. Check HSSC Minimum Percentage
-            min_hssc = rules.get("minimum_hssc_percent") if "minimum_hssc_percent" in rules else rules.get("min_hssc_percentage")
-            if min_hssc is not None:
-                hssc_pct = profile.get("hssc_percentage")
-                if hssc_pct is None:
-                    is_eligible = False
-                    reasons.append("Student HSSC percentage not provided.")
-                elif hssc_pct < min_hssc:
-                    is_eligible = False
-                    reasons.append(f"HSSC percentage ({hssc_pct}%) is below required minimum ({min_hssc}%).")
-                else:
-                    reasons.append(f"Meets stated HSSC percentage requirement ({min_hssc}%).")
+            # 2. Check Overall Percentage / Academic Score (min_overall_percent)
+            min_overall = program.get("min_overall_percent")
+            if min_overall is not None:
+                if min_overall > 4.0:  # Percentage-based
+                    hssc_pct = profile.get("hssc_percentage")
+                    if hssc_pct is None:
+                        is_eligible = False
+                        reasons.append("Student HSSC percentage not provided in profile.")
+                    elif hssc_pct < min_overall:
+                        is_eligible = False
+                        reasons.append(f"HSSC percentage ({hssc_pct}%) is below the required minimum ({min_overall}%).")
+                    else:
+                        reasons.append(f"Meets minimum overall percentage requirement ({min_overall}%).")
+                else:  # GPA-based
+                    gpa = profile.get("gpa_score", 3.5)
+                    if gpa < min_overall:
+                        is_eligible = False
+                        reasons.append(f"GPA score ({gpa}) is below minimum requirement ({min_overall}).")
+                    else:
+                        reasons.append(f"Meets minimum GPA requirement ({min_overall}).")
 
-            # 3. Check SSC Minimum Percentage
-            min_ssc = rules.get("minimum_ssc_percent") if "minimum_ssc_percent" in rules else rules.get("min_ssc_percentage")
-            if min_ssc is not None:
-                ssc_pct = profile.get("ssc_percentage")
-                if ssc_pct is None:
-                    is_eligible = False
-                    reasons.append("Student SSC percentage not provided.")
-                elif ssc_pct < min_ssc:
-                    is_eligible = False
-                    reasons.append(f"SSC percentage ({ssc_pct}%) is below required minimum ({min_ssc}%).")
-                else:
-                    reasons.append(f"Meets stated SSC percentage requirement ({min_ssc}%).")
-
-            # 4. Check HSSC Accepted Groups
-            req_groups = rules.get("hssc_groups") or rules.get("required_hssc_groups")
-            if req_groups:
+            # 3. Check Accepted Streams / Groups
+            accepted_streams = program.get("accepted_streams", [])
+            if accepted_streams and "General Track" not in accepted_streams and "STEM Focus" not in accepted_streams:
                 hssc_group = profile.get("hssc_group", "Pre-Engineering")
-                group_match = (
-                    hssc_group in req_groups or
-                    (hssc_group == "ICS" and "Computer Science" in req_groups)
+                stream_match = any(
+                    stream.lower() in hssc_group.lower() or hssc_group.lower() in stream.lower() 
+                    for stream in accepted_streams
                 )
-                if not group_match:
-                    is_eligible = False
-                    reasons.append(f"HSSC group '{hssc_group}' is not listed in accepted groups: {', '.join(req_groups)}.")
+                if not stream_match and hssc_group != "ICS":
+                    if not (hssc_group == "ICS" and any("ics" in s.lower() or "computer" in s.lower() for s in accepted_streams)):
+                        is_eligible = False
+                        reasons.append(f"HSSC stream '{hssc_group}' is not explicitly listed in accepted streams: {', '.join(accepted_streams)}.")
+                    else:
+                        reasons.append("Meets accepted stream requirement.")
                 else:
-                    reasons.append("Meets HSSC group requirement.")
+                    reasons.append("Meets accepted stream requirement.")
+            else:
+                reasons.append("Meets stream requirements.")
 
             status_string = "Eligible based on available data" if is_eligible else "Not eligible based on available data"
 

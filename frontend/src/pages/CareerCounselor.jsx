@@ -3,6 +3,8 @@ import { Send, Bot, User, Sparkles, Trash2, Loader2, MessageSquare } from 'lucid
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
+const API_URL = import.meta.env.VITE_API_URL || 'https://pathpilot-ai-exln.onrender.com';
+
 export default function CareerCounselor({ profile }) {
   const userEmail = profile?.email || profile?.name || 'default_student';
   const STORAGE_KEY = `pathpilot_chat_${userEmail.replace(/[^a-zA-Z0-9_]/g, '_')}`;
@@ -43,7 +45,7 @@ export default function CareerCounselor({ profile }) {
     setLoading(true);
 
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/counselor/chat', {
+      const res = await fetch(`${API_URL}/api/counselor/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ profile, query: userMsg })

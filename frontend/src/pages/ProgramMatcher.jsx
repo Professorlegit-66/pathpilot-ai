@@ -272,6 +272,27 @@ export default function ProgramMatcher({ results, profile, setResults }) {
                           </p>
                         </div>
                       </div>
+
+                      {/* Primary Actions visible immediately on card */}
+                      <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'flex-end', marginTop: '0.5rem', flexWrap: 'wrap' }}>
+                        <button 
+                          onClick={() => setSelectedDetailProgram(prog)}
+                          style={{ background: 'transparent', border: '1px solid #334155', color: '#f8fafc', padding: '0.55rem 1.15rem', borderRadius: '8px', fontSize: '0.88rem', fontWeight: '600', cursor: 'pointer', transition: 'background 0.2s' }} 
+                        >
+                          View Details
+                        </button>
+                        <button 
+                          onClick={() => {
+                            sessionStorage.removeItem('roadmap_is_reset');
+                            sessionStorage.setItem('roadmap_selected_program', JSON.stringify(prog));
+                            if (targetCareer) sessionStorage.setItem('roadmap_target_career', targetCareer);
+                            navigate('/roadmap', { state: { selectedProgram: prog, selectedCareer: targetCareer } });
+                          }}
+                          style={{ background: '#059669', color: '#fff', border: 'none', padding: '0.55rem 1.15rem', borderRadius: '8px', fontSize: '0.88rem', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem' }} 
+                        >
+                          <PlusCircle size={16} /> Add to My Roadmap
+                        </button>
+                      </div>
                     </div>
 
                     <div style={{ borderTop: '1px solid #334155' }}>
@@ -294,7 +315,7 @@ export default function ProgramMatcher({ results, profile, setResults }) {
                           </ul>
 
                           {prog.available_scholarships?.length > 0 && (
-                            <div style={{ marginBottom: '1.5rem' }}>
+                            <div>
                               <h4 style={{ fontSize: '0.85rem', color: '#94a3b8', margin: '0 0 0.5rem 0' }}>Matching Financial Aid Records:</h4>
                               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                                 {prog.available_scholarships.map((sch, sIdx) => (
@@ -306,26 +327,6 @@ export default function ProgramMatcher({ results, profile, setResults }) {
                               </div>
                             </div>
                           )}
-
-                          <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end', marginTop: '1rem' }}>
-                            <button 
-                              onClick={() => setSelectedDetailProgram(prog)}
-                              style={{ background: 'transparent', border: '1px solid #334155', color: '#f8fafc', padding: '0.6rem 1.25rem', borderRadius: '8px', fontSize: '0.9rem', fontWeight: '600', cursor: 'pointer', transition: 'background 0.2s' }} 
-                            >
-                              View Details
-                            </button>
-                            <button 
-                              onClick={() => {
-                                sessionStorage.removeItem('roadmap_is_reset');
-                                sessionStorage.setItem('roadmap_selected_program', JSON.stringify(prog));
-                                if (targetCareer) sessionStorage.setItem('roadmap_target_career', targetCareer);
-                                navigate('/roadmap', { state: { selectedProgram: prog, selectedCareer: targetCareer } });
-                              }}
-                              style={{ background: '#059669', color: '#fff', border: 'none', padding: '0.6rem 1.25rem', borderRadius: '8px', fontSize: '0.9rem', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem' }} 
-                            >
-                              <PlusCircle size={16} /> Add to My Roadmap
-                            </button>
-                          </div>
                         </div>
                       )}
                     </div>

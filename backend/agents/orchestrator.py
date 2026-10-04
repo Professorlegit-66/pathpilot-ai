@@ -3,6 +3,7 @@ import json
 from agents.career_agent import CareerAgent
 from agents.eligibility_agent import EligibilityAgent
 from agents.roadmap_agent import RoadmapAgent
+from agents.agent_core import EduPathAgent, ToolRegistry, AgentState, ActionTypes
 
 class AIOrchestrator:
     def __init__(self, data_dir="data"):
@@ -11,21 +12,37 @@ class AIOrchestrator:
         self.eligibility_agent = EligibilityAgent(data_dir=data_dir)
         self.roadmap_agent = RoadmapAgent()
         
-        # Tool registry mapping deterministic capabilities
-        self.tool_registry = {
-            "match_careers": {
-                "description": "Find careers matching student preferred field and profile.",
-                "func": self.career_agent.analyze
-            },
-            "evaluate_eligibility": {
-                "description": "Evaluate deterministic program eligibility rules against student academic metrics.",
-                "func": self.eligibility_agent.evaluate
-            },
-            "generate_roadmap": {
-                "description": "Synthesize a structured learning roadmap using verified eligible programs.",
-                "func": lambda profile: self.roadmap_agent.generate_roadmap(profile, self.eligibility_agent.evaluate(profile))
-            }
-        }
+        # Initialize Tool Registry with strict tool contracts
+        self.registry = ToolRegistry()
+        self._register_default_tools()
+        
+        self.agent = EduPathAgent(self.registry)
+
+    def _register_default_tools(self):
+        self.registry.register(
+            name="match_careers",
+            description="Find verified careers matching student profile using deterministic rules.",
+            input_schema={"profile": "StudentProfile"},
+            func=self.career_agent.analyze
+        )
+        self.registry.register(
+            name="evaluate_eligibility",
+            description="Evaluate program eligibility rules deterministically against student metrics.",
+            input_schema={"profile": "StudentProfile"},
+            func=self.eligibility_agent.evaluate
+        )
+        self.registry.register(
+            name="generate_roadmap",
+            description="Synthesize structured learning roadmap based on verified eligible programs.",
+            input_schema={"profile": "StudentProfile"},
+            func=lambda profile: self.roadmap_agent.generate_roadmap(profile, self.eligibility_agent.evaluate(profile))
+        )
+        self.registry.register(
+            name="match_scholarships",
+            description="Match financial aid and scholarships from verified structured datasets.",
+            input_schema={"profile": "StudentProfile"},
+            func=lambda profile: self._load_json("scholarships.json") # Safe dataset fallback tool
+        )
 
     def _load_json(self, filename):
         filepath = os.path.join(self.data_dir, filename)
@@ -34,50 +51,63 @@ class AIOrchestrator:
         with open(filepath, "r", encoding="utf-8") as f:
             return json.load(f)
 
-    def get_universities(self):
-        return self._load_json("universities.json")
-
-    def agent_decide_and_execute(self, profile: dict, user_goal: str) -> dict:
+    def execute_agent_loop(self, profile: dict, message: str, conversation_id: str = "default_conv") -> dict:
         """
-        Agentic Loop: Analyzes student goal/query, dynamically selects required tools, 
-        executes them, and returns structured grounded context.
+        Executes the controlled iterative agent loop with step boundaries and structured error handling.
         """
-        goal_lower = user_goal.lower()
-        executed_actions = []
-        tool_results = {}
+        state = AgentState(
+            conversation_id=conversation_id,
+            student_profile=profile,
+            current_goal=message
+        )
 
-        print(f"[Agentic Orchestrator] Analyzing goal for: {profile.get('name')} | Query: '{user_goal}'")
+        actions_taken = []
+        
+        while state.agent_status == "running" and state.step_count < state.max_steps:
+            decision = self.agent.decide(state, message)
+            action = decision.get("action")
 
-        # Dynamic Tool Selection based on intent
-        needs_career = any(k in goal_lower for k in ["career", "job", "field", "work", "role"])
-        needs_eligibility = any(k in goal_lower for k in ["eligib", "admission", "qualify", "program", "score", "percentage"])
-        needs_roadmap = any(k in goal_lower for k in ["roadmap", "plan", "study", "complete", "step", "future"])
+            if action == ActionTypes.CALL_TOOL:
+                tool_name = decision["tool"]
+                args = decision["arguments"]
+                
+                print(f"[Agent Loop] Step {state.step_count}: Executing tool '{tool_name}'")
+                result = self.registry.execute(tool_name, args)
+                
+                state.tool_results[tool_name] = result
+                state.previous_actions.append(tool_name)
+                actions_taken.append(tool_name)
 
-        # If intent is general or multifaceted, execute comprehensive tool workflow
-        if not (needs_career or needs_eligibility or needs_roadmap):
-            needs_career = needs_eligibility = needs_roadmap = True
+                if result.get("status") == "error":
+                    # Graceful failure handling per specification
+                    state.agent_status = "error"
+                    break
 
-        # Execute selected tools dynamically
-        if needs_career:
-            tool_results["career_analysis"] = self.tool_registry["match_careers"]["func"](profile)
-            executed_actions.append("match_careers")
+            elif action == ActionTypes.ASK_CLARIFICATION:
+                state.agent_status = "requires_clarification"
+                break
 
-        if needs_eligibility:
-            tool_results["eligibility_evaluations"] = self.tool_registry["evaluate_eligibility"]["func"](profile)
-            executed_actions.append("evaluate_eligibility")
-
-        if needs_roadmap:
-            tool_results["roadmap"] = self.tool_registry["generate_roadmap"]["func"](profile)
-            executed_actions.append("generate_roadmap")
+            elif action == ActionTypes.FINAL_RESPONSE:
+                state.agent_status = "completed"
+                break
 
         return {
-            "orchestrator_status": "Completed successfully via dynamic agent loop",
-            "executed_actions": executed_actions,
-            "context": tool_results
+            "conversation_id": state.conversation_id,
+            "agent_status": state.agent_status,
+            "actions": actions_taken,
+            "context": state.tool_results
         }
 
     def run_workflow(self, profile: dict, eligibility_results: list = None) -> dict:
         """
-        Backward-compatible wrapper maintaining your existing pipeline signature.
+        Maintains backward compatibility for existing pipeline routes.
         """
-        return self.agent_decide_and_execute(profile, "Give me a complete review of my careers, eligibility, and roadmap.")
+        loop_res = self.execute_agent_loop(profile, "Give me a complete review of my careers, eligibility, and roadmap.")
+        context = loop_res.get("context", {})
+        
+        return {
+            "orchestrator_status": "Completed successfully",
+            "career_insights": context.get("match_careers", {}).get("results", {}),
+            "eligibility_evaluations": context.get("evaluate_eligibility", {}).get("results", []),
+            "roadmap": context.get("generate_roadmap", {}).get("results", "Roadmap generation complete.")
+        }

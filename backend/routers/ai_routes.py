@@ -1,33 +1,42 @@
 from fastapi import APIRouter, HTTPException
-from typing import List
-from schemas import StudentProfile, EligibilityResult, CounselorRequest
+from pydantic import BaseModel, Field
+from typing import Dict, Any, Optional
 from dependencies import orchestrator
 
-router = APIRouter(prefix="/api", tags=["Multi-Agent Workflow"])
+router = APIRouter(prefix="/api/agent", tags=["Agentic AI Layer"])
 
-@router.post("/eligibility", response_model=List[EligibilityResult])
-def evaluate_eligibility(profile: StudentProfile):
-    try:
-        results = orchestrator.eligibility_agent.evaluate(profile.dict())
-        return results
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+class AgentChatRequest(BaseModel):
+    message: str
+    profile: Optional[Dict[str, Any]] = Field(default_factory=dict)
+    conversation_id: str = "default_conv"
 
-@router.post("/roadmap")
-def generate_ai_roadmap(data: dict):
+@router.post("/chat")
+def agent_chat(payload: AgentChatRequest):
     try:
-        profile = data.get("profile", {})
-        results = data.get("results", [])
+        # Run the formal agent execution loop
+        agent_output = orchestrator.execute_agent_loop(
+            profile=payload.profile or {},
+            message=payload.message,
+            conversation_id=payload.conversation_id
+        )
         
-        workflow_output = orchestrator.run_workflow(profile, results)
-        return {"roadmap": workflow_output["roadmap"]}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        # Synthesize a clean response summary for the user
+        actions = agent_output.get("actions", [])
+        context = agent_output.get("context", {})
+        
+        response_text = f"Analyzed your request successfully using deterministic tools: ({', '.join(actions) or 'Direct Verification'})."
+        
+        if "generate_roadmap" in context:
+            roadmap_res = context["generate_roadmap"].get("results")
+            if isinstance(roadmap_res, str):
+                response_text = roadmap_res
 
-@router.post("/counselor/chat")
-def career_counselor_chat(req: CounselorRequest):
-    try:
-        advice = orchestrator.counselor_agent.get_advice(req.profile.dict(), req.query)
-        return {"response": advice}
+        return {
+            "response": response_text,
+            "conversation_id": agent_output.get("conversation_id"),
+            "agent_status": agent_output.get("agent_status"),
+            "actions": actions,
+            "context": context
+        }
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=f"Agent execution failed: {str(e)}")

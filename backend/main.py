@@ -18,9 +18,16 @@ app = FastAPI(
     version="1.0.0"
 )
 
+# Explicitly define allowed origins for CORS (required when allow_credentials=True)
+origins = [
+    "https://pathpilot-ai-phi.vercel.app",
+    "http://localhost:5173",
+    "http://localhost:3000"
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],

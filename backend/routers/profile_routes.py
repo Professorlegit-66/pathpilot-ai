@@ -95,3 +95,18 @@ def update_user_profile(payload: Dict[str, Any], user_id: int = Depends(get_curr
     db.commit()
     db.refresh(profile)
     return get_user_profile(user_id=user_id, db=db)
+
+@router.delete("/")
+def delete_user_account(user_id: int = Depends(get_current_user_id), db: Session = Depends(get_db)):
+    # Delete student profile records if they exist
+    profile = db.query(models.DBStudentProfile).filter(models.DBStudentProfile.user_id == user_id).first()
+    if profile:
+        db.delete(profile)
+    
+    # Delete the main user record
+    user = db.query(models.User).filter(models.User.id == user_id).first()
+    if user:
+        db.delete(user)
+    
+    db.commit()
+    return {"status": "success", "message": "Account permanently deleted."}

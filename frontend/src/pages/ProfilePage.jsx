@@ -10,7 +10,6 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
   const navigate = useNavigate();
   const { token } = useAuth();
 
-  // Read cached name fallback if available
   const cachedName = localStorage.getItem('user_full_name') || '';
 
   const [formData, setFormData] = useState({
@@ -25,11 +24,11 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
     hssc_percentage: profile?.hssc_percentage ?? 75.0,
     mathematics_background: profile?.mathematics_background ?? true,
     preferred_field: profile?.preferred_field || 'Computer Science',
+    target_career: profile?.target_career || sessionStorage.getItem('roadmap_target_career') || null,
     budget: profile?.budget || 'Rs. 300,000 / year',
     financial_need_status: profile?.financial_need_status ?? true
   });
 
-  // Automatically sync form state whenever parent profile finishes async fetch
   useEffect(() => {
     if (profile) {
       const activeName = profile.name || profile.full_name || localStorage.getItem('user_full_name') || '';
@@ -39,7 +38,8 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
       setFormData(prev => ({
         ...prev,
         ...profile,
-        name: activeName || prev.name
+        name: activeName || prev.name,
+        target_career: profile.target_career || prev.target_career
       }));
     }
   }, [profile]);
@@ -86,10 +86,13 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
         return;
       }
 
+      const activeCareer = formData.target_career || sessionStorage.getItem('roadmap_target_career') || null;
+
       const payload = {
         ...formData,
         full_name: formData.name,
-        name: formData.name
+        name: formData.name,
+        target_career: activeCareer
       };
 
       const saveRes = await fetch(`${API_URL}/api/profile/`, {
@@ -109,20 +112,34 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
       const updatedName = savedData.name || savedData.full_name || formData.name;
 
       localStorage.setItem('user_full_name', updatedName);
-      setProfile(prev => ({ ...prev, ...savedData, name: updatedName }));
+      setProfile(prev => ({ ...prev, ...savedData, name: updatedName, target_career: activeCareer }));
 
-      const res = await fetch(`${API_URL}/api/programs/match`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${activeToken}`
-        },
-        body: JSON.stringify(payload)
-      });
-      const data = await res.json();
-      setResults(data);
+      // Recalculate program matching to invalidate stale evaluation results
+      if (activeCareer) {
+        const savedScope = sessionStorage.getItem('radius_mode') || '100KM';
+        const matchRes = await fetch(`${API_URL}/api/programs/match`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${activeToken}`
+          },
+          body: JSON.stringify({
+            ...savedData,
+            target_career: activeCareer,
+            preferred_field: savedData.preferred_field || 'Computer Science',
+            radius_mode: savedScope,
+            location_scope: savedScope
+          })
+        });
+        if (matchRes.ok) {
+          const matchData = await matchRes.json();
+          setResults(matchData);
+        }
+      } else {
+        setResults(null);
+      }
 
-      setSuccessMsg('Profile successfully saved to database and programs evaluated!');
+      setSuccessMsg('Profile successfully saved to database and evaluations updated!');
       setTimeout(() => {
         navigate('/programs');
       }, 1200);
@@ -143,6 +160,7 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
       });
       if (res.ok) {
         localStorage.clear();
+        sessionStorage.clear();
         window.location.href = '/auth';
       } else {
         alert("Failed to delete account.");
@@ -383,15 +401,15 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
               <CustomDropdown 
                 value={formData.preferred_field || 'Computer Science'}
                 options={[
-                { label: 'Computer Science', value: 'Computer Science' },
-                { label: 'Software Engineering', value: 'Software Engineering' },
-                { label: 'Artificial Intelligence', value: 'Artificial Intelligence' },
-                { label: 'Cyber Security', value: 'Cybersecurity' } // value fixed to 'Cybersecurity'
-              ]}
-            onChange={val => handleChange('preferred_field', val)}
-            icon={<ArrowUpDown size={14} />}
-          />
-        </div>
+                  { label: 'Computer Science', value: 'Computer Science' },
+                  { label: 'Software Engineering', value: 'Software Engineering' },
+                  { label: 'Artificial Intelligence', value: 'Artificial Intelligence' },
+                  { label: 'Cyber Security', value: 'Cybersecurity' }
+                ]}
+                onChange={val => handleChange('preferred_field', val)}
+                icon={<ArrowUpDown size={14} />}
+              />
+            </div>
             <div>
               <label style={labelStyle}>Financial Need Status</label>
               <CustomDropdown

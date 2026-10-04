@@ -3,7 +3,9 @@ import { Compass, Briefcase, Loader2, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
-export default function CareerExplorer() {
+const API_URL = import.meta.env.VITE_API_URL || 'https://pathpilot-ai-exln.onrender.com';
+
+export default function CareerExplorer({ profile }) {
   const [careers, setCareers] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -12,20 +14,21 @@ export default function CareerExplorer() {
   useEffect(() => {
     const fetchCareers = async () => {
       try {
-        let res = await fetch('http://127.0.0.1:8000/api/data/careers', {
-          headers: { 'Authorization': `Bearer ${token}` }
+        let res = await fetch(`${API_URL}/api/careers/`, {
+          headers: token ? { 'Authorization': `Bearer ${token}` } : {}
         });
         
-        // Fallback endpoint check
         if (!res.ok) {
-          res = await fetch('http://127.0.0.1:8000/api/careers', {
-            headers: { 'Authorization': `Bearer ${token}` }
+          res = await fetch(`${API_URL}/api/data/careers`, {
+            headers: token ? { 'Authorization': `Bearer ${token}` } : {}
           });
         }
 
-        const data = await res.json();
-        const list = Array.isArray(data) ? data : (data.data || data.careers || []);
-        setCareers(list);
+        if (res.ok) {
+          const data = await res.json();
+          const list = Array.isArray(data) ? data : (data.data || data.careers || []);
+          setCareers(list);
+        }
       } catch (err) {
         console.error("Failed to fetch careers dataset:", err);
       } finally {
@@ -35,6 +38,34 @@ export default function CareerExplorer() {
 
     fetchCareers();
   }, [token]);
+
+  const handleExplorePath = async (title) => {
+    // Clear old state & program selection to prevent auto-generating stale roadmaps
+    sessionStorage.removeItem('roadmap_is_reset');
+    sessionStorage.removeItem('roadmap_selected_program');
+    sessionStorage.setItem('roadmap_target_career', title);
+
+    if (token) {
+      try {
+        await fetch(`${API_URL}/api/profile/`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            ...(profile || {}),
+            target_career: title
+          })
+        });
+      } catch (err) {
+        console.error("Failed to persist target career to profile:", err);
+      }
+    }
+
+    // REQUIRED FLOW: Navigates to Program Matcher (roadmap remains unassigned until program added)
+    navigate('/programs', { state: { selectedCareer: title } });
+  };
 
   return (
     <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
@@ -100,12 +131,7 @@ export default function CareerExplorer() {
                 </div>
 
                 <button 
-                  onClick={() => {
-                    // Clear reset flag and pass selected career straight to roadmap
-                    sessionStorage.removeItem('roadmap_is_reset');
-                    sessionStorage.setItem('roadmap_target_career', title);
-                    navigate('/roadmap', { state: { selectedCareer: title } });
-                  }}
+                  onClick={() => handleExplorePath(title)}
                   style={{ background: '#059669', color: '#fff', border: 'none', padding: '0.75rem', borderRadius: '8px', fontWeight: '600', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem', marginTop: '1rem', transition: 'background 0.2s' }}
                   onMouseEnter={e => e.target.style.background = '#047857'}
                   onMouseLeave={e => e.target.style.background = '#059669'}

@@ -52,7 +52,7 @@ export default function RoadmapView({ profile, results, setResults }) {
   const [loading, setLoading] = useState(false);
   const [availableCareers, setAvailableCareers] = useState(ALL_10_CAREERS);
 
-  // Fetch verified careers from dataset and merge with the 10 core career dataset
+  // Fetch verified careers from dataset
   useEffect(() => {
     const fetchCareersDataset = async () => {
       try {
@@ -70,16 +70,17 @@ export default function RoadmapView({ profile, results, setResults }) {
           }
         }
       } catch (err) {
-        console.error("Failed to load careers dataset, using full 10 careers list:", err);
+        console.error("Failed to load careers dataset, using default list:", err);
       }
     };
     fetchCareersDataset();
   }, [token]);
 
-  if (location.state?.selectedProgram || location.state?.selectedCareer || sessionStorage.getItem('roadmap_selected_program')) {
+  if (location.state?.selectedProgram || location.state?.selectedCareer) {
     sessionStorage.removeItem('roadmap_is_reset');
   }
 
+  // Selected program MUST be explicitly chosen by student via "Add to My Roadmap"
   const [selectedProgram, setSelectedProgram] = useState(() => {
     if (location.state?.selectedProgram) {
       sessionStorage.setItem('roadmap_selected_program', JSON.stringify(location.state.selectedProgram));
@@ -118,14 +119,16 @@ export default function RoadmapView({ profile, results, setResults }) {
   }, [selectedProgram]);
 
   const [isReset, setIsReset] = useState(() => {
-    if (location.state?.selectedProgram || location.state?.selectedCareer || sessionStorage.getItem('roadmap_selected_program')) {
+    if (location.state?.selectedProgram || location.state?.selectedCareer) {
       return false;
     }
     return sessionStorage.getItem('roadmap_is_reset') === 'true';
   });
 
   const rawList = Array.isArray(results) ? results : (results?.eligible_programs || results?.programs || []);
-  const isEvaluated = !isReset && Boolean(targetCareer) && ((results !== null && results !== undefined && rawList.length > 0) || Boolean(selectedProgram));
+  
+  // Roadmap requires BOTH an explicit target career AND an explicitly selected program option
+  const isEvaluated = !isReset && Boolean(targetCareer) && Boolean(selectedProgram);
 
   useEffect(() => {
     const fetchProgramsForCareer = async () => {
@@ -158,25 +161,22 @@ export default function RoadmapView({ profile, results, setResults }) {
     fetchProgramsForCareer();
   }, [targetCareer, isReset]);
 
-  useEffect(() => {
-    if (rawList.length > 0 && targetCareer) {
-      const careerLower = targetCareer.toLowerCase();
-      let matched = rawList.find(p => (p.program_name || "").toLowerCase().includes(careerLower) && p.eligibility_status === "ELIGIBLE");
-      if (!matched) {
-        matched = rawList.find(p => p.eligibility_status === "ELIGIBLE") || rawList[0];
-      }
-      setSelectedProgram(matched);
-    }
-  }, [rawList, targetCareer]);
-
   const handleSaveCareer = () => {
     if (tempCareer && tempCareer.trim()) {
       const trimmed = tempCareer.trim();
       const newCareer = trimmed === "Cyber Security" ? "Cybersecurity" : trimmed;
+      
+      // Clear selected program when career changes so student re-evaluates options
+      setSelectedProgram(null);
+      sessionStorage.removeItem('roadmap_selected_program');
+      
       setTargetCareer(newCareer);
       sessionStorage.setItem('roadmap_target_career', newCareer);
       sessionStorage.removeItem('roadmap_is_reset');
       setIsReset(false);
+      
+      // Navigate to Program Matcher to choose a new program for updated career
+      navigate('/programs', { state: { selectedCareer: newCareer } });
     }
     setIsEditingCareer(false);
   };
@@ -194,35 +194,52 @@ export default function RoadmapView({ profile, results, setResults }) {
     navigate('/roadmap', { replace: true, state: {} });
   };
 
-  if (!isEvaluated || loading || !targetCareer) {
+  if (!isEvaluated || loading || !targetCareer || !selectedProgram) {
     return (
       <div style={{ maxWidth: '800px', margin: '4rem auto', padding: '3rem 2rem', background: '#1e293b', border: '1px solid #334155', borderRadius: '16px', textAlign: 'center', boxSizing: 'border-box' }}>
         <div style={{ background: '#0f172a', width: '64px', height: '64px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem auto', border: '1px solid #334155' }}>
           {loading ? <Loader2 className="animate-spin" size={32} color="#38bdf8" /> : <AlertCircle size={32} color="#38bdf8" />}
         </div>
         <h2 style={{ fontSize: '1.5rem', color: '#f8fafc', marginBottom: '0.75rem' }}>Personalized Career Roadmap</h2>
-        <p style={{ color: '#94a3b8', fontSize: '0.95rem', lineHeight: '1.5', maxWidth: '500px', margin: '0 auto 2rem auto' }}>
-          {loading ? "Generating your personalized roadmap..." : "No career selected. Please select a verified career path from the Career Explorer to build your grounded milestone progression."}
+        <p style={{ color: '#94a3b8', fontSize: '0.95rem', lineHeight: '1.5', maxWidth: '520px', margin: '0 auto 2rem auto' }}>
+          {loading 
+            ? "Evaluating career requirements and matching options..." 
+            : !targetCareer 
+              ? "No career selected. Please select a verified career path from the Career Explorer to begin." 
+              : `Target career set to "${targetCareer}". Please select a university program from the Program Matcher and click "Add to My Roadmap" to build your milestone progression.`}
         </p>
         {!loading && (
           <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <button 
-              onClick={() => navigate('/careers')}
-              style={{
-                background: '#059669', color: '#fff', border: 'none', padding: '0.85rem 2rem',
-                borderRadius: '8px', fontWeight: '600', fontSize: '1rem', cursor: 'pointer',
-                display: 'inline-flex', alignItems: 'center', gap: '0.5rem', boxShadow: '0 4px 12px rgba(5, 150, 105, 0.3)'
-              }}
-            >
-              Explore Careers <ArrowRight size={18} />
-            </button>
+            {!targetCareer ? (
+              <button 
+                onClick={() => navigate('/careers')}
+                style={{
+                  background: '#059669', color: '#fff', border: 'none', padding: '0.85rem 2rem',
+                  borderRadius: '8px', fontWeight: '600', fontSize: '1rem', cursor: 'pointer',
+                  display: 'inline-flex', alignItems: 'center', gap: '0.5rem', boxShadow: '0 4px 12px rgba(5, 150, 105, 0.3)'
+                }}
+              >
+                Explore Careers <ArrowRight size={18} />
+              </button>
+            ) : (
+              <button 
+                onClick={() => navigate('/programs', { state: { selectedCareer: targetCareer } })}
+                style={{
+                  background: '#059669', color: '#fff', border: 'none', padding: '0.85rem 2rem',
+                  borderRadius: '8px', fontWeight: '600', fontSize: '1rem', cursor: 'pointer',
+                  display: 'inline-flex', alignItems: 'center', gap: '0.5rem', boxShadow: '0 4px 12px rgba(5, 150, 105, 0.3)'
+                }}
+              >
+                Match Programs <ArrowRight size={18} />
+              </button>
+            )}
           </div>
         )}
       </div>
     );
   }
 
-  const activeProg = selectedProgram || rawList[0];
+  const activeProg = selectedProgram;
   const alternativePrograms = rawList.filter(p => p.program_id !== activeProg?.program_id && p.university_name !== activeProg?.university_name);
   const currentSkills = getSkillsForCareer(targetCareer);
 
@@ -239,8 +256,6 @@ export default function RoadmapView({ profile, results, setResults }) {
   };
 
   const eligBadge = getEligibilityBadge(activeProg?.eligibility_status);
-
-  // Formatting options array containing strictly career entries
   const dropdownOptions = availableCareers.map(cTitle => ({ label: cTitle, value: cTitle }));
 
   return (

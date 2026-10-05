@@ -1,9 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Send, Bot, User, Sparkles, Trash2, Loader2, MessageSquare, CheckCircle2 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://pathpilot-ai-exln.onrender.com';
+
+// Helper function to force delays in async functions
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 export default function CareerCounselor({ profile }) {
   const userEmail = profile?.email || profile?.name || 'default_student';
@@ -25,9 +28,17 @@ export default function CareerCounselor({ profile }) {
   const [inputQuery, setInputQuery] = useState('');
   const [loading, setLoading] = useState(false);
   const [activeStep, setActiveStep] = useState('');
+  
+  // Reference for auto-scrolling to bottom
+  const messagesEndRef = useRef(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
+    scrollToBottom();
   }, [messages, STORAGE_KEY]);
 
   const handleClearChat = () => {
@@ -54,17 +65,38 @@ export default function CareerCounselor({ profile }) {
     setInputQuery('');
     setMessages(prev => [...prev, { sender: 'user', text: userMsg }]);
     setLoading(true);
+    
+    // Auto-scroll as soon as user sends a message
+    setTimeout(scrollToBottom, 100);
+
     setActiveStep('Initializing multi-agent orchestrator...');
 
-    setTimeout(() => setActiveStep('Executing deterministic tools...'), 600);
-
     try {
+      // 1. Fetch the data immediately so we know exactly which tools were executed
       const res = await fetch(`${API_URL}/api/counselor/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ profile, query: userMsg })
       });
       const data = await res.json();
+
+      await sleep(800);
+
+      // 2. Dynamically loop through the actual executed actions to simulate live processing
+      if (data.actions && data.actions.length > 0) {
+        for (const action of data.actions) {
+          setActiveStep(`${formatActionName(action)}...`);
+          await sleep(1200); // 1.2s delay per tool for readability
+        }
+      } else {
+        setActiveStep('Executing deterministic tools...');
+        await sleep(1200);
+      }
+
+      // 3. Final synthesis step before revealing the response
+      setActiveStep('Synthesizing final advisory response...');
+      await sleep(1000); 
+
       setMessages(prev => [...prev, { 
         sender: 'bot', 
         text: data.response,
@@ -75,6 +107,7 @@ export default function CareerCounselor({ profile }) {
     } finally {
       setLoading(false);
       setActiveStep('');
+      setTimeout(scrollToBottom, 100); // Scroll down again when the long response renders
     }
   };
 
@@ -101,12 +134,25 @@ export default function CareerCounselor({ profile }) {
   ];
 
   return (
-    <div style={{ width: '100%', height: 'calc(100vh - 110px)', margin: '0 auto', padding: '0 1.5rem', display: 'flex', flexDirection: 'column', boxSizing: 'border-box', overflow: 'hidden' }}>
+    <div style={{ height: 'calc(100vh - 110px)', display: 'flex', flexDirection: 'column', width: '100%', margin: '0 auto', padding: '0 1.5rem', boxSizing: 'border-box', overflow: 'hidden' }}>
       
       <style>{`
         @keyframes customSpin {
           0% { transform: rotate(0deg); }
           100% { transform: rotate(360deg); }
+        }
+        .prompts-scroll::-webkit-scrollbar {
+          height: 6px;
+        }
+        .prompts-scroll::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        .prompts-scroll::-webkit-scrollbar-thumb {
+          background-color: rgb(51 65 85 / 0.6);
+          border-radius: 9999px;
+        }
+        .prompts-scroll::-webkit-scrollbar-thumb:hover {
+          background-color: rgb(100 116 139 / 0.8);
         }
       `}</style>
 
@@ -217,10 +263,16 @@ export default function CareerCounselor({ profile }) {
               </div>
             </div>
           )}
+          
+          {/* Dummy element to act as scroll target */}
+          <div ref={messagesEndRef} />
         </div>
 
         {messages.length <= 2 && !loading && (
-          <div style={{ padding: '0.75rem 1.25rem', display: 'flex', gap: '0.5rem', overflowX: 'auto', flexWrap: 'nowrap', borderTop: '1px solid #1e293b', background: '#0f172a' }}>
+          <div 
+            className="prompts-scroll"
+            style={{ padding: '0.75rem 1.25rem', display: 'flex', gap: '0.5rem', overflowX: 'auto', flexWrap: 'nowrap', borderTop: '1px solid #1e293b', background: '#0f172a' }}
+          >
             {quickPrompts.map((prompt, i) => (
               <button 
                 key={i}
@@ -229,7 +281,7 @@ export default function CareerCounselor({ profile }) {
                 style={{ 
                   background: '#1e293b', color: '#38bdf8', border: '1px solid #334155', 
                   padding: '0.5rem 1rem', borderRadius: '20px', fontSize: '0.85rem', 
-                  whiteSpace: 'nowrap', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem'
+                  whiteSpace: 'nowrap', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem', flexShrink: 0
                 }}
               >
                 <MessageSquare size={14} /> {prompt}

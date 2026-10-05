@@ -11,11 +11,19 @@ env_path = os.path.join(current_dir, ".env")
 load_dotenv(dotenv_path=env_path)
 
 models.Base.metadata.create_all(bind=engine)
-
+    
 app = FastAPI(
     title="PathPilot AI Multi-Agent Backend",
     description="Modular multi-agent MVP for education and career guidance.",
     version="1.0.0"
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # Explicitly define allowed origins for CORS (required when allow_credentials=True)
@@ -24,14 +32,6 @@ origins = [
     "http://localhost:5173",
     "http://localhost:3000"
 ]
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allow_headers=["*"],
-)
 
 # Register all routers
 app.include_router(auth_routes.router)

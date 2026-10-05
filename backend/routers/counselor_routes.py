@@ -29,6 +29,9 @@ def counselor_chat(req: ChatRequest):
     )
     
     executed_actions = agent_output.get("actions", [])
+    # Deduplicate actions while preserving order
+    executed_actions = list(dict.fromkeys(executed_actions))
+    
     agent_context = agent_output.get("context", {})
     
     # --- DIRECT DETERMINISTIC RENDERER FOR ROADMAPS & CAREERS ---
@@ -58,14 +61,18 @@ def counselor_chat(req: ChatRequest):
                 lines.append(f"- **{c.get('title')}** ({c.get('field_category')}): {c.get('description')}")
             return {"response": "\n".join(lines), "actions": executed_actions}
 
-    # NOTE: The deterministic eligibility renderer has been removed. 
-    # Eligibility queries will now fall through to the Groq synthesis block below.
-
     # Fallback to Groq for general queries & eligibility synthesis with strict safety prompts
     profile_str = json.dumps(profile_data, indent=2)
     tool_summaries = []
     for tool_name, tool_data in agent_context.items():
         results = tool_data.get("results", tool_data) if isinstance(tool_data, dict) else tool_data
+        
+        # TRUNCATION FIX: Limit huge JSON arrays to top 5 results to avoid token limit crashes
+        if isinstance(results, list) and len(results) > 5:
+            omitted_count = len(results) - 5
+            results = results[:5]
+            results.append({"note": f"...and {omitted_count} more matching items available in the dataset."})
+            
         if isinstance(results, str):
             tool_summaries.append(f"### Tool Execution [{tool_name}]\n{results}")
         else:

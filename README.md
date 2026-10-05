@@ -33,7 +33,7 @@ Student
    ↓
 Career Counselor / Agent UI
    ↓
-EduPath AI Agent
+PathPilot AI Agent
    ↓
 Tool Registry
    ├── Career Matching
@@ -138,22 +138,34 @@ Create the required environment variables for the backend and frontend before st
 ```text
 pathpilot-ai
 ├── backend
-│   ├── app
-│   │   ├── api
-│   │   ├── models
-│   │   ├── services
-│   │   ├── agent
-│   │   ├── main.py
-│   │   └── config.py
-│   └── requirements.txt
+│   ├── agents             # Multi-agent orchestrator logic (CareerAgent, EligibilityAgent, etc.)
+│   ├── data               # Structured JSON datasets for deterministic evaluation
+│   ├── routers            # FastAPI route handlers (auth, profile, counselor, etc.)
+│   ├── venv               # Python virtual environment
+│   ├── .env               # Backend environment variables (Groq API, database URL)
+│   ├── config.py          # Configuration settings
+│   ├── database.py        # SQLAlchemy database connection setup
+│   ├── dependencies.py    # FastAPI dependencies (auth, orchestrator instance)
+│   ├── main.py            # FastAPI application entry point
+│   ├── models.py          # SQLAlchemy database models (Users, Profiles)
+│   ├── pathpilot.db       # SQLite database file
+│   ├── requirements.txt   # Python dependencies
+│   ├── schemas.py         # Pydantic validation schemas
+│   └── utils.py           # Helper functions
 │
 └── frontend
-    ├── src
-    │   ├── components
-    │   ├── pages
-    │   ├── api
-    │   └── context
-    └── package.json
+    ├── dist               # Production build output
+    ├── node_modules       # npm dependencies
+    ├── public             # Static assets
+    ├── src                # React source code (components, pages, context)
+    ├── .env               # Frontend environment variables (Vite API URL)
+    ├── .gitignore         # Git ignore rules
+    ├── eslint.config.js   # Linter configuration
+    ├── index.html         # Main HTML entry point
+    ├── package.json       # npm scripts and dependencies
+    ├── README.md          # Project documentation
+    ├── vercel.json        # Vercel deployment configuration
+    └── vite.config.js     # Vite bundler configuration
 ```
 
 ---

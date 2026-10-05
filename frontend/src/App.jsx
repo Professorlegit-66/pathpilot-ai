@@ -12,7 +12,7 @@ import CareerCounselor from './pages/CareerCounselor';
 import { Loader2 } from 'lucide-react';
 import './App.css';
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://pathpilot-ai-exln.onrender.com';
+const API_URL = import.meta.env.VITE_API_URL || 'https://pathpilot-ai-zo6r.onrender.com';
 
 function AppContent() {
   const { token, logout } = useAuth();

@@ -55,9 +55,18 @@ export const AuthProvider = ({ children }) => {
       }
 
       const data = await response.json();
-      setToken(data.access_token);
+      
+      // FIX: Fetch and populate the user profile FIRST before setting the token
+      // This prevents the router from redirecting to the dashboard while the profile is still empty.
+      const profileData = await fetchUserProfile(data.access_token);
+      
+      if (profileData && profileData.target_career) {
+        sessionStorage.setItem('roadmap_target_career', profileData.target_career);
+      }
+      
       localStorage.setItem('token', data.access_token);
-      await fetchUserProfile(data.access_token);
+      setToken(data.access_token);
+      
       return { success: true };
     } catch (error) {
       return { success: false, error: error.message };
@@ -92,10 +101,17 @@ export const AuthProvider = ({ children }) => {
       }
 
       const data = await response.json();
-      setToken(data.access_token);
-      localStorage.setItem('token', data.access_token);
       
+      // FIX: Fetch profile FIRST
       const profile = await fetchUserProfile(data.access_token);
+      
+      if (profile && profile.target_career) {
+        sessionStorage.setItem('roadmap_target_career', profile.target_career);
+      }
+      
+      localStorage.setItem('token', data.access_token);
+      setToken(data.access_token);
+      
       return { success: true, profile };
     } catch (error) {
       return { success: false, error: error.message };

@@ -9,12 +9,16 @@ import CareerExplorer from './pages/CareerExplorer';
 import RoadmapView from './pages/RoadmapView';
 import AuthPage from './pages/AuthPage';
 import CareerCounselor from './pages/CareerCounselor';
+import { Loader2 } from 'lucide-react';
 import './App.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://pathpilot-ai-exln.onrender.com';
 
 function AppContent() {
   const { token, logout } = useAuth();
+
+  const [fetchedToken, setFetchedToken] = useState(null);
+  const isInitializing = token ? token !== fetchedToken : false;
 
   useEffect(() => {
     const updateAppScale = () => {
@@ -35,18 +39,19 @@ function AppContent() {
 
   const [studentProfile, setStudentProfile] = useState({
     name: localStorage.getItem('user_full_name') || '',
-    country: 'Pakistan',
-    region: 'Khyber Pakhtunkhwa',
-    city: 'Kohat',
-    current_education_level: 'HSSC',
-    ssc_percentage: 75.0,
-    hssc_percentage: 85.0,
-    hssc_group: 'Pre-Engineering',
+    country: '',
+    region: '',
+    city: '',
+    desired_degree: '',
+    current_education_level: '',
+    ssc_percentage: null,
+    hssc_percentage: null,
+    hssc_group: '',
     mathematics_background: true,
-    preferred_field: 'Computer Science',
+    preferred_field: '',
     target_career: sessionStorage.getItem('roadmap_target_career') || null,
     selected_program: sessionStorage.getItem('roadmap_selected_program') ? JSON.parse(sessionStorage.getItem('roadmap_selected_program')) : null,
-    financial_need_status: true
+    financial_need_status: null
   });
 
   const [matchingResults, setMatchingResults] = useState(null);
@@ -54,8 +59,11 @@ function AppContent() {
   useEffect(() => {
     if (!token) {
       setMatchingResults(null);
+      setFetchedToken(null);
       return;
     }
+
+    let activeCareerFound = null;
 
     fetch(`${API_URL}/api/profile/`, {
       headers: { 'Authorization': `Bearer ${token}` }
@@ -73,6 +81,7 @@ function AppContent() {
           }
 
           const activeCareer = data.target_career || sessionStorage.getItem('roadmap_target_career') || null;
+          activeCareerFound = activeCareer;
 
           if (activeCareer) {
             sessionStorage.setItem('roadmap_target_career', activeCareer);
@@ -114,21 +123,34 @@ function AppContent() {
               ...data,
               name: resolvedName,
               target_career: activeCareer,
-              preferred_field: data.preferred_field || 'Computer Science',
+              preferred_field: data.preferred_field || '',
               radius_mode: savedRadius,
               location_scope: savedRadius
             })
           });
         }
+        return null;
       })
       .then(res => res ? res.json() : null)
       .then(matchData => {
-        if (matchData) {
-          setMatchingResults(matchData);
-        }
+        // Explicitly set matchingResults (even if null) so state is never left ambiguous
+        setMatchingResults(matchData || null);
+        setFetchedToken(token); 
       })
-      .catch(err => console.error("Profile sync bypassed:", err.message));
+      .catch(err => {
+        console.error("Profile sync bypassed:", err.message);
+        setMatchingResults(null);
+        setFetchedToken(token);
+      });
   }, [token]);
+
+  if (isInitializing) {
+    return (
+      <div style={{ height: '100vh', width: '100vw', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#030712' }}>
+        <Loader2 className="animate-spin" size={40} color="#059669" />
+      </div>
+    );
+  }
 
   return (
     <Router>

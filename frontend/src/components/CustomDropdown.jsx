@@ -6,12 +6,14 @@ export default function CustomDropdown({
   options, 
   onChange, 
   icon, 
-  placeholder = "Select a career from dataset..." 
+  placeholder = "Select an option...",
+  background = '#0f172a',
+  padding = '0.75rem 1rem',
+  triggerStyle = {}
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -22,17 +24,20 @@ export default function CustomDropdown({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const selectedOption = options.find(opt => opt.value === value);
+  // Only consider an option selected if value is present and non-empty
+  const selectedOption = value ? options.find(opt => opt.value === value) : null;
+
+  // Filter out empty/placeholder values from the dropdown list items
+  const validOptions = options.filter(opt => opt.value !== '' && opt.value !== undefined && opt.value !== null);
 
   return (
     <div ref={dropdownRef} style={{ position: 'relative', width: '100%' }}>
-      {/* Scrollbar Custom Styles */}
       <style>{`
         .custom-dropdown-menu::-webkit-scrollbar {
           width: 6px;
         }
         .custom-dropdown-menu::-webkit-scrollbar-track {
-          background: #0f172a;
+          background: ${background};
           border-radius: 8px;
         }
         .custom-dropdown-menu::-webkit-scrollbar-thumb {
@@ -49,10 +54,10 @@ export default function CustomDropdown({
         onClick={() => setIsOpen(!isOpen)}
         style={{
           width: '100%',
-          background: '#0f172a',
+          background: background,
           border: `1px solid ${isOpen ? '#38bdf8' : '#334155'}`,
           borderRadius: '10px',
-          padding: '0.75rem 1rem',
+          padding: padding,
           color: selectedOption ? '#f8fafc' : '#94a3b8',
           fontSize: '0.95rem',
           boxSizing: 'border-box',
@@ -61,12 +66,14 @@ export default function CustomDropdown({
           justifyContent: 'space-between',
           alignItems: 'center',
           boxShadow: isOpen ? '0 0 0 2px rgba(56, 189, 248, 0.15)' : 'none',
-          transition: 'all 0.2s'
+          transition: 'all 0.2s',
+          position: 'relative',
+          ...triggerStyle
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          {icon && <span style={{ color: '#38bdf8' }}>{icon}</span>}
-          <span>{selectedOption ? selectedOption.label : placeholder}</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          {icon && <span style={{ color: '#64748b', display: 'flex', alignItems: 'center', position: padding.includes('2.75rem') ? 'absolute' : 'static', left: padding.includes('2.75rem') ? '1rem' : 'auto' }}>{icon}</span>}
+          <span style={{ marginLeft: padding.includes('2.75rem') ? '0.5rem' : '0' }}>{selectedOption ? selectedOption.label : placeholder}</span>
         </div>
         <ChevronDown size={16} color="#94a3b8" style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }} />
       </div>
@@ -80,9 +87,9 @@ export default function CustomDropdown({
             top: 'calc(100% + 6px)',
             left: 0,
             width: '100%',
-            maxHeight: '225px', // Fits ~6 items cleanly before scrolling
+            maxHeight: '225px',
             overflowY: 'auto',
-            background: '#0f172a',
+            background: background,
             border: '1px solid #334155',
             borderRadius: '12px',
             boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.6)',
@@ -94,7 +101,7 @@ export default function CustomDropdown({
             gap: '2px'
           }}
         >
-          {options.map((opt, idx) => {
+          {validOptions.map((opt, idx) => {
             const isSelected = opt.value === value;
             return (
               <div

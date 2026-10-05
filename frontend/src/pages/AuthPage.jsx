@@ -1,23 +1,22 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Rocket, Mail, Lock, User, Globe, MapPin, ShieldCheck, ArrowLeft, AlertCircle } from 'lucide-react';
+import CustomDropdown from '../components/CustomDropdown';
 
 export default function AuthPage({ onLogin }) {
   const { login, register } = useAuth();
   const [isRegister, setIsRegister] = useState(false);
   const [error, setError] = useState('');
 
-  // Registration step state: 'form' or 'verify'
   const [regStep, setRegStep] = useState('form');
   const [enteredOtp, setEnteredOtp] = useState('');
   const [mockSentOtp, setMockSentOtp] = useState('');
 
-  // Fields initialized as empty strings for real user input
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
-    country: 'Pakistan',
+    country: '',
     region: '',
     city: ''
   });
@@ -27,7 +26,10 @@ export default function AuthPage({ onLogin }) {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  // Step 1: Validate email format & trigger OTP generation/sending
+  const handleCountryChange = (value) => {
+    setFormData(prev => ({ ...prev, country: value }));
+  };
+
   const handleRequestOtp = (e) => {
     e.preventDefault();
     setError('');
@@ -38,16 +40,17 @@ export default function AuthPage({ onLogin }) {
       return;
     }
 
-    // Generate a mock 6-digit OTP
+    if (!formData.country || !formData.region || !formData.city) {
+        setError("Please fill out all location fields to continue.");
+        return;
+    }
+
     const randomOtp = Math.floor(100000 + Math.random() * 900000).toString();
     setMockSentOtp(randomOtp);
-
     alert(`[Demo Mode] Verification OTP sent to ${formData.email}\nYour OTP Code is: ${randomOtp}`);
-
     setRegStep('verify');
   };
 
-  // Step 2: Verify OTP and complete registration in backend
   const handleVerifyAndRegister = async (e) => {
     e.preventDefault();
     setError('');
@@ -57,12 +60,10 @@ export default function AuthPage({ onLogin }) {
       return;
     }
 
-    // Explicitly cache name locally for new account
     if (formData.name) {
       localStorage.setItem('user_full_name', formData.name);
     }
 
-    // Register user in backend with full details
     const result = await register(
       formData.name,
       formData.email,
@@ -74,19 +75,14 @@ export default function AuthPage({ onLogin }) {
 
     if (result.success) {
       if (typeof onLogin === 'function') {
-        onLogin({
-          ...formData,
-          name: formData.name
-        });
-      } else {
-        window.location.reload();
+        onLogin({ ...formData, name: formData.name });
       }
+      // Removed window.location.reload() - React Router handles navigation automatically via auth state!
     } else {
       setError(result.error);
     }
   };
 
-  // Sign In using backend authentication
   const handleSignIn = async (e) => {
     e.preventDefault();
     setError('');
@@ -97,31 +93,27 @@ export default function AuthPage({ onLogin }) {
       return;
     }
 
-    // Log user in and fetch JWT
     const result = await login(formData.email, formData.password);
 
     if (result.success) {
       if (typeof onLogin === 'function') {
         onLogin(formData);
-      } else {
-        window.location.reload();
       }
+      // Removed window.location.reload() - React Router handles navigation automatically via auth state!
     } else {
       setError(result.error);
     }
   };
 
-  // Styling helpers
   const inputWrapperStyle = { position: 'relative', display: 'flex', alignItems: 'center', marginTop: '0.35rem' };
-  const iconStyle = { position: 'absolute', left: '1rem', color: '#64748b', pointerEvents: 'none' };
-  const inputStyle = { width: '100%', padding: '0.75rem 1rem 0.75rem 2.75rem', background: '#090d16', border: '1px solid #334155', borderRadius: '10px', color: '#f8fafc', fontSize: '0.9rem', boxSizing: 'border-box', outline: 'none' };
+  const iconStyle = { position: 'absolute', left: '1rem', color: '#64748b', pointerEvents: 'none', zIndex: 10 };
+  const inputStyle = { width: '100%', padding: '0.75rem 1rem 0.75rem 2.75rem', background: '#090d16', border: '1px solid #334155', borderRadius: '10px', color: '#f8fafc', fontSize: '0.9rem', boxSizing: 'border-box', outline: 'none', position: 'relative' };
   const labelStyle = { fontSize: '0.8rem', fontWeight: '500', color: '#cbd5e1', display: 'block', textAlign: 'left', marginTop: '0.75rem' };
 
   return (
     <div style={{ minHeight: '100vh', width: '100%', background: '#070b14', display: 'flex', alignItems: 'center', justifyContent: 'center', overflowY: 'auto', padding: '3rem 1rem', boxSizing: 'border-box' }}>
       <div style={{ width: '100%', maxWidth: '460px', background: '#0f172a', border: '1px solid #1e293b', borderRadius: '20px', padding: '2.25rem', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.7)', margin: 'auto' }}>
 
-        {/* Brand Header */}
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: '1.25rem' }}>
           <div style={{ background: 'linear-gradient(135deg, #059669 0%, #047857 100%)', padding: '0.65rem', borderRadius: '12px', display: 'flex', boxShadow: '0 10px 15px -3px rgba(5, 150, 105, 0.3)', marginBottom: '0.5rem' }}>
             <Rocket size={26} color="#fff" />
@@ -130,7 +122,6 @@ export default function AuthPage({ onLogin }) {
           <span style={{ fontSize: '0.65rem', background: '#05966933', color: '#34d399', padding: '0.1rem 0.4rem', borderRadius: '4px', fontWeight: '600', marginTop: '0.3rem' }}>GLOBAL OPPORTUNITY NAVIGATOR</span>
         </div>
 
-        {/* Error Message Display */}
         {error && (
           <div style={{ background: '#7f1d1d33', border: '1px solid #ef444455', color: '#fca5a5', padding: '0.75rem', borderRadius: '8px', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.25rem' }}>
             <AlertCircle size={16} />
@@ -138,7 +129,6 @@ export default function AuthPage({ onLogin }) {
           </div>
         )}
 
-        {/* --- VIEW A: SIGN IN --- */}
         {!isRegister && (
           <>
             <h2 style={{ fontSize: '1.1rem', fontWeight: '600', color: '#e2e8f0', textAlign: 'center', marginBottom: '1.25rem' }}>Sign in to your account</h2>
@@ -162,7 +152,6 @@ export default function AuthPage({ onLogin }) {
           </>
         )}
 
-        {/* --- VIEW B: REGISTER - STEP 1 (Details & Email Input) --- */}
         {isRegister && regStep === 'form' && (
           <>
             <h2 style={{ fontSize: '1.1rem', fontWeight: '600', color: '#e2e8f0', textAlign: 'center', marginBottom: '1.25rem' }}>Create a new account</h2>
@@ -193,12 +182,21 @@ export default function AuthPage({ onLogin }) {
 
               <div>
                 <label style={labelStyle}>Country</label>
-                <div style={inputWrapperStyle}>
-                  <Globe size={18} style={iconStyle} />
-                  <select name="country" value={formData.country} onChange={handleChange} style={{ ...inputStyle, appearance: 'none', cursor: 'pointer' }}>
-                    <option value="Pakistan">Pakistan</option>
-                    <option value="International">International / Other</option>
-                  </select>
+                <div style={{ marginTop: '0.35rem' }}>
+                  <CustomDropdown
+                    value={formData.country || ''}
+                    options={[
+                      { label: 'Pakistan', value: 'Pakistan' },
+                      { label: 'India', value: 'India' },
+                      { label: 'United States', value: 'United States' },
+                      { label: 'International / Other', value: 'International' }
+                    ]}
+                    onChange={handleCountryChange}
+                    placeholder="Select your country..."
+                    icon={<Globe size={18} />}
+                    background="#090d16"
+                    padding="0.75rem 1rem 0.75rem 2.75rem"
+                  />
                 </div>
               </div>
 
@@ -226,10 +224,8 @@ export default function AuthPage({ onLogin }) {
           </>
         )}
 
-        {/* --- VIEW C: REGISTER - STEP 2 (OTP Verification Code Input) --- */}
         {isRegister && regStep === 'verify' && (
           <>
-            {/* Centered Icon Container */}
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: '1rem' }}>
               <div style={{ background: '#34d3991a', padding: '0.65rem', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '0.75rem' }}>
                 <ShieldCheck size={36} color="#34d399" />
@@ -273,7 +269,6 @@ export default function AuthPage({ onLogin }) {
           </>
         )}
 
-        {/* Toggle between Sign In / Register tabs */}
         <div style={{ textAlign: 'center', marginTop: '1.25rem' }}>
           <p style={{ color: '#94a3b8', fontSize: '0.85rem', margin: 0 }}>
             {isRegister ? 'Already have an account? ' : "Don't have an account? "}
@@ -288,7 +283,6 @@ export default function AuthPage({ onLogin }) {
           </p>
         </div>
 
-        {/* Footer Warning / Notice */}
         <div style={{ textAlign: 'center', marginTop: '1.5rem', borderTop: '1px solid #1e293b', paddingTop: '1rem' }}>
           <p style={{ color: '#64748b', fontSize: '0.7rem', lineHeight: '1.4', margin: 0 }}>
             PathPilot AI is under active development — some features may change or behave unexpectedly.

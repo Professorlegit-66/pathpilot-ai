@@ -14,19 +14,19 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
 
   const [formData, setFormData] = useState({
     name: profile?.name || profile?.full_name || cachedName || '',
-    country: profile?.country || 'Pakistan',
-    region: profile?.region || 'Khyber Pakhtunkhwa',
+    country: profile?.country || '',
+    region: profile?.region || '',
     city: profile?.city || '',
-    desired_degree: profile?.desired_degree || "Bachelor's Degree (BS / BSc)",
-    current_education_level: profile?.current_education_level || 'HSSC (Intermediate)',
-    hssc_group: profile?.hssc_group || 'Pre-Engineering',
+    desired_degree: profile?.desired_degree || '',
+    current_education_level: profile?.current_education_level || '',
+    hssc_group: profile?.hssc_group || '',
     ssc_percentage: profile?.ssc_percentage !== undefined && profile?.ssc_percentage !== null ? profile.ssc_percentage : '',
     hssc_percentage: profile?.hssc_percentage !== undefined && profile?.hssc_percentage !== null ? profile.hssc_percentage : '',
-    mathematics_background: profile?.mathematics_background ?? true,
-    preferred_field: profile?.preferred_field || 'Computer Science',
+    mathematics_background: profile?.mathematics_background ?? false,
+    preferred_field: profile?.preferred_field || '',
     target_career: profile?.target_career || sessionStorage.getItem('roadmap_target_career') || null,
-    budget: profile?.budget || 'Rs. 300,000 / year',
-    financial_need_status: profile?.financial_need_status ?? true
+    budget: profile?.budget || '',
+    financial_need_status: profile?.financial_need_status ?? null
   });
 
   useEffect(() => {
@@ -55,8 +55,8 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
   };
 
   const handleCountryChange = (val) => {
-    let defaultStream = 'Pre-Engineering';
-    let defaultEduLevel = 'HSSC (Intermediate)';
+    let defaultStream = '';
+    let defaultEduLevel = '';
 
     if (val === 'India') {
       defaultStream = 'PCM';
@@ -64,6 +64,9 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
     } else if (val === 'United States') {
       defaultStream = 'STEM Focus';
       defaultEduLevel = 'High School Diploma';
+    } else if (val === 'Pakistan') {
+      defaultStream = 'Pre-Engineering';
+      defaultEduLevel = 'HSSC (Intermediate)';
     }
 
     setFormData(prev => ({
@@ -199,18 +202,21 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
     switch (formData.country) {
       case 'India':
         return [
+          { label: 'Select academic stream...', value: '' },
           { label: 'PCM (Physics, Chem, Math)', value: 'PCM' },
           { label: 'PCB (Physics, Chem, Bio)', value: 'PCB' },
           { label: 'Commerce with Math', value: 'Commerce with Math' }
         ];
       case 'United States':
         return [
+          { label: 'Select academic track...', value: '' },
           { label: 'STEM Focus Track', value: 'STEM Focus' },
           { label: 'General High School Track', value: 'General Track' }
         ];
       case 'Pakistan':
       default:
         return [
+          { label: 'Select academic stream...', value: '' },
           { label: 'Pre-Engineering', value: 'Pre-Engineering' },
           { label: 'ICS (Computer Science)', value: 'ICS' },
           { label: 'Pre-Medical', value: 'Pre-Medical' },
@@ -223,12 +229,14 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
     switch (formData.country) {
       case 'India':
         return [
+          { label: 'Select education level...', value: '' },
           { label: '12th Board Standard', value: '12th Board' },
           { label: '10th Board Standard', value: '10th Board' },
           { label: "Bachelor's Degree", value: "Bachelor's" }
         ];
       case 'United States':
         return [
+          { label: 'Select education level...', value: '' },
           { label: 'High School Diploma', value: 'High School Diploma' },
           { label: 'GED Equivalent', value: 'GED' },
           { label: "Bachelor's Degree", value: "Bachelor's" }
@@ -236,6 +244,7 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
       case 'Pakistan':
       default:
         return [
+          { label: 'Select education level...', value: '' },
           { label: 'HSSC (Intermediate)', value: 'HSSC (Intermediate)' },
           { label: 'SSC (Matric)', value: 'SSC (Matric)' },
           { label: "Bachelor's Degree", value: "Bachelor's" }
@@ -283,35 +292,50 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
             <div>
               <label style={labelStyle}>Country of Education / Residence</label>
               <CustomDropdown
-                value={formData.country || 'Pakistan'}
+                value={formData.country || ''}
                 options={[
+                  { label: 'Select your country...', value: '' },
                   { label: 'Pakistan', value: 'Pakistan' },
                   { label: 'India', value: 'India' },
-                  { label: 'United States', value: 'United States' }
+                  { label: 'United States', value: 'United States' },
+                  { label: 'International / Other', value: 'International' }
                 ]}
                 onChange={handleCountryChange}
+                placeholder="Select your country..."
                 icon={<ArrowUpDown size={14} />}
               />
             </div>
             <div>
-              <label style={labelStyle}>City / Region</label>
+              <label style={labelStyle}>Region / Province</label>
+              <input
+                type="text"
+                value={formData.region || ''}
+                onChange={e => handleChange('region', e.target.value)}
+                style={inputStyle}
+                placeholder="e.g. KPK, Punjab, Sindh"
+              />
+            </div>
+            <div>
+              <label style={labelStyle}>City</label>
               <input
                 type="text"
                 value={formData.city || ''}
                 onChange={e => handleChange('city', e.target.value)}
                 style={inputStyle}
-                placeholder="e.g. Kohat, Islamabad, Delhi, Boston"
+                placeholder="e.g. Kohat, Islamabad, Lahore"
               />
             </div>
             <div>
               <label style={labelStyle}>Desired Degree Level</label>
               <CustomDropdown
-                value={formData.desired_degree || "Bachelor's Degree (BS / BSc)"}
+                value={formData.desired_degree || ''}
                 options={[
+                  { label: 'Select desired degree...', value: '' },
                   { label: "Bachelor's Degree (BS / BSc)", value: "Bachelor's Degree (BS / BSc)" },
                   { label: "Master's Degree (MS / MSc)", value: "Master's Degree (MS / MSc)" }
                 ]}
                 onChange={val => handleChange('desired_degree', val)}
+                placeholder="Select desired degree..."
                 icon={<ArrowUpDown size={14} />}
               />
             </div>
@@ -322,7 +346,7 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#34d399', marginBottom: '1.25rem', paddingBottom: '0.75rem', borderBottom: '1px solid #334155' }}>
             <BookOpen size={20} />
             <h2 style={{ margin: 0, fontSize: '1.15rem', fontWeight: 'bold', color: '#f8fafc' }}>
-              Academic History ({formData.country || 'Pakistan'} System)
+              Academic History ({formData.country || 'Global'} System)
             </h2>
           </div>
 
@@ -330,18 +354,20 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
             <div>
               <label style={labelStyle}>Current Education Level</label>
               <CustomDropdown
-                value={formData.current_education_level || getEducationLevelOptions()[0].value}
+                value={formData.current_education_level || ''}
                 options={getEducationLevelOptions()}
                 onChange={val => handleChange('current_education_level', val)}
+                placeholder="Select education level..."
                 icon={<ArrowUpDown size={14} />}
               />
             </div>
             <div>
               <label style={labelStyle}>Academic Specialization / Stream</label>
               <CustomDropdown
-                value={formData.hssc_group || getStreamOptions()[0].value}
+                value={formData.hssc_group || ''}
                 options={getStreamOptions()}
                 onChange={val => handleChange('hssc_group', val)}
+                placeholder="Select academic stream..."
                 icon={<ArrowUpDown size={14} />}
               />
             </div>
@@ -377,15 +403,41 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
             </div>
           </div>
 
-          <div style={{ marginTop: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem', background: '#0f172a', padding: '0.85rem 1rem', borderRadius: '10px', border: '1px solid #334155' }}>
+          {/* Polished Checkbox Component */}
+          <div 
+            onClick={() => handleChange('mathematics_background', !formData.mathematics_background)}
+            style={{ 
+              marginTop: '0.5rem', 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '0.85rem', 
+              background: '#0f172a', 
+              padding: '1rem 1.15rem', 
+              borderRadius: '10px', 
+              border: '1px solid #334155', 
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+              userSelect: 'none'
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.borderColor = '#059669'}
+            onMouseLeave={(e) => e.currentTarget.style.borderColor = '#334155'}
+          >
             <input
               type="checkbox"
               id="math_bg"
-              checked={formData.mathematics_background ?? true}
+              checked={formData.mathematics_background ?? false}
               onChange={e => handleChange('mathematics_background', e.target.checked)}
-              style={{ width: '18px', height: '18px', accentColor: '#059669', cursor: 'pointer' }}
+              onClick={(e) => e.stopPropagation()}
+              style={{ 
+                width: '20px', 
+                height: '20px', 
+                accentColor: '#059669', 
+                cursor: 'pointer',
+                borderRadius: '4px',
+                border: '2px solid #475569'
+              }}
             />
-            <label htmlFor="math_bg" style={{ color: '#e2e8f0', fontSize: '0.9rem', cursor: 'pointer', fontWeight: '500' }}>
+            <label htmlFor="math_bg" style={{ color: '#e2e8f0', fontSize: '0.92rem', cursor: 'pointer', fontWeight: '500', margin: 0 }}>
               I have a formal mathematics background in my coursework
             </label>
           </div>
@@ -401,26 +453,30 @@ export default function ProfilePage({ profile, setProfile, setResults }) {
             <div>
               <label style={labelStyle}>Preferred Field of Study</label>
               <CustomDropdown 
-                value={formData.preferred_field || 'Computer Science'}
+                value={formData.preferred_field || ''}
                 options={[
+                  { label: 'Select preferred field...', value: '' },
                   { label: 'Computer Science', value: 'Computer Science' },
                   { label: 'Software Engineering', value: 'Software Engineering' },
                   { label: 'Artificial Intelligence', value: 'Artificial Intelligence' },
                   { label: 'Cyber Security', value: 'Cybersecurity' }
                 ]}
                 onChange={val => handleChange('preferred_field', val)}
+                placeholder="Select preferred field..."
                 icon={<ArrowUpDown size={14} />}
               />
             </div>
             <div>
               <label style={labelStyle}>Financial Need Status</label>
               <CustomDropdown
-                value={formData.financial_need_status ? "true" : "false"}
+                value={formData.financial_need_status !== null && formData.financial_need_status !== undefined ? String(formData.financial_need_status) : ''}
                 options={[
+                  { label: 'Select financial status...', value: '' },
                   { label: 'Yes (Evaluate Financial Aid / Need-Based Loans)', value: 'true' },
                   { label: 'No', value: 'false' }
                 ]}
-                onChange={val => handleChange('financial_need_status', val === "true")}
+                onChange={val => handleChange('financial_need_status', val === "" ? null : val === "true")}
+                placeholder="Select financial status..."
                 icon={<ArrowUpDown size={14} />}
               />
             </div>

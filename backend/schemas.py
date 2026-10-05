@@ -3,16 +3,16 @@ from typing import List, Optional
 
 class StudentProfile(BaseModel):
     name: str = Field(..., json_schema_extra={"example": "Talha Ahmad"})
-    country: str = Field(default="Pakistan")
-    region: Optional[str] = Field(default="Khyber Pakhtunkhwa")
-    city: str = Field(default="Kohat")
+    country: Optional[str] = Field(default="")
+    region: Optional[str] = Field(default="")
+    city: Optional[str] = Field(default="")
     current_education_level: str = Field(..., json_schema_extra={"example": "HSSC"})
-    ssc_percentage: Optional[float] = Field(75.0, json_schema_extra={"example": 75.0})
-    hssc_percentage: Optional[float] = Field(85.0, json_schema_extra={"example": 85.0})
-    hssc_group: Optional[str] = Field("Pre-Engineering", json_schema_extra={"example": "Pre-Engineering"})
-    mathematics_background: Optional[bool] = Field(True, json_schema_extra={"example": True})
-    preferred_field: str = Field("Computer Science", json_schema_extra={"example": "Computer Science"})
-    financial_need_status: bool = Field(default=True)
+    ssc_percentage: Optional[float] = Field(None, json_schema_extra={"example": 75.0})
+    hssc_percentage: Optional[float] = Field(None, json_schema_extra={"example": 85.0})
+    hssc_group: Optional[str] = Field(None, json_schema_extra={"example": "Pre-Engineering"})
+    mathematics_background: Optional[bool] = Field(False, json_schema_extra={"example": False})
+    preferred_field: Optional[str] = Field(None, json_schema_extra={"example": "Computer Science"})
+    financial_need_status: Optional[bool] = Field(default=None)
 
     @field_validator('preferred_field')
     @classmethod
@@ -25,6 +25,9 @@ class UserCreate(BaseModel):
     full_name: str
     email: str
     password: str
+    country: Optional[str] = None
+    region: Optional[str] = None
+    city: Optional[str] = None
 
 class UserLogin(BaseModel):
     email: str

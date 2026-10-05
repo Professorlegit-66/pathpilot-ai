@@ -39,23 +39,32 @@ def register_user(user: UserCreate, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Email already registered")
     
     hashed_password = get_password_hash(user.password)
-    new_user = models.User(full_name=user.full_name, email=user.email, hashed_password=hashed_password)
+    
+    user_country = getattr(user, "country", None)
+    user_region = getattr(user, "region", None)
+    user_city = getattr(user, "city", None)
+
+    # User model only stores authentication credentials
+    new_user = models.User(
+        full_name=user.full_name, 
+        email=user.email, 
+        hashed_password=hashed_password
+    )
     
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
 
-    # Initialize linked student profile
+    # DBStudentProfile stores the location and academic profile details
     new_profile = models.DBStudentProfile(
         user_id=new_user.id,
-        country="Pakistan",
-        region="Khyber Pakhtunkhwa",
-        city="Kohat"
+        country=user_country,
+        region=user_region,
+        city=user_city
     )
     db.add(new_profile)
     db.commit()
     
-    # Include user.id in JWT payload
     access_token = create_access_token(data={"sub": new_user.email, "id": new_user.id})
     return {"access_token": access_token, "token_type": "bearer"}
 
@@ -68,6 +77,5 @@ def login_user(credentials: UserLogin, db: Session = Depends(get_db)):
             detail="Invalid email or password"
         )
     
-    # Crucial: Include "id": user.id so profile_routes can identify the user
     access_token = create_access_token(data={"sub": user.email, "id": user.id})
     return {"access_token": access_token, "token_type": "bearer"}

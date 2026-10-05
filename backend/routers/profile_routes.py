@@ -31,18 +31,19 @@ def get_user_profile(user_id: int = Depends(get_current_user_id), db: Session = 
     if not profile:
         return {
             "name": user.full_name if user else "",
-            "country": "Pakistan",
-            "region": "Khyber Pakhtunkhwa",
-            "city": "Kohat",
-            "current_education_level": "HSSC",
-            "ssc_percentage": 75.0,
-            "hssc_percentage": 85.0,
-            "hssc_group": "Pre-Engineering",
-            "mathematics_background": True,
-            "preferred_field": "Computer Science",
+            "country": "",
+            "region": "",
+            "city": "",
+            "desired_degree": "",
+            "current_education_level": "",
+            "ssc_percentage": None,
+            "hssc_percentage": None,
+            "hssc_group": "",
+            "mathematics_background": False,
+            "preferred_field": "",
             "target_career": None,
             "selected_program": None,
-            "financial_need_status": True
+            "financial_need_status": None
         }
 
     parsed_program = None
@@ -56,18 +57,19 @@ def get_user_profile(user_id: int = Depends(get_current_user_id), db: Session = 
         "id": profile.id,
         "user_id": profile.user_id,
         "name": (user.full_name if user else None) or getattr(profile, "name", "") or "",
-        "country": profile.country or "Pakistan",
-        "region": profile.region or "Khyber Pakhtunkhwa",
-        "city": profile.city or "Kohat",
-        "current_education_level": profile.current_education_level or "HSSC",
-        "ssc_percentage": profile.ssc_percentage if profile.ssc_percentage is not None else 75.0,
-        "hssc_percentage": profile.hssc_percentage if profile.hssc_percentage is not None else 85.0,
-        "hssc_group": profile.hssc_group or "Pre-Engineering",
-        "mathematics_background": profile.mathematics_background if profile.mathematics_background is not None else True,
-        "preferred_field": profile.preferred_field or "Computer Science",
+        "country": profile.country or "",
+        "region": profile.region or "",
+        "city": profile.city or "",
+        "desired_degree": profile.desired_degree or "",
+        "current_education_level": profile.current_education_level or "",
+        "ssc_percentage": profile.ssc_percentage if profile.ssc_percentage is not None else None,
+        "hssc_percentage": profile.hssc_percentage if profile.hssc_percentage is not None else None,
+        "hssc_group": profile.hssc_group or "",
+        "mathematics_background": profile.mathematics_background if profile.mathematics_background is not None else False,
+        "preferred_field": profile.preferred_field or "",
         "target_career": profile.target_career,
         "selected_program": parsed_program,
-        "financial_need_status": profile.financial_need_status if profile.financial_need_status is not None else True
+        "financial_need_status": profile.financial_need_status if profile.financial_need_status is not None else None
     }
 
 @router.post("/")
@@ -87,7 +89,7 @@ def update_user_profile(payload: Dict[str, Any], user_id: int = Depends(get_curr
     if "target_career" in payload:
         profile.target_career = payload["target_career"]
 
-    for field in ["country", "region", "city", "current_education_level", "ssc_percentage", 
+    for field in ["country", "region", "city", "desired_degree", "current_education_level", "ssc_percentage", 
                   "hssc_percentage", "hssc_group", "mathematics_background", "preferred_field", "financial_need_status"]:
         if field in payload and hasattr(profile, field):
             setattr(profile, field, payload[field])
@@ -98,12 +100,10 @@ def update_user_profile(payload: Dict[str, Any], user_id: int = Depends(get_curr
 
 @router.delete("/")
 def delete_user_account(user_id: int = Depends(get_current_user_id), db: Session = Depends(get_db)):
-    # Delete student profile records if they exist
     profile = db.query(models.DBStudentProfile).filter(models.DBStudentProfile.user_id == user_id).first()
     if profile:
         db.delete(profile)
     
-    # Delete the main user record
     user = db.query(models.User).filter(models.User.id == user_id).first()
     if user:
         db.delete(user)

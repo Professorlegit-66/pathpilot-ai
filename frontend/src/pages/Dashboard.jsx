@@ -1,12 +1,16 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { GraduationCap, Award, Map, ArrowRight, Zap, AlertCircle } from 'lucide-react';
+import { GraduationCap, Award, Map, ArrowRight, Zap, AlertCircle, Loader2 } from 'lucide-react';
 
 export default function Dashboard({ profile, results }) {
   const navigate = useNavigate();
 
   const isReset = sessionStorage.getItem('roadmap_is_reset') === 'true';
   const hasTargetCareer = Boolean(sessionStorage.getItem('roadmap_target_career') || profile?.target_career);
+  
   const isEvaluated = results !== null && results !== undefined && hasTargetCareer && !isReset;
+  
+  // New guard: If they have a career but results are null, we are currently fetching data
+  const isEvaluating = hasTargetCareer && !isReset && (results === null || results === undefined);
   
   const rawList = Array.isArray(results) ? results : (results?.eligible_programs || results?.programs || []);
   const eligibleCount = isEvaluated ? rawList.filter(r => r.eligibility_status === "ELIGIBLE").length : 0;
@@ -20,7 +24,7 @@ export default function Dashboard({ profile, results }) {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
           <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', margin: '0 0 0.2rem 0', color: '#f8fafc' }}>
-            Welcome back, {(profile?.name || 'Student').split(' ')[0]} 👋
+            Welcome back, {(profile?.name || localStorage.getItem('user_full_name') || 'Student').split(' ')[0]} 👋
           </h1>
           <p style={{ color: '#94a3b8', margin: 0, fontSize: '0.9rem' }}>
             Here is the current outlook for your journey into {profile?.preferred_field || 'Computer Science'}.
@@ -28,7 +32,13 @@ export default function Dashboard({ profile, results }) {
         </div>
       </div>
 
-      {!isEvaluated ? (
+      {isEvaluating ? (
+        <div style={{ background: '#1e293b', border: '1px solid #334155', borderRadius: '12px', padding: '3.5rem 1.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
+          <Loader2 className="animate-spin" size={36} color="#38bdf8" style={{ marginBottom: '1rem' }} />
+          <h2 style={{ fontSize: '1.25rem', color: '#f8fafc', marginBottom: '0.5rem', margin: 0 }}>Evaluating Programs...</h2>
+          <p style={{ color: '#94a3b8', fontSize: '0.9rem', margin: 0 }}>Running deterministic matching against verified requirements.</p>
+        </div>
+      ) : !isEvaluated ? (
         <div style={{ background: '#1e293b', border: '1px solid #334155', borderRadius: '12px', padding: '2.5rem 1.5rem', textAlign: 'center' }}>
           <div style={{ background: '#0f172a', width: '48px', height: '48px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem auto', border: '1px solid #334155' }}>
             <AlertCircle size={24} color="#38bdf8" />

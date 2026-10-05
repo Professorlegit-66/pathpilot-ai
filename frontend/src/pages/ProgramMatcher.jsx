@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { createPortal } from 'react-dom';
 import { 
   GraduationCap, MapPin, CheckCircle2, XCircle, HelpCircle, 
   ChevronDown, ChevronUp, Award, Banknote, PlusCircle, RefreshCw, X, Navigation, AlertCircle, ArrowRight
@@ -330,11 +331,15 @@ export default function ProgramMatcher({ results, profile, setResults }) {
                       {isExpanded && (
                         <div style={{ padding: '0 1.5rem 1.5rem 1.5rem' }}>
                           <ul style={{ margin: '0.5rem 0 1.5rem 0', paddingLeft: '1.5rem', color: '#cbd5e1', fontSize: '0.9rem', lineHeight: '1.6' }}>
-                            {prog.why_this_appears && prog.why_this_appears.map((reason, rIdx) => (
-                              <li key={rIdx} style={{ color: reason.startsWith('✕') ? '#fca5a5' : reason.startsWith('⚠') ? '#fcd34d' : '#a7f3d0' }}>
-                                <span style={{ color: '#e2e8f0' }}>{reason.substring(1).trim()}</span>
-                              </li>
-                            ))}
+                            {prog.why_this_appears && prog.why_this_appears.map((reason, rIdx) => {
+                              const text = reason.replace(/^[✓✕⚠]\s*/, '').trim();
+                              const iconColor = reason.startsWith('✕') ? '#fca5a5' : reason.startsWith('⚠') ? '#fcd34d' : reason.startsWith('📍') ? '#38bdf8' : '#a7f3d0';
+                              return (
+                                <li key={rIdx} style={{ color: iconColor }}>
+                                  <span style={{ color: '#e2e8f0' }}>{text}</span>
+                                </li>
+                              );
+                            })}
                           </ul>
 
                           {prog.available_scholarships?.length > 0 && (
@@ -361,8 +366,8 @@ export default function ProgramMatcher({ results, profile, setResults }) {
         </>
       )}
 
-      {selectedDetailProgram && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(3, 7, 18, 0.8)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '1rem' }}>
+      {selectedDetailProgram && createPortal(
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(3, 7, 18, 0.8)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999, padding: '1rem', boxSizing: 'border-box' }}>
           <div style={{ background: '#1e293b', border: '1px solid #334155', borderRadius: '16px', maxWidth: '650px', width: '100%', padding: '2rem', boxSizing: 'border-box', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.7)', maxHeight: '90vh', overflowY: 'auto' }}>
             
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.25rem' }}>
@@ -412,7 +417,7 @@ export default function ProgramMatcher({ results, profile, setResults }) {
                   <span style={{ fontSize: '0.75rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: '600' }}>Evaluation Criteria Breakdown</span>
                   <ul style={{ margin: '0.4rem 0 0 0', paddingLeft: '1.25rem', color: '#cbd5e1', fontSize: '0.85rem', display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
                     {selectedDetailProgram.why_this_appears.map((reason, rIdx) => (
-                      <li key={rIdx}>{reason.substring(1).trim()}</li>
+                      <li key={rIdx}>{reason.replace(/^[✓✕⚠]\s*/, '').trim()}</li>
                     ))}
                   </ul>
                 </div>
@@ -429,7 +434,8 @@ export default function ProgramMatcher({ results, profile, setResults }) {
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
     </div>

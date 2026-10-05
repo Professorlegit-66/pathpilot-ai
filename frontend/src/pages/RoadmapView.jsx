@@ -79,19 +79,6 @@ export default function RoadmapView({ profile, results, setResults }) {
     sessionStorage.removeItem('roadmap_is_reset');
   }
 
-  const [selectedProgram, setSelectedProgram] = useState(() => {
-    if (location.state?.selectedProgram) {
-      sessionStorage.setItem('roadmap_selected_program', JSON.stringify(location.state.selectedProgram));
-      return location.state.selectedProgram;
-    }
-    const saved = sessionStorage.getItem('roadmap_selected_program');
-    if (saved) return JSON.parse(saved);
-    if (profile?.selected_program) {
-      return typeof profile.selected_program === 'string' ? JSON.parse(profile.selected_program) : profile.selected_program;
-    }
-    return null;
-  });
-
   const [targetCareer, setTargetCareer] = useState(() => {
     if (location.state?.selectedCareer) {
       const selected = location.state.selectedCareer;
@@ -104,6 +91,36 @@ export default function RoadmapView({ profile, results, setResults }) {
     if (profile?.target_career) return profile.target_career === "Cyber Security" ? "Cybersecurity" : profile.target_career;
     return null; 
   });
+
+  const rawList = Array.isArray(results) ? results : (results?.eligible_programs || results?.programs || []);
+
+  const [selectedProgram, setSelectedProgram] = useState(() => {
+    if (location.state?.selectedProgram) {
+      sessionStorage.setItem('roadmap_selected_program', JSON.stringify(location.state.selectedProgram));
+      return location.state.selectedProgram;
+    }
+    const saved = sessionStorage.getItem('roadmap_selected_program');
+    if (saved) return JSON.parse(saved);
+    if (profile?.selected_program) {
+      return typeof profile.selected_program === 'string' ? JSON.parse(profile.selected_program) : profile.selected_program;
+    }
+    // Auto-select the first available eligible program if none is explicitly chosen yet
+    if (rawList.length > 0) {
+      const firstEligible = rawList.find(p => p.eligibility_status === "ELIGIBLE") || rawList[0];
+      sessionStorage.setItem('roadmap_selected_program', JSON.stringify(firstEligible));
+      return firstEligible;
+    }
+    return null;
+  });
+
+  // If results load later and selectedProgram is still null, auto-select the first program
+  useEffect(() => {
+    if (!selectedProgram && rawList.length > 0) {
+      const firstEligible = rawList.find(p => p.eligibility_status === "ELIGIBLE") || rawList[0];
+      setSelectedProgram(firstEligible);
+      sessionStorage.setItem('roadmap_selected_program', JSON.stringify(firstEligible));
+    }
+  }, [results]);
 
   useEffect(() => {
     if (profile?.target_career && !targetCareer) {
@@ -146,8 +163,6 @@ export default function RoadmapView({ profile, results, setResults }) {
     }
     return sessionStorage.getItem('roadmap_is_reset') === 'true';
   });
-
-  const rawList = Array.isArray(results) ? results : (results?.eligible_programs || results?.programs || []);
   
   const isEvaluated = !isReset && Boolean(targetCareer) && Boolean(selectedProgram);
 
@@ -326,9 +341,8 @@ export default function RoadmapView({ profile, results, setResults }) {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem', marginBottom: '0.5rem' }}>
         <div>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', color: '#34d399', fontSize: '0.8rem', fontWeight: '600', marginBottom: '0.5rem', letterSpacing: '0.1em' }}>
-
-<Map size={16} />
-END-TO-END STUDENT JOURNEY
+            <Map size={16} />
+            END-TO-END STUDENT JOURNEY
           </div>
           <h1 style={{ fontSize: '2.2rem', fontWeight: 'bold', color: '#fff', margin: '0 0 0.5rem 0' }}>Personalized Career Roadmap</h1>
           <p style={{ color: '#94a3b8', fontSize: '0.95rem', margin: '0 0 0.5rem 0' }}>

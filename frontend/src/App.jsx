@@ -49,8 +49,8 @@ function AppContent() {
     hssc_group: '',
     mathematics_background: true,
     preferred_field: '',
-    target_career: sessionStorage.getItem('roadmap_target_career') || null,
-    selected_program: sessionStorage.getItem('roadmap_selected_program') ? JSON.parse(sessionStorage.getItem('roadmap_selected_program')) : null,
+    target_career: sessionStorage.getItem('roadmap_is_reset') === 'true' ? null : (sessionStorage.getItem('roadmap_target_career') || null),
+    selected_program: sessionStorage.getItem('roadmap_is_reset') === 'true' ? null : (sessionStorage.getItem('roadmap_selected_program') ? JSON.parse(sessionStorage.getItem('roadmap_selected_program')) : null),
     financial_need_status: null
   });
 
@@ -62,8 +62,6 @@ function AppContent() {
       setFetchedToken(null);
       return;
     }
-
-    let activeCareerFound = null;
 
     fetch(`${API_URL}/api/profile/`, {
       headers: { 'Authorization': `Bearer ${token}` }
@@ -80,16 +78,28 @@ function AppContent() {
             localStorage.setItem('user_full_name', resolvedName);
           }
 
-          const activeCareer = data.target_career || sessionStorage.getItem('roadmap_target_career') || null;
-          activeCareerFound = activeCareer;
+          const isReset = sessionStorage.getItem('roadmap_is_reset') === 'true';
+          const activeCareer = isReset ? null : (data.target_career || null);
 
-          if (activeCareer) {
-            sessionStorage.setItem('roadmap_target_career', activeCareer);
-            sessionStorage.removeItem('roadmap_is_reset');
+          if (!activeCareer) {
+            sessionStorage.removeItem('roadmap_target_career');
+            sessionStorage.removeItem('roadmap_selected_program');
+            setMatchingResults(null);
+            setStudentProfile(prev => ({ 
+              ...prev, 
+              ...data, 
+              name: resolvedName,
+              target_career: null,
+              selected_program: null
+            }));
+            return null;
           }
 
+          sessionStorage.setItem('roadmap_target_career', activeCareer);
+          sessionStorage.removeItem('roadmap_is_reset');
+
           let restoredProgram = null;
-          if (data.selected_program) {
+          if (data.selected_program && !isReset) {
             try {
               restoredProgram = typeof data.selected_program === 'string' ? JSON.parse(data.selected_program) : data.selected_program;
               sessionStorage.setItem('roadmap_selected_program', JSON.stringify(restoredProgram));
@@ -105,11 +115,6 @@ function AppContent() {
             target_career: activeCareer,
             selected_program: restoredProgram !== null ? restoredProgram : prev.selected_program
           }));
-
-          if (!activeCareer) {
-            setMatchingResults(null);
-            return null;
-          }
           
           const savedRadius = sessionStorage.getItem('radius_mode') || '100KM';
 
@@ -133,8 +138,8 @@ function AppContent() {
       })
       .then(res => res ? res.json() : null)
       .then(matchData => {
-        // Explicitly set matchingResults (even if null) so state is never left ambiguous
-        setMatchingResults(matchData || null);
+        const isReset = sessionStorage.getItem('roadmap_is_reset') === 'true';
+        setMatchingResults(isReset ? null : (matchData || null));
         setFetchedToken(token); 
       })
       .catch(err => {

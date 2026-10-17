@@ -65,8 +65,8 @@ The agent is not allowed to invent universities, programs, scholarships, eligibi
 | AI | Groq API |
 | Agent Layer | Lightweight Python orchestration |
 | Storage | Supabase Storage |
-| Frontend Hosting | Vercel / Netlify |
-| Backend Hosting | Koyeb |
+| Frontend Hosting | Vercel |
+| Backend Hosting | Render |
 
 ---
 
@@ -103,7 +103,7 @@ POST /api/agent/chat
 * Python 3.11+
 * Node.js 18+
 * PostgreSQL / Supabase project
-* Google Gemini API key
+* Groq API key
 * Supabase credentials
 
 ### Backend:
